@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
@@ -186,7 +186,7 @@ public DataVisualizationController(UserRepository userRepository, EvaluationRepo
 		JFreeChart pieChart = ChartFactory.createPieChart(chartName + " Evaluation" , pieDataset);
 		response.setContentType("image/jpeg");
 		OutputStream out = response.getOutputStream();
-		ChartUtilities.writeChartAsJPEG(out, pieChart, 600, 600);	
+		ChartUtils.writeChartAsJPEG(out, pieChart, 600, 600);	
 		
 	
 		
@@ -235,7 +235,7 @@ public DataVisualizationController(UserRepository userRepository, EvaluationRepo
 		JFreeChart ringChart = ChartFactory.createRingChart(chartName + " Evaluation" ,pieDataset, false, false, false);
 		response.setContentType("image/jpeg");
 		OutputStream out = response.getOutputStream();
-		ChartUtilities.writeChartAsJPEG(out, ringChart, 600, 600);	
+		ChartUtils.writeChartAsJPEG(out, ringChart, 600, 600);	
 	}
 /**
  * Receives the reviewee id as path variable and finds all logs of all completed evaluations for that reviewee, then generates bar charts using the average for that reviewee	
@@ -278,7 +278,7 @@ public DataVisualizationController(UserRepository userRepository, EvaluationRepo
 		JFreeChart barChart = ChartFactory.createBarChart(chartName + " Evaluation" ,"Category", "Score", categoryDataset);
 		response.setContentType("image/jpeg");
 		OutputStream out = response.getOutputStream();
-		ChartUtilities.writeChartAsJPEG(out, barChart, 600, 600);	
+		ChartUtils.writeChartAsJPEG(out, barChart, 600, 600);	
 	}
 /**
  *Receives the reviewee id as path variable and finds all logs of all completed evaluations for that reviewee, then generates area charts using the average for that reviewee	
@@ -322,7 +322,7 @@ public DataVisualizationController(UserRepository userRepository, EvaluationRepo
 		JFreeChart areaChart = ChartFactory.createAreaChart(chartName + " Evaluation" + " Evaluation" ,"Category", "Score", categoryDataset);
 		response.setContentType("image/jpeg");
 		OutputStream out = response.getOutputStream();
-		ChartUtilities.writeChartAsJPEG(out, areaChart, 600, 600);	
+		ChartUtils.writeChartAsJPEG(out, areaChart, 600, 600);	
 	}
 
 /**
@@ -368,7 +368,7 @@ public DataVisualizationController(UserRepository userRepository, EvaluationRepo
 		JFreeChart pieChart = ChartFactory.createPieChart(chartName + " Evaluation" , pieDataset);
 		response.setContentType("image/jpeg");
 		OutputStream out = response.getOutputStream();
-		ChartUtilities.writeChartAsJPEG(out, pieChart, 600, 600);	
+		ChartUtils.writeChartAsJPEG(out, pieChart, 600, 600);	
 		
 	}
 /**
@@ -416,7 +416,7 @@ public DataVisualizationController(UserRepository userRepository, EvaluationRepo
 		JFreeChart pieChart = ChartFactory.createRingChart(chartName + " Evaluation" ,pieDataset, false, false, false);
 		response.setContentType("image/jpeg");
 		OutputStream out = response.getOutputStream();
-		ChartUtilities.writeChartAsJPEG(out, pieChart, 600, 600);	
+		ChartUtils.writeChartAsJPEG(out, pieChart, 600, 600);	
 		
 	
 		
@@ -471,7 +471,7 @@ public DataVisualizationController(UserRepository userRepository, EvaluationRepo
 	
 		response.setContentType("image/jpeg");
 		OutputStream out = response.getOutputStream();
-		ChartUtilities.writeChartAsJPEG(out, pieChart, 600, 600);	
+		ChartUtils.writeChartAsJPEG(out, pieChart, 600, 600);	
 		
 		
 		 
@@ -521,7 +521,7 @@ public DataVisualizationController(UserRepository userRepository, EvaluationRepo
 		JFreeChart pieChart = ChartFactory.createAreaChart(chartName + " Evaluation" ,"Category", "Score", barDataset);
 		response.setContentType("image/jpeg");
 		OutputStream out = response.getOutputStream();
-		ChartUtilities.writeChartAsJPEG(out, pieChart, 600, 600);
+		ChartUtils.writeChartAsJPEG(out, pieChart, 600, 600);
 		
 		
 	}
@@ -592,7 +592,7 @@ public DataVisualizationController(UserRepository userRepository, EvaluationRepo
 		JFreeChart pieChart = ChartFactory.createPieChart("Group " + chartName + " Evaluation" , pieDataset);
 		response.setContentType("image/jpeg");
 		OutputStream out = response.getOutputStream();
-		ChartUtilities.writeChartAsJPEG(out, pieChart, 600, 600);	
+		ChartUtils.writeChartAsJPEG(out, pieChart, 600, 600);	
 	
 	}
 
@@ -658,7 +658,7 @@ public DataVisualizationController(UserRepository userRepository, EvaluationRepo
 		JFreeChart ringChart = ChartFactory.createRingChart("Group " + chartName + " Evaluation" ,pieDataset, false, false, false);
 		response.setContentType("image/jpeg");
 		OutputStream out = response.getOutputStream();
-		ChartUtilities.writeChartAsJPEG(out, ringChart, 600, 600);	
+		ChartUtils.writeChartAsJPEG(out, ringChart, 600, 600);	
 	 
 	}
 	
@@ -724,7 +724,7 @@ public DataVisualizationController(UserRepository userRepository, EvaluationRepo
 		JFreeChart areaChart = ChartFactory.createBarChart("Group " + chartName + " Evaluation" , "","", barDataset);
 		response.setContentType("image/jpeg");
 		OutputStream out = response.getOutputStream();
-		ChartUtilities.writeChartAsJPEG(out, areaChart, 600, 600);	
+		ChartUtils.writeChartAsJPEG(out, areaChart, 600, 600);	
 	 
 	}
 /**
@@ -789,7 +789,7 @@ public DataVisualizationController(UserRepository userRepository, EvaluationRepo
 		JFreeChart areaChart = ChartFactory.createAreaChart("Group " + chartName + " Evaluation" + " Evaluation" ,"Category", "Score", barDataset);
 		response.setContentType("image/jpeg");
 		OutputStream out = response.getOutputStream();
-		ChartUtilities.writeChartAsJPEG(out, areaChart, 600, 600);	
+		ChartUtils.writeChartAsJPEG(out, areaChart, 600, 600);	
 	 
 	}
 
@@ -827,7 +827,7 @@ public DataVisualizationController(UserRepository userRepository, EvaluationRepo
 		JFreeChart pieChart = ChartFactory.createPieChart(chartName + " Self Evaluation" , pieDataset, true, true, true);
 		response.setContentType("image/jpeg");
 		OutputStream out = response.getOutputStream();
-		ChartUtilities.writeChartAsJPEG(out, pieChart, 600, 600);	
+		ChartUtils.writeChartAsJPEG(out, pieChart, 600, 600);	
 	}
 
 /**
@@ -864,7 +864,7 @@ public DataVisualizationController(UserRepository userRepository, EvaluationRepo
 		JFreeChart pieChart = ChartFactory.createRingChart(chartName + " Self Evaluation" , pieDataset, true, true, true);
 		response.setContentType("image/jpeg");
 		OutputStream out = response.getOutputStream();
-		ChartUtilities.writeChartAsJPEG(out, pieChart, 600, 600);	
+		ChartUtils.writeChartAsJPEG(out, pieChart, 600, 600);	
 	}
 /**
  * Recieves the revieweeId and pulls the self evaluation logs for that reviewee and generates bar charts	
@@ -902,7 +902,7 @@ public DataVisualizationController(UserRepository userRepository, EvaluationRepo
 		JFreeChart pieChart = ChartFactory.createBarChart(chartName + " Self Evaluation" , "","", barDataset);
 		response.setContentType("image/jpeg");
 		OutputStream out = response.getOutputStream();
-		ChartUtilities.writeChartAsJPEG(out, pieChart, 600, 600);	
+		ChartUtils.writeChartAsJPEG(out, pieChart, 600, 600);	
 		
 	}
 /**
@@ -941,7 +941,7 @@ public DataVisualizationController(UserRepository userRepository, EvaluationRepo
 		JFreeChart pieChart = ChartFactory.createAreaChart(chartName + " Self Evaluation" , "","", barDataset);
 		response.setContentType("image/jpeg");
 		OutputStream out = response.getOutputStream();
-		ChartUtilities.writeChartAsJPEG(out, pieChart, 600, 600);	
+		ChartUtils.writeChartAsJPEG(out, pieChart, 600, 600);	
 		
 	}
 	
