@@ -22,7 +22,7 @@ import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 @SpringBootApplication
 //@EnableJpaRepositories(basePackageClasses = UserRepository.class)
 public class WebBasedEvaluationsApplication {
-
+//adding a comment to test merge. 
 	public static void main(String[] args) {
 		System.setProperty("spring.devtools.restart.enabled", "false");
 		
