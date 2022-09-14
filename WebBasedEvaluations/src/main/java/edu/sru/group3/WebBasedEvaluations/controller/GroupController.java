@@ -480,7 +480,7 @@ public class GroupController {
 
 						} else {
 							redir.addFlashAttribute("error", "user "
-									+ ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i)) + " dosnt not exist");
+									+ ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i)) + " does not exist");
 
 							RedirectView redirectView = new RedirectView("/admin_groups", true);
 							//System.out.println("user dosnt not exist " + x + " " + i

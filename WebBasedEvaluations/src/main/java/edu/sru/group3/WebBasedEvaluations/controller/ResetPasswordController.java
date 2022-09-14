@@ -138,7 +138,7 @@ public class ResetPasswordController {
 			emailSentConfirm(model);
 
 		} catch (Exception e) {
-			mess = "Email failed to be sent";
+			mess = "Email could not be sent";
 
 			ansr = "fail";
 

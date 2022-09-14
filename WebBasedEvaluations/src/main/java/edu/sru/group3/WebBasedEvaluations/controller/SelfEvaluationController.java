@@ -169,7 +169,7 @@ else if(type.equals("admin")) {
 	  * method used to save self evaluation
 	 * @param eval is the evaluation object 
 	 * @param response is an array  that hold the answer for question the the user answered 
-	 * @param completed is a boolean variable that determines if the sue is saving  or submitting their evaluatio
+	 * @param completed is a boolean variable that determines if the sue is saving  or submitting their evaluation
 	 * @param id hold the id of the self evaluation
 	 * @param authentication is the user details 
 	 * @param model
