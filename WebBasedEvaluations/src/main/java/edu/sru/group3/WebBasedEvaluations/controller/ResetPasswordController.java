@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -209,9 +211,15 @@ public class ResetPasswordController {
 		String passCheck = reset.getPasswordCheck();
 		String ansr;
 		String mess;
-		if (adminMethodsService.hasSpace(pass) | pass.length() < PASSWORDSIZE) {
+		Pattern pattern = Pattern.compile("[^A-Za-z0-9]");	
+		// defining regex that searches for non-alphanumeric characters 
+		Matcher matcher = pattern.matcher(pass);
+		boolean containsSpecial = matcher.find();	
+		// is true if password has a special char, false otherwise
+		
+		if (adminMethodsService.hasSpace(pass) | pass.length() < PASSWORDSIZE | !containsSpecial) {
 			ansr = "fail";
-			mess = "Password either has a space in it or isn't long enough (at least 5 characters long)!";
+			mess = "Password either has a space in it, isn't long enough (at least 5 characters long), or doesn't contain a special character!";
 
 			model.addAttribute("ansr", ansr);
 			model.addAttribute("mess", mess);
