@@ -9,8 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.FetchType;
 
 import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -47,15 +50,25 @@ public class User {
 	@NonNull
 	private boolean resetP;
 
-	@OneToMany(mappedBy = "user")
-	private List<Evaluator> evaluator = new ArrayList<>();
-
+	@NonNull
+	private String companyName;
+	
+	
+	//@OneToMany(mappedBy = "user")
+	//private List<Evaluator> evaluator = new ArrayList<>();
+	
+	
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "company_id", nullable = false)
+	private Company company;
+	
+	
 	// Preload
 	//private long employeeId;
 	private String dateOfHire;
 	private String jobTitle;
 	private String supervisor;
-	private String companyName;
 	private String divisionBranch;
 
 	public User() {
@@ -64,7 +77,7 @@ public class User {
 
 	public User(String name, String firstName, String lastName, String email, String password, String role,
 			int employeeId, String dateOfHire, String jobTitle, String supervisor, String companyName,
-			String divisionBranch) {
+			String divisionBranch, Company co) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
@@ -72,13 +85,14 @@ public class User {
 		this.password = password;
 		this.roles = role;
 		this.resetP = true;
-
+		//this.companyID = companyID;
+		this.companyName = companyName;
+		this.company = co;
 		// Preload
 		//this.employeeId = employeeId;
 		this.dateOfHire = dateOfHire;
 		this.jobTitle = jobTitle;
 		this.supervisor = supervisor;
-		this.companyName = companyName;
 		this.divisionBranch = divisionBranch;
 
 	}
@@ -130,7 +144,7 @@ public class User {
 
 		this.roles = roles;
 	}
-
+/*
 	public List<Evaluator> getEvaluator() {
 		return evaluator;
 	}
@@ -138,7 +152,7 @@ public class User {
 	public void setEvaluator(List<Evaluator> evaluator) {
 		this.evaluator = evaluator;
 	}
-
+*/
 	public String getFirstName() {
 		return firstName;
 	}
@@ -241,5 +255,24 @@ public class User {
 	public void setDivisionBranch(String divisionBranch) {
 		this.divisionBranch = divisionBranch;
 	}
+
+	
+	public Long getCompanyID() {
+		return id;
+	}
+
+	public void setCompanyID(Long companyID) {
+		this.id = companyID;
+	}
+	 
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	
 
 }
