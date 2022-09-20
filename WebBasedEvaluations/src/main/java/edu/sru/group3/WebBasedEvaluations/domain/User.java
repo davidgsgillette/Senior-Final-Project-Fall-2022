@@ -45,6 +45,15 @@ public class User {
 	private String roles;
 	@NonNull
 	private boolean using2FA;
+	
+	@NonNull
+	private String secQuest1;
+	@NonNull
+	private String secAns1;
+	@NonNull
+	private String secQuest2;
+	@NonNull
+	private String secAns2;
 
 	@NonNull
 	private boolean resetP;
@@ -140,6 +149,38 @@ public class User {
 
 	public void setUsing2FA(boolean using2fa) {
 		using2FA = using2fa;
+	}
+
+	public String getSecQuest1() {
+		return secQuest1;
+	}
+
+	public void setSecQuest1(String secQuest1) {
+		this.secQuest1 = secQuest1;
+	}
+
+	public String getSecAns1() {
+		return secAns1;
+	}
+
+	public void setSecAns1(String secAns1) {
+		this.secAns1 = secAns1;
+	}
+
+	public String getSecQuest2() {
+		return secQuest2;
+	}
+
+	public void setSecQuest2(String secQuest2) {
+		this.secQuest2 = secQuest2;
+	}
+
+	public String getSecAns2() {
+		return secAns2;
+	}
+
+	public void setSecAns2(String secAns2) {
+		this.secAns2 = secAns2;
 	}
 
 	public List<Evaluator> getEvaluator() {
