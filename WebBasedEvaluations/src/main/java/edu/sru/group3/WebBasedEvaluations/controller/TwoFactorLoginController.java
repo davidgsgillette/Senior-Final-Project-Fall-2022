@@ -23,11 +23,6 @@ public class TwoFactorLoginController {
 	private PasswordTokenRepository passwordTokenRepository;
 	@Autowired
 	private UserRepository userRepository;
-
-	@Autowired
-	private AdminMethodsService adminMethodsService;
-
-	private static final int PASSWORDSIZE = 5;
 	
 	public String loginRequest(@ModelAttribute ResetPassword login, Model model) {
 	String token = UUID.randomUUID().toString();

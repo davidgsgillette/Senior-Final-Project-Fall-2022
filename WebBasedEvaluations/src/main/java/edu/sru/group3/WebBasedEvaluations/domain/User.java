@@ -43,6 +43,8 @@ public class User {
 	private String password;
 	@NonNull
 	private String roles;
+	@NonNull
+	private boolean using2FA;
 
 	@NonNull
 	private boolean resetP;
@@ -71,6 +73,7 @@ public class User {
 		this.email = email;
 		this.password = password;
 		this.roles = role;
+		this.using2FA = false; // set it to false for now, building in capability to toggle later
 		this.resetP = true;
 
 		// Preload
@@ -129,6 +132,14 @@ public class User {
 	public void setRoles(String roles) {
 
 		this.roles = roles;
+	}
+
+	public boolean isUsing2FA() {
+		return using2FA;
+	}
+
+	public void setUsing2FA(boolean using2fa) {
+		using2FA = using2fa;
 	}
 
 	public List<Evaluator> getEvaluator() {
