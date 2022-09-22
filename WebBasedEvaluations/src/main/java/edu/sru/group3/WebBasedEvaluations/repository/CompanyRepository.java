@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import antlr.collections.List;
-import edu.sru.group3.WebBasedEvaluations.domain.Company;
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 
 

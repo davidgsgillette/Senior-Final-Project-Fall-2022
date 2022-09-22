@@ -18,6 +18,8 @@ import javax.persistence.FetchType;
 import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
+
 /**Class for methods of a user object, almost exclusively made out of getters and setters.
  * @author Tanuj Rane, Dalton Stenzel, Logan Racer
  *

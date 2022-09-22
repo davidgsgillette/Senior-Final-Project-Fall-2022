@@ -1,4 +1,4 @@
-package edu.sru.group3.WebBasedEvaluations.domain;
+package edu.sru.group3.WebBasedEvaluations.company;
 
 
 import java.util.ArrayList;

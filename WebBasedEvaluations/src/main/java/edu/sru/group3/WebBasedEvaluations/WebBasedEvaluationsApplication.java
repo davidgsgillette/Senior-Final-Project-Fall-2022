@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import edu.sru.group3.WebBasedEvaluations.domain.Company;
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.Evaluator;
 import edu.sru.group3.WebBasedEvaluations.domain.Group;
 import edu.sru.group3.WebBasedEvaluations.domain.Reviewee;
