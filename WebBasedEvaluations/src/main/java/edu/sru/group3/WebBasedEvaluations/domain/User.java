@@ -2,15 +2,15 @@ package edu.sru.group3.WebBasedEvaluations.domain;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.FetchType;
@@ -19,6 +19,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import edu.sru.group3.WebBasedEvaluations.company.Company;
+import edu.sru.group3.WebBasedEvaluations.company.Location;
 
 /**Class for methods of a user object, almost exclusively made out of getters and setters.
  * @author Tanuj Rane, Dalton Stenzel, Logan Racer
@@ -64,6 +65,12 @@ public class User {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "company_id", nullable = false)
 	private Company company;
+	
+	
+//	@NonNull
+//	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//	@JoinColumn(name = "location_id", nullable = false)
+//	private List<Location> locations;
 	
 	
 	// Preload

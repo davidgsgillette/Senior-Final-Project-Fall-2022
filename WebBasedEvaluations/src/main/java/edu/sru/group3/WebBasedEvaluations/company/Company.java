@@ -21,9 +21,10 @@ import edu.sru.group3.WebBasedEvaluations.domain.User;
 
 /*
  * Class for methods of the company object. hold info such as number of employees and head of tree of locations. 
+ * @author David Gillette
  */
 @Entity
-@Table(name = "Company")
+@Table(name = "company")
 public class Company {
 	
 	@Id 
