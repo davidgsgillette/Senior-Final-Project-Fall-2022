@@ -51,10 +51,9 @@ public class Location {
 	private int numEmployees;
 	
 	
-//	@NonNull
-//	@ManyToMany(mappedBy = "locations", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	@JoinColumn(name = "user_id", nullable = false)
-//	private List<User> users;
+	@NonNull
+	@ManyToMany(mappedBy = "locations", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<User> users;
 
 	
 	public Location() {

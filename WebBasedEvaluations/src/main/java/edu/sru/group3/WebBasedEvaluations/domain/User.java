@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -67,10 +68,12 @@ public class User {
 	private Company company;
 	
 	
-//	@NonNull
-//	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//	@JoinColumn(name = "location_id", nullable = false)
-//	private List<Location> locations;
+	@ManyToMany
+	@JoinTable(
+	  name = "user_location", 
+	  joinColumns = @JoinColumn(name = "user_id"), 
+	  inverseJoinColumns = @JoinColumn(name = "location_id"))
+	private List<Location> locations;
 	
 	
 	// Preload
