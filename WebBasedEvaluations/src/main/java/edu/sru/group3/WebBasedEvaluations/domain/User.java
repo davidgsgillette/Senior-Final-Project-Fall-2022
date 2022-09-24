@@ -2,6 +2,7 @@ package edu.sru.group3.WebBasedEvaluations.domain;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -56,26 +57,26 @@ public class User {
 
 	@NonNull
 	private String companyName;
-	
-	
+
+
 	//@OneToMany(mappedBy = "user")
 	//private List<Evaluator> evaluator = new ArrayList<>();
-	
-	
-	
+
+
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "company_id", nullable = false)
 	private Company company;
-	
-	
+
+
 	@ManyToMany
 	@JoinTable(
-	  name = "user_location", 
-	  joinColumns = @JoinColumn(name = "user_id"), 
-	  inverseJoinColumns = @JoinColumn(name = "location_id"))
+			name = "user_location", 
+			joinColumns = @JoinColumn(name = "user_id"), 
+			inverseJoinColumns = @JoinColumn(name = "location_id"))
 	private List<Location> locations;
-	
-	
+
+
 	// Preload
 	//private long employeeId;
 	private String dateOfHire;
@@ -87,9 +88,35 @@ public class User {
 
 	}
 
+	//adds user to a no location
 	public User(String name, String firstName, String lastName, String email, String password, String role,
 			int employeeId, String dateOfHire, String jobTitle, String supervisor, String companyName,
 			String divisionBranch, Company co) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.roles = role;
+		this.resetP = true;
+		//this.companyID = companyID;
+		this.companyName = companyName;
+		this.company = co;
+		
+		//this.employeeId = employeeId;
+		this.dateOfHire = dateOfHire;
+		this.jobTitle = jobTitle;
+		this.supervisor = supervisor;
+		this.divisionBranch = divisionBranch;
+		this.locations = new ArrayList<Location>();
+
+
+	}
+
+	//adds user to a single location
+	public User(String name, String firstName, String lastName, String email, String password, String role,
+			int employeeId, String dateOfHire, String jobTitle, String supervisor, String companyName,
+			String divisionBranch, Company co, Location location) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
@@ -106,6 +133,32 @@ public class User {
 		this.jobTitle = jobTitle;
 		this.supervisor = supervisor;
 		this.divisionBranch = divisionBranch;
+		this.locations = new ArrayList<Location>();
+		this.locations.add(location);
+
+	}
+
+	//adds user to multiple locations. 
+	public User(String name, String firstName, String lastName, String email, String password, String role,
+			int employeeId, String dateOfHire, String jobTitle, String supervisor, String companyName,
+			String divisionBranch, Company co, List<Location> locations) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.roles = role;
+		this.resetP = true;
+		//this.companyID = companyID;
+		this.companyName = companyName;
+		this.company = co;
+		// Preload
+		//this.employeeId = employeeId;
+		this.dateOfHire = dateOfHire;
+		this.jobTitle = jobTitle;
+		this.supervisor = supervisor;
+		this.divisionBranch = divisionBranch;
+		this.locations = locations;
 
 	}
 
@@ -156,7 +209,7 @@ public class User {
 
 		this.roles = roles;
 	}
-/*
+	/*
 	public List<Evaluator> getEvaluator() {
 		return evaluator;
 	}
@@ -164,7 +217,7 @@ public class User {
 	public void setEvaluator(List<Evaluator> evaluator) {
 		this.evaluator = evaluator;
 	}
-*/
+	 */
 	public String getFirstName() {
 		return firstName;
 	}
@@ -224,7 +277,7 @@ public class User {
 	public void setEmployeeId(long employeeId) {
 		this.employeeId = employeeId;
 	}
-	*/
+	 */
 	public String getDateOfHire() {
 		return dateOfHire;
 	}
@@ -268,7 +321,7 @@ public class User {
 		this.divisionBranch = divisionBranch;
 	}
 
-	
+
 	public Long getCompanyID() {
 		return id;
 	}
@@ -276,7 +329,7 @@ public class User {
 	public void setCompanyID(Long companyID) {
 		this.id = companyID;
 	}
-	 
+
 	public Company getCompany() {
 		return company;
 	}
@@ -285,6 +338,6 @@ public class User {
 		this.company = company;
 	}
 
-	
+
 
 }

@@ -49,6 +49,15 @@ public class Province {
 	public Province() {
 		
 	}
+	
+	public Province(String provinceName, Country parentCountry) {
+		this.provinceName = provinceName;
+		this.numCities = 0;
+		this.parentCountry = parentCountry;
+		this.childCities = new ArrayList<City>();;
+	}
+	
+	
 	public Province(String provinceName, int numCities, Country parentCountry, List<City> cities) {
 		this.provinceName = provinceName;
 		this.numCities = numCities;
@@ -60,7 +69,7 @@ public class Province {
 		this.provinceName = provinceName;
 		this.numCities = numCities;
 		this.parentCountry = parentCountry;
-		this.childCities = new ArrayList<>();
+		this.childCities = new ArrayList<City>();
 		this.childCities.add(city);
 	}
 
@@ -70,6 +79,7 @@ public class Province {
 	 */
 	public boolean addCity(City city) {
 		this.childCities.add(city);
+		this.numCities++;
 		return true;
 	}
 
@@ -79,6 +89,7 @@ public class Province {
 	 */
 	public boolean addCities(List<City> cities) {
 		for(City city : cities) { 
+			this.numCities++;
 			this.childCities.add(city);
 		}
 		return true;
@@ -89,7 +100,8 @@ public class Province {
 	 */
 	public boolean removeCity(City city) {
 		if(this.childCities.contains(city)) {
-			this.childCities.add(city);
+			this.childCities.remove(city);
+			this.numCities--;			
 			return true;
 		}
 		return false;

@@ -36,6 +36,7 @@ public class Company {
 	
 	@NonNull
 	private int numEmployees;
+
 	
 	//TODO create CEO class.
 	//@NonNull
@@ -53,6 +54,11 @@ public class Company {
 	private List<User> users;
 	//private List<User> users = new ArrayList<>();
 	
+	
+	@NonNull
+	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Location> locations;
+	
 	public Company() {
 		
 	}
@@ -61,8 +67,66 @@ public class Company {
 	public Company(String companyName) {
 		this.companyName = companyName;
 		//this.ceo = ceo;
-		this.numEmployees = 1;
+		this.numEmployees = 0;
+		this.numLocations = 0;
+		this.locations = new ArrayList<Location>();
+		this.users = new ArrayList<User>();
 	}
+	
+	
+	public boolean addLocation(Location loc) {
+		this.locations.add(loc);
+		this.numLocations++;
+		return true;
+	}
+	
+	public boolean addLocations(List<Location> locs) {
+		for(Location loc : locs) {
+			this.locations.add(loc);
+			this.numLocations++;
+		}		
+		return true;
+	}
+	
+	public boolean removeLocation(Location loc) {
+		
+		if(this.locations.contains(loc)) {
+			this.locations.remove(loc);
+			this.numLocations--;
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	public boolean addUser(User user) {
+		this.users.add(user);
+		this.numEmployees++;
+		return true;
+	}
+	
+	public boolean addUsers(List<User> userList) {
+		for(User user : userList) {
+			this.users.add(user);
+			this.numEmployees++;
+		}		
+		return true;
+	}
+	
+	public boolean removeUser(User user) {
+		
+		if(this.users.contains(user)) {
+			this.users.remove(user);
+			this.numEmployees--;
+			return true;
+		}
+		return false;
+	}
+	
+	
+	//getters and setters
+	
 
 	public Long getId() {
 		return id;

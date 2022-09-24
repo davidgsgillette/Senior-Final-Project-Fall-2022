@@ -37,7 +37,7 @@ public class Country {
 
 	@NonNull
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "continent_id", nullable = false)
+	@JoinColumn(name = "country_id", nullable = false)
 	private Continent parentContinent;
 
 	@NonNull
@@ -47,6 +47,13 @@ public class Country {
 	
 	public Country() {
 		
+	}
+	
+	public Country(String countryName, Continent parentContinent) {
+		this.countryName = countryName;
+		this.numProvinces = 0;
+		this.parentContinent = parentContinent;
+		this.childProvinces = new ArrayList<Province>();
 	}
 	
 	public Country(String countryName, int numProvinces, Continent parentContinent, List<Province> childProvinces) {
@@ -60,7 +67,7 @@ public class Country {
 		this.countryName = countryName;
 		this.numProvinces = numProvinces;
 		this.parentContinent = parentContinent;
-		this.childProvinces = new ArrayList<>();
+		this.childProvinces = new ArrayList<Province>();
 		this.childProvinces.add(childProvince);
 	}
 	
@@ -71,6 +78,7 @@ public class Country {
 	 */
 	public boolean addProvince(Province province) {
 		this.childProvinces.add(province);
+		this.numProvinces++;
 		return true;
 	}
 
@@ -81,6 +89,7 @@ public class Country {
 	public boolean addProvinces(List<Province> provinces) {
 		for(Province province : provinces) { 
 			this.childProvinces.add(province);
+			this.numProvinces++;
 		}
 		return true;
 	}
@@ -90,7 +99,8 @@ public class Country {
 	 */
 	public boolean removeProvince(Province province) {
 		if(this.childProvinces.contains(province)) {
-			this.childProvinces.add(province);
+			this.childProvinces.remove(province);
+			this.numProvinces--;
 			return true;
 		}
 		return false;

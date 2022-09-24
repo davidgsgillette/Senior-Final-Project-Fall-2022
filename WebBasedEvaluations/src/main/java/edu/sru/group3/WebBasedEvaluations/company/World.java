@@ -39,8 +39,10 @@ public class World {
 	
 	
 	public World() {
-		
+		this.numContinents = 0;
+		this.childContinents = new ArrayList<Continent>();
 	}
+	
 	public World(int numContinents, List<Continent> childContinents) {
 		this.numContinents = numContinents;
 		this.childContinents = childContinents;
@@ -48,15 +50,16 @@ public class World {
 
 	public World(int numContinents, Continent childCountry) {
 		this.numContinents = numContinents;
-		this.childContinents = new ArrayList<>();
+		this.childContinents = new ArrayList<Continent>();
 		this.childContinents.add(childCountry);
 	}
 
 	/*
 	 * adds a location
 	 */
-	public boolean addProvince(Continent childContinent) {
+	public boolean addContinent(Continent childContinent) {
 		this.childContinents.add(childContinent);
+		this.numContinents++;
 		return true;
 	}
 
@@ -64,9 +67,10 @@ public class World {
 	/*
 	 * adds a list of locations
 	 */
-	public boolean addProvinces(List<Continent> childContinents) {
+	public boolean addContinent(List<Continent> childContinents) {
 		for(Continent childContinent : childContinents) { 
 			this.childContinents.add(childContinent);
+			this.numContinents++;
 		}
 		return true;
 	}
@@ -74,9 +78,10 @@ public class World {
 	/*
 	 * removes a continent, should not be needed though. 
 	 */
-	public boolean removeProvince(Continent childContinent) {
+	public boolean removeContinent(Continent childContinent) {
 		if(this.childContinents.contains(childContinent)) {
-			this.childContinents.add(childContinent);
+			this.childContinents.remove(childContinent);
+			this.numContinents--;
 			return true;
 		}
 		return false;

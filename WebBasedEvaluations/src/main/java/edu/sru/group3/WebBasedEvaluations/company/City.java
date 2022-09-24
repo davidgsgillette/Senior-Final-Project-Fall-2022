@@ -53,6 +53,13 @@ public class City {
 		
 	}
 	
+	public City(String cityName, Province parentProvince) {
+		this.cityName = cityName;
+		this.numLocations = 0;
+		this.parentProvince = parentProvince;
+		this.childLocations = new ArrayList<Location>();
+	}
+	
 	
 	public City(String cityName, int numLocations, Province parentProvince, List<Location> locations) {
 		this.cityName = cityName;
@@ -65,7 +72,7 @@ public class City {
 		this.cityName = cityName;
 		this.numLocations = numLocations;
 		this.parentProvince = parentProvince;
-		this.childLocations = new ArrayList<>();
+		this.childLocations = new ArrayList<Location>();
 		this.childLocations.add(location);
 	}
 
@@ -75,6 +82,7 @@ public class City {
 	 */
 	public boolean addLocation(Location loc) {
 		this.childLocations.add(loc);
+		this.numLocations++;
 		return true;
 	}
 
@@ -85,6 +93,7 @@ public class City {
 	public boolean addLocations(List<Location> locs) {
 		for(Location loc : locs) { 
 			this.childLocations.add(loc);
+			this.numLocations++;
 		}
 		return true;
 	}
@@ -94,7 +103,8 @@ public class City {
 	 */
 	public boolean removeLocation(Location loc) {
 		if(this.childLocations.contains(loc)) {
-			this.childLocations.add(loc);
+			this.childLocations.remove(loc);
+			this.numLocations--;
 			return true;
 		}
 		return false;

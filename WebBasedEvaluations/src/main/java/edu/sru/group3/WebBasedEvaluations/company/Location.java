@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
@@ -39,6 +38,9 @@ public class Location {
 	
 	
 	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "company_id", nullable = false)
+	private Company company;
 
 
 	@NonNull
@@ -60,51 +62,64 @@ public class Location {
 		
 	}
 	
-	public Location(City parentCity, int numEmployees, List<User> users, String locationName) {
-		this.numEmployees = numEmployees;
+	public Location(String locationName, City parentCity, Company co) {
+		this.numEmployees = 0;
 		this.parentCity = parentCity;
 		this.locationName = locationName;
-//		this.users = users;
+		this.users = new ArrayList<User>();
+		this.company = co;
 	}
 	
-	public Location(City parentCity, int numEmployees, User user, String locationName) {
+	public Location(City parentCity, int numEmployees, List<User> users, String locationName, Company co) {
 		this.numEmployees = numEmployees;
 		this.parentCity = parentCity;
 		this.locationName = locationName;
-//		this.users = new ArrayList<>();
-//		users.add(user);
+		this.users = users;
+		this.company = co;
+	}
+	
+	public Location(City parentCity, int numEmployees, User user, String locationName, Company co) {
+		this.numEmployees = numEmployees;
+		this.parentCity = parentCity;
+		this.locationName = locationName;
+		this.users = new ArrayList<User>();
+		users.add(user);
+		this.company = co;
 	}
 		
 	/*
 	 * adds a single user to a location. 
 	 */
-//	public boolean addUser(User user) {
-//		this.users.add(user);
-//		return true;
-//	}
+	public boolean addUser(User user) {
+		this.users.add(user);
+		this.numEmployees++;
+		return true;
+	}
 	
 	
 	/*
 	 * adds a list of users to the location
 	 */
-//	public boolean addUsers(List<User> users) {
-//		
-//		for(User user : users) {
-//			this.users.add(user);
-//		}	
-//		return true;
-//	}
+	public boolean addUsers(List<User> users) {
+		
+		for(User user : users) {
+			this.users.add(user);
+			this.numEmployees++;
+		}	
+		return true;
+	}
 	
 	/*
 	 * removes a user from a location
 	 */
-//	public boolean removeUser(User user) {
-//		if(this.users.contains(user)) {
-//			this.users.remove(user);
-//			return true;
-//		}
-//		return false;
-//	}	
+	public boolean removeUser(User user) {
+		if(this.users.contains(user)) {
+			this.users.remove(user);
+			this.numEmployees--;
+			return true;
+		}
+		return false;
+	}	
 	
 	
 	
@@ -154,6 +169,22 @@ public class Location {
 
 	public void setHomeCity(City homeCity) {
 		this.parentCity = homeCity;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
 	}
 
 

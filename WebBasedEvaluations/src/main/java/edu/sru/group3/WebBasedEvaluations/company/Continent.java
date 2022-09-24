@@ -47,8 +47,17 @@ public class Continent {
 	private List<Country> childCountries;
 	
 	
+	
 	public Continent() {
 		
+	}
+	
+	
+	public Continent(String continentName, World parentWorld) {
+		this.continentName = continentName;
+		this.numCountries = 0;
+		this.parentWorld = parentWorld;
+		this.childCountries = new ArrayList<Country>();;
 	}
 	
 	public Continent(String continentName, int numCountries, World parentWorld, List<Country> childCountries) {
@@ -71,8 +80,9 @@ public class Continent {
 	/*
 	 * adds a location
 	 */
-	public boolean addProvince(Country childCountry) {
+	public boolean addCountry(Country childCountry) {
 		this.childCountries.add(childCountry);
+		this.numCountries++;
 		return true;
 	}
 
@@ -80,9 +90,10 @@ public class Continent {
 	/*
 	 * adds a list of locations
 	 */
-	public boolean addProvinces(List<Country> childCountries) {
+	public boolean addCountry(List<Country> childCountries) {
 		for(Country childCountry : childCountries) { 
 			this.childCountries.add(childCountry);
+			this.numCountries++;
 		}
 		return true;
 	}
@@ -90,9 +101,10 @@ public class Continent {
 	/*
 	 * removes a country, should not be needed though. 
 	 */
-	public boolean removeProvince(Country childCountry) {
+	public boolean removeCountry(Country childCountry) {
 		if(this.childCountries.contains(childCountry)) {
-			this.childCountries.add(childCountry);
+			this.childCountries.remove(childCountry);
+			this.numCountries--;
 			return true;
 		}
 		return false;
