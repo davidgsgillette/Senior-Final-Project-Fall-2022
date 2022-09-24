@@ -1,12 +1,15 @@
 package edu.sru.group3.WebBasedEvaluations;
+/*Marked for deletion
 
 import static org.junit.Assert.*;
 
+Reason:
+JUNIT4, upgrade to JUNIT5
+*/
+import  static org.junit.jupiter.api.Assertions.*;
+
 import java.util.ArrayList;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
@@ -14,7 +17,13 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import antlr.collections.List;
 
-import org.junit.*;
+import org.junit.jupiter.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.suite.api.IncludeClassNamePatterns;
+import org.junit.platform.suite.api.SelectPackages;
+import org.junit.platform.suite.api.Suite;
+import org.junit.platform.suite.api.SuiteDisplayName;
 
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
@@ -24,21 +33,24 @@ import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 import edu.sru.group3.WebBasedEvaluations.controller.UserController;
 import edu.sru.group3.WebBasedEvaluations.controller.AddUserController;
 
-
-
-public class AdminMethodsServicesTest {
+//https://junit.org/junit5/docs/current/user-guide/#overview
+@Suite
+@SuiteDisplayName("Admin Methods")
+@IncludeClassNamePatterns(".*Tests")
+class AdminMethodsServicesTest {
 	private static User user = new User();
 	private static User user2 = new User();
 	private static User user3 = new User();
-
+	/*Marked for deletion
 	@Autowired
 	private static User user4;
+	*/
 	@Autowired
 	UserRepository userRepo;
 	
 	AdminMethodsService adminMeth = new AdminMethodsService(userRepo);
 
-	@BeforeClass
+	@BeforeAll
 	public static void  newUser() {
 		
 		// User missing some details (Job Title & Date of Hire)
@@ -110,8 +122,6 @@ public class AdminMethodsServicesTest {
         assertFalse(adminMeth.checkAndUpdate(user));
         assertTrue(adminMeth.checkAndUpdate(user2));
         assertFalse(adminMeth.checkAndUpdate(user3));
-
-
 
     }
 

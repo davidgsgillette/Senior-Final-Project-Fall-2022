@@ -19,6 +19,7 @@ import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
  * This class provides all of the tools for the UserController and AddUserController classes that don't require the use of a html file/link tag
 
  * @author Dalton Stenzel
+ * @author J Abbigail Rowe
  * 
  *
  */
@@ -106,7 +107,7 @@ public class AdminMethodsService {
 	 */
 	public boolean hasSpace(String str) {
 		for (int i = 0; i < str.length(); i++) {
-			if (str.charAt(i) == ' ' /* || str.charAt(i)==' '&&str.charAt(i+1)!=' ' */) {
+			if (str.charAt(i) == ' ') {
 				return true;
 			}
 		}
