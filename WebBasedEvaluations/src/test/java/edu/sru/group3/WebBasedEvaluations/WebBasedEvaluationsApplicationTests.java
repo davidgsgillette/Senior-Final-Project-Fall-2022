@@ -1,7 +1,8 @@
 package edu.sru.group3.WebBasedEvaluations;
 
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.suite.api.Suite;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -11,13 +12,8 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-//@SpringBootTest
-//@RunWith(SpringRunner.class)
-//@DataJpaTest
 
-@RunWith(Suite.class)
+@ExtendWith(Suite.class)
 @Suite.SuiteClasses({
 	EvaluationTests.class})
 class WebBasedEvaluationsApplicationTests {
