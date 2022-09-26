@@ -1,11 +1,5 @@
 package edu.sru.group3.WebBasedEvaluations;
-/*Marked for deletion
 
-import static org.junit.Assert.*;
-
-Reason:
-JUNIT4, upgrade to JUNIT5
-*/
 import  static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;

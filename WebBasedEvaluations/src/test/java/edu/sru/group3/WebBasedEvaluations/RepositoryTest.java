@@ -2,9 +2,6 @@ package edu.sru.group3.WebBasedEvaluations;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Before;
-
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -14,14 +11,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
-import static org.junit.Assert.assertTrue;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import edu.sru.group3.WebBasedEvaluations.controller.AddUserController;
 import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
@@ -31,7 +28,7 @@ import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 import edu.sru.group3.WebBasedEvaluations.service.UserService;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class) //Replaces @RunWith(SpringRunner.class) in JUnit 5
 
 @WebMvcTest(AddUserController.class)
 @DataJpaTest

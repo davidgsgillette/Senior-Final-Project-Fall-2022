@@ -1,14 +1,10 @@
 package edu.sru.group3.WebBasedEvaluations;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
