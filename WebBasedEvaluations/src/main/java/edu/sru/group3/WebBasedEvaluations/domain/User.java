@@ -135,6 +135,7 @@ public class User {
 		this.divisionBranch = divisionBranch;
 		this.locations = new ArrayList<Location>();
 		this.locations.add(location);
+		
 
 	}
 
@@ -205,6 +206,24 @@ public class User {
 		return roles;
 	}
 
+	public List<Location> getLocations() {
+		return locations;
+	}
+
+	public void setLocations(List<Location> locations) {
+		this.locations = locations;
+	}
+
+	public void addLocation(Location loc) {
+		this.locations.add(loc);
+	}
+	
+	public void addLocations(List<Location> locations) {
+		for(Location loc : locations) {
+			this.locations.add(loc);
+		}
+	}
+	
 	public void setRoles(String roles) {
 
 		this.roles = roles;

@@ -83,7 +83,7 @@ public class Location {
 		this.parentCity = parentCity;
 		this.locationName = locationName;
 		this.users = new ArrayList<User>();
-		users.add(user);
+		this.addUser(user);
 		this.company = co;
 	}
 		

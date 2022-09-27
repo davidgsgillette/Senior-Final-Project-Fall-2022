@@ -42,6 +42,8 @@ public class WebBasedEvaluationsApplication {
 		
 		ConfigurableApplicationContext configurableApplicationContext = SpringApplication.run(WebBasedEvaluationsApplication.class, args);
 		
+		
+		//comment these out if you are not creating the DB fresh, They just add one company for the admin user. 
 		InitUsers startingUsers = new InitUsers();
 		startingUsers.createBaseUsers(configurableApplicationContext);
 
@@ -78,56 +80,64 @@ class InitUsers{
 		Company co = new Company("testCO");
 		companyRepo.save(co);
 		
+		
+		User use1 = new User("jimmy neutron","fname","lname","admin@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ","ADMIN", 999991, "N/A", "N/A", "N/A", "N/A", "N/A", co);
+		use1.setEncryptedPassword("test");
+		userRepo.save(use1);
+		
 		World world = new World();
 		worldRepo.save(world);
 		
 		Continent continent = new Continent("testContinent", world);
 		continentRepo.save(continent);
 		
-		
-		
 		world.addContinent(continent);
-//		worldRepo.save(world);
-		
+		worldRepo.save(world);
+	
 		Country country = new Country("testCountry", continent);
-		continent.addCountry(country);
-//		continentRepo.save(continent);
 		countryRepo.save(country);
+		
+		continent.addCountry(country);
+		continentRepo.save(continent);
+		
 		
 		
 		
 		
 		Province province = new Province("testProvince", country);
-		country.addProvince(province);
-//		countryRepo.save(country);
 		provinceRepo.save(province);
+		
+		country.addProvince(province);
+		countryRepo.save(country);
 		
 		
 		City city = new City("testCity", province);
-		province.addCity(city);
-//		provinceRepo.save(province);
 		cityRepo.save(city);
+		
+		province.addCity(city);
+		provinceRepo.save(province);
 		
 		
 		Location loc = new Location("testLocation", city, co);
+		locationRepo.save(loc);
+		
 		city.addLocation(loc);
-//		cityRepo.save(city);
-		locationRepo.save(loc);	
+		cityRepo.save(city);
+	
 		
 		
 		co.addLocation(loc);
-//		companyRepo.save(co);
+		companyRepo.save(co);
 		
 		
-		User use1 = new User("jimmy neutron","fname","lname","admin@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ","ADMIN", 999991, "N/A", "N/A", "N/A", "N/A", "N/A", co, loc);
-		use1.setEncryptedPassword("test");
+		
 		co.addUser(use1);
 		loc.addUser(use1);
-//		companyRepo.save(co);
-//		locationRepo.save(loc);	
-		userRepo.save(use1);
+		companyRepo.save(co);
+		locationRepo.save(loc);	
 		
-		//add records to the tables.
+		loc.addUser(use1);
+		use1.addLocation(loc);
 		
 	}
 }

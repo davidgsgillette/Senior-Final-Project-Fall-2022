@@ -39,7 +39,7 @@ public class Continent {
 
 	@NonNull
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "continent_id", nullable = false)
+	@JoinColumn(name = "world_id", nullable = false)
 	private World parentWorld;
 
 	@NonNull
