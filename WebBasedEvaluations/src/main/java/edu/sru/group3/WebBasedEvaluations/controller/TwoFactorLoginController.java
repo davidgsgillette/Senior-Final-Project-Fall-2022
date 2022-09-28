@@ -24,22 +24,21 @@ public class TwoFactorLoginController {
 	@Autowired
 	private UserRepository userRepository;
 	
-	public String loginRequest(@ModelAttribute ResetPassword login, Model model) {
+	public String loginRequest(@ModelAttribute String email, Model model) {
 	String token = UUID.randomUUID().toString();
 	String path = "http://localhost:8080";
 	String url = path + "/loginRequest?token=" + token;
 	String ansr;
 	String mess;
-	System.out.println(login.getEmail());
-	System.out.println(login.getPassword());
+	System.out.println(email);
 
 	// LocalDate localDate = LocalDate.now();
-	model.addAttribute("reset", login);
+	model.addAttribute("reset", email);
 	try {
 		ansr = "pass";
 		mess = "Email sent";
 
-		User user = userRepository.findByEmail(login.getEmail());
+		User user = userRepository.findByEmail(email);
 
 		PasswordResetToken passwordResetToken = new PasswordResetToken(token, user);
 
@@ -47,8 +46,8 @@ public class TwoFactorLoginController {
 
 		passwordTokenRepository.save(passwordResetToken);
 
-		service.sendSimpleEmail(login.getEmail(),
-				"The reset token associated with this url will expire in 10 minutes. \n" + url, "Password Reset");
+		service.sendSimpleEmail(email,
+				"The token associated with this url will expire in 10 minutes. \n" + url, "Login Request");
 
 		model.addAttribute("ansr", ansr);
 		model.addAttribute("mess", mess);
