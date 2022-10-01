@@ -21,6 +21,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import edu.sru.group3.WebBasedEvaluations.company.Company;
+import edu.sru.group3.WebBasedEvaluations.company.Department;
 import edu.sru.group3.WebBasedEvaluations.company.Location;
 
 /**Class for methods of a user object, almost exclusively made out of getters and setters.
@@ -75,6 +76,11 @@ public class User {
 			joinColumns = @JoinColumn(name = "user_id"), 
 			inverseJoinColumns = @JoinColumn(name = "location_id"))
 	private List<Location> locations;
+	
+	
+	
+	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Department> departments;
 
 
 	// Preload
@@ -85,7 +91,7 @@ public class User {
 	private String divisionBranch;
 
 	public User() {
-
+		
 	}
 
 	//adds user to a no location
@@ -109,6 +115,7 @@ public class User {
 		this.supervisor = supervisor;
 		this.divisionBranch = divisionBranch;
 		this.locations = new ArrayList<Location>();
+		this.departments = new ArrayList<Department>(); 
 
 
 	}
@@ -116,7 +123,7 @@ public class User {
 	//adds user to a single location
 	public User(String name, String firstName, String lastName, String email, String password, String role,
 			int employeeId, String dateOfHire, String jobTitle, String supervisor, String companyName,
-			String divisionBranch, Company co, Location location) {
+			String divisionBranch, Company co, Location location, Department dept) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
@@ -135,6 +142,8 @@ public class User {
 		this.divisionBranch = divisionBranch;
 		this.locations = new ArrayList<Location>();
 		this.locations.add(location);
+		this.departments = new ArrayList<Department>(); 
+		this.departments.add(dept);
 		
 
 	}
@@ -142,7 +151,7 @@ public class User {
 	//adds user to multiple locations. 
 	public User(String name, String firstName, String lastName, String email, String password, String role,
 			int employeeId, String dateOfHire, String jobTitle, String supervisor, String companyName,
-			String divisionBranch, Company co, List<Location> locations) {
+			String divisionBranch, Company co, List<Location> locations, List<Department> depts) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
@@ -160,7 +169,27 @@ public class User {
 		this.supervisor = supervisor;
 		this.divisionBranch = divisionBranch;
 		this.locations = locations;
+		this.departments = depts;
 
+	}
+	
+	public void addDepartment(Department dept) {
+		this.departments.add(dept);
+	}
+	public List<Department> getDepartments() {
+		return departments;
+	}
+
+	public void setDepartments(List<Department> departments) {
+		this.departments = departments;
+	}
+
+	public boolean removeDepartment(Department dept) {
+		if(this.departments.contains(dept)) {
+			this.departments.remove(dept);
+			return true;
+		}
+		return false;
 	}
 
 	public String getPassword() {
@@ -222,6 +251,14 @@ public class User {
 		for(Location loc : locations) {
 			this.locations.add(loc);
 		}
+	}
+	
+	public boolean removeLocation(Location loc) {
+		if(this.locations.contains(loc)) {
+			this.locations.remove(loc);
+			return true;
+		}
+		return false;
 	}
 	
 	public void setRoles(String roles) {

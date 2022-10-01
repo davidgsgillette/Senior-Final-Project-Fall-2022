@@ -42,6 +42,10 @@ public class Location {
 	@JoinColumn(name = "company_id", nullable = false)
 	private Company company;
 
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "location_group_id", nullable = false)
+	private LocationGroup locGroup;
 
 	@NonNull
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -53,7 +57,12 @@ public class Location {
 	private int numEmployees;
 	
 	
-	@NonNull
+	
+	@ManyToMany(mappedBy = "locations", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Department> departments;
+	
+	
+	 
 	@ManyToMany(mappedBy = "locations", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<User> users;
 
@@ -62,31 +71,75 @@ public class Location {
 		
 	}
 	
-	public Location(String locationName, City parentCity, Company co) {
+	public Location(String locationName, City parentCity, Company co, LocationGroup locGroup) {
 		this.numEmployees = 0;
 		this.parentCity = parentCity;
 		this.locationName = locationName;
 		this.users = new ArrayList<User>();
+		this.departments = new ArrayList<Department>();
 		this.company = co;
+		this.locGroup = locGroup;
 	}
 	
-	public Location(City parentCity, int numEmployees, List<User> users, String locationName, Company co) {
+	public Location(City parentCity, int numEmployees, List<User> users, String locationName, Company co, LocationGroup locGroup, Department dept) {
 		this.numEmployees = numEmployees;
 		this.parentCity = parentCity;
 		this.locationName = locationName;
 		this.users = users;
 		this.company = co;
+		this.locGroup = locGroup;
+		this.departments = new ArrayList<Department>();
+		this.departments.add(dept);
 	}
 	
-	public Location(City parentCity, int numEmployees, User user, String locationName, Company co) {
+	public Location(City parentCity, int numEmployees, User user, String locationName, Company co, LocationGroup locGroup, List<Department> depts) {
 		this.numEmployees = numEmployees;
 		this.parentCity = parentCity;
 		this.locationName = locationName;
 		this.users = new ArrayList<User>();
 		this.addUser(user);
 		this.company = co;
+		this.locGroup = locGroup;
+		this.departments = depts;
 	}
 		
+	/*
+	 * adds a single dept to a location. 
+	 */
+	public boolean addDept(Department dept) {
+		this.departments.add(dept);
+		return true;
+	}
+	
+	
+	/*
+	 * removes a dept from a location
+	 */
+	public boolean removeDept(Department dept) {
+		if(this.departments.contains(dept)) {
+			this.departments.remove(dept);
+			return true;
+		}
+		return false;
+	}	
+	
+	
+	public LocationGroup getLocGroup() {
+		return locGroup;
+	}
+
+	public void setLocGroup(LocationGroup locGroup) {
+		this.locGroup = locGroup;
+	}
+
+	public List<Department> getDepartments() {
+		return departments;
+	}
+
+	public void setDepartments(List<Department> departments) {
+		this.departments = departments;
+	}
+
 	/*
 	 * adds a single user to a location. 
 	 */

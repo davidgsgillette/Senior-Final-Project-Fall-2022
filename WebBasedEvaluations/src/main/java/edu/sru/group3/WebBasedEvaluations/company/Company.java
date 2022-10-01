@@ -38,13 +38,6 @@ public class Company {
 	private int numEmployees;
 
 	
-	//TODO create CEO class.
-	//@NonNull
-	//private CEO ceo;
-	
-	//TODO: create location where hq is the head of the tree of locations. 
-	//private Location hq;
-	
 	@NonNull
 	private int numLocations;
 	
