@@ -15,7 +15,9 @@ import edu.sru.group3.WebBasedEvaluations.company.City;
 import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.company.Continent;
 import edu.sru.group3.WebBasedEvaluations.company.Country;
+import edu.sru.group3.WebBasedEvaluations.company.Department;
 import edu.sru.group3.WebBasedEvaluations.company.Location;
+import edu.sru.group3.WebBasedEvaluations.company.LocationGroup;
 import edu.sru.group3.WebBasedEvaluations.company.Province;
 import edu.sru.group3.WebBasedEvaluations.company.World;
 import edu.sru.group3.WebBasedEvaluations.domain.Evaluator;
@@ -26,8 +28,10 @@ import edu.sru.group3.WebBasedEvaluations.repository.CityRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.CompanyRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.ContinentRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.CountryRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.DepartmentRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.GroupRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.LocationGroupRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.LocationRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.ProvinceRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
@@ -74,6 +78,8 @@ class InitUsers{
 		
 		UserRepository userRepo=configurableApplicationContext.getBean(UserRepository.class);
 		CompanyRepository companyRepo=configurableApplicationContext.getBean(CompanyRepository.class);
+		LocationGroupRepository locGroupRepo = configurableApplicationContext.getBean(LocationGroupRepository.class);
+		DepartmentRepository deptRepo =  configurableApplicationContext.getBean(DepartmentRepository.class);
 		
 		//making instances to add to the tables. 
 		
@@ -117,9 +123,24 @@ class InitUsers{
 		province.addCity(city);
 		provinceRepo.save(province);
 		
+		LocationGroup locGroup = new LocationGroup();
+		locGroupRepo.save(locGroup);
 		
-		Location loc = new Location("testLocation", city, co);
+		Location loc = new Location("testLocation", city, co, locGroup);
 		locationRepo.save(loc);
+		
+		Department dept = new Department(use1, loc, "testing dept");
+		deptRepo.save(dept);
+		
+		use1.addDepartment(dept);
+		loc.addDept(dept);
+		userRepo.save(use1);
+		locationRepo.save(loc);
+		
+		
+		
+		locGroup.addLocation(loc);
+		locGroupRepo.save(locGroup);
 		
 		city.addLocation(loc);
 		cityRepo.save(city);
@@ -132,12 +153,12 @@ class InitUsers{
 		
 		
 		co.addUser(use1);
-		loc.addUser(use1);
-		companyRepo.save(co);
-		locationRepo.save(loc);	
-		
-		loc.addUser(use1);
+		//loc.addUser(use1);
 		use1.addLocation(loc);
+		companyRepo.save(co);
+		//locationRepo.save(loc);	
+		//userRepo.save(use1);
+
 		
 	}
 }
