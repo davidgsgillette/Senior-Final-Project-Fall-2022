@@ -87,7 +87,7 @@ class InitUsers{
 		companyRepo.save(co);
 		
 		
-		User use1 = new User("jimmy neutron","fname","lname","admin@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ","ADMIN", 999991, "N/A", "N/A", "N/A", "N/A", "N/A", co);
+		User use1 = new User("jimmy neutron","fname","lname","admin@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ","ADMIN", 999991, "N/A", "N/A", "N/A", "N/A", co);
 		use1.setEncryptedPassword("test");
 		userRepo.save(use1);
 		
@@ -129,7 +129,7 @@ class InitUsers{
 		Location loc = new Location("testLocation", city, co, locGroup);
 		locationRepo.save(loc);
 		
-		Department dept = new Department(use1, loc, "testing dept");
+		Department dept = new Department(use1, loc, "testing dept", null);
 		deptRepo.save(dept);
 		
 		use1.addDepartment(dept);

@@ -25,7 +25,7 @@ import edu.sru.group3.WebBasedEvaluations.company.Department;
 import edu.sru.group3.WebBasedEvaluations.company.Location;
 
 /**Class for methods of a user object, almost exclusively made out of getters and setters.
- * @author Tanuj Rane, Dalton Stenzel, Logan Racer
+ * @author Tanuj Rane, Dalton Stenzel, Logan Racer, David Gillette
  *
  */
 @Entity
@@ -51,7 +51,7 @@ public class User {
 	@NonNull
 	private String password;
 	@NonNull
-	private String roles;
+	private String rolesStr;
 
 	@NonNull
 	private boolean resetP;
@@ -64,7 +64,7 @@ public class User {
 	//private List<Evaluator> evaluator = new ArrayList<>();
 
 
-
+	@NonNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "company_id", nullable = false)
 	private Company company;
@@ -76,6 +76,15 @@ public class User {
 			joinColumns = @JoinColumn(name = "user_id"), 
 			inverseJoinColumns = @JoinColumn(name = "location_id"))
 	private List<Location> locations;
+	
+	
+	
+	@ManyToMany
+	@JoinTable(
+			name = "user_roles", 
+			joinColumns = @JoinColumn(name = "user_id"), 
+			inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private List<Role> roles;
 	
 	
 	
@@ -96,17 +105,17 @@ public class User {
 
 	//adds user to a no location
 	public User(String name, String firstName, String lastName, String email, String password, String role,
-			int employeeId, String dateOfHire, String jobTitle, String supervisor, String companyName,
+			int employeeId, String dateOfHire, String jobTitle, String supervisor,
 			String divisionBranch, Company co) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.roles = role;
+		this.rolesStr = role;
 		this.resetP = true;
 		//this.companyID = companyID;
-		this.companyName = companyName;
+		this.companyName = co.getCompanyName();
 		this.company = co;
 		
 		//this.employeeId = employeeId;
@@ -116,23 +125,24 @@ public class User {
 		this.divisionBranch = divisionBranch;
 		this.locations = new ArrayList<Location>();
 		this.departments = new ArrayList<Department>(); 
+		this.roles = new ArrayList<Role>();
 
 
 	}
 
 	//adds user to a single location
-	public User(String name, String firstName, String lastName, String email, String password, String role,
-			int employeeId, String dateOfHire, String jobTitle, String supervisor, String companyName,
-			String divisionBranch, Company co, Location location, Department dept) {
+	public User(String name, String firstName, String lastName, String email, String password, String roleStr,
+			int employeeId, String dateOfHire, String jobTitle, String supervisor, 
+			String divisionBranch, Company co, Location location, Department dept, Role role) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.roles = role;
+		this.rolesStr = roleStr;
 		this.resetP = true;
 		//this.companyID = companyID;
-		this.companyName = companyName;
+		this.companyName = co.getCompanyName();
 		this.company = co;
 		// Preload
 		//this.employeeId = employeeId;
@@ -144,23 +154,25 @@ public class User {
 		this.locations.add(location);
 		this.departments = new ArrayList<Department>(); 
 		this.departments.add(dept);
+		this.roles = new ArrayList<Role>();
+		this.roles.add(role);
 		
 
 	}
 
 	//adds user to multiple locations. 
 	public User(String name, String firstName, String lastName, String email, String password, String role,
-			int employeeId, String dateOfHire, String jobTitle, String supervisor, String companyName,
-			String divisionBranch, Company co, List<Location> locations, List<Department> depts) {
+			int employeeId, String dateOfHire, String jobTitle, String supervisor,
+			String divisionBranch, Company co, List<Location> locations, List<Department> depts, List<Role> roles) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.roles = role;
+		this.rolesStr = role;
 		this.resetP = true;
 		//this.companyID = companyID;
-		this.companyName = companyName;
+		this.companyName = co.getCompanyName();
 		this.company = co;
 		// Preload
 		//this.employeeId = employeeId;
@@ -170,6 +182,7 @@ public class User {
 		this.divisionBranch = divisionBranch;
 		this.locations = locations;
 		this.departments = depts;
+		this.roles = roles;
 
 	}
 	
@@ -178,6 +191,18 @@ public class User {
 	}
 	public List<Department> getDepartments() {
 		return departments;
+	}
+
+	public String getRolesStr() {
+		return rolesStr;
+	}
+
+	public void setRolesStr(String rolesStr) {
+		this.rolesStr = rolesStr;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
 	}
 
 	public void setDepartments(List<Department> departments) {
@@ -232,7 +257,7 @@ public class User {
 	}
 
 	public String getRoles() {
-		return roles;
+		return rolesStr;
 	}
 
 	public List<Location> getLocations() {
@@ -263,7 +288,7 @@ public class User {
 	
 	public void setRoles(String roles) {
 
-		this.roles = roles;
+		this.rolesStr = roles;
 	}
 	/*
 	public List<Evaluator> getEvaluator() {
