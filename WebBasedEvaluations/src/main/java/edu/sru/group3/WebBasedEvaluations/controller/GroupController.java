@@ -415,7 +415,7 @@ public class GroupController {
 					if (evaltemp == null) {
 						RedirectView redirectView = new RedirectView("/admin_groups", true);
 						redir.addFlashAttribute("error", "template " + evaltemplateid + "does not exist");
-						//System.out.println("user dosnt not exist1 " + evaltemplateid);
+						//System.out.println("user doesn't not exist1 " + evaltemplateid);
 						log.error("user does not exist " + evaltemplateid);
 						return redirectView;
 					}

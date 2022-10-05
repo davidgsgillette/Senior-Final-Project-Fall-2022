@@ -1,6 +1,6 @@
 package edu.sru.group3.WebBasedEvaluations;
 
-import  static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
@@ -35,17 +35,13 @@ class AdminMethodsServicesTest {
 	private static User user = new User();
 	private static User user2 = new User();
 	private static User user3 = new User();
-	/*Marked for deletion
-	@Autowired
-	private static User user4;
-	*/
 	@Autowired
 	UserRepository userRepo;
 	
 	AdminMethodsService adminMeth = new AdminMethodsService(userRepo);
 
 	@BeforeAll
-	public static void  newUser() {
+	public static void newUser() {
 		
 		// User missing some details (Job Title & Date of Hire)
 		user.setFirstName("Sam");
@@ -107,6 +103,7 @@ class AdminMethodsServicesTest {
     	//String capVal = adminMeth.capitialize("test");
         //String finalVal = "Test";
         assertTrue(adminMeth.hasSpace(user3.getEmail()));
+        assertFalse(adminMeth.hasSpace(user2.getEmail()));
 
     }
     
