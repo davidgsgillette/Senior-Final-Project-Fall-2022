@@ -31,7 +31,7 @@ import edu.sru.group3.WebBasedEvaluations.controller.AddUserController;
 @Suite
 @SuiteDisplayName("Admin Methods")
 @IncludeClassNamePatterns(".*Tests")
-class AdminMethodsServicesTest {
+public class AdminMethodsServicesTest {
 	private static User user = new User();
 	private static User user2 = new User();
 	private static User user3 = new User();
