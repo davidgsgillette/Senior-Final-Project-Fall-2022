@@ -30,7 +30,7 @@ public class MyUserDetails implements UserDetails {
 	        this.userName = user.getEmail();
 	        this.password = user.getPassword();
 	        this.role = user.getRoles();
-	        this.companyID = user.getCompany().getId();
+//	        this.companyID = user.getCompany().getId();
 
 	        //this.active = user.isActive();
 	        this.authorities = Arrays.stream(user.getRoles().split(","))
@@ -94,6 +94,12 @@ public class MyUserDetails implements UserDetails {
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
 		return true;
+	}
+	public User getUser() {
+		return user;
+	}
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 }
