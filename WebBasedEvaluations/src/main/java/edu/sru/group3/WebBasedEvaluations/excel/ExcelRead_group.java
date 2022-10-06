@@ -15,11 +15,9 @@ public class ExcelRead_group {
 	// Upload File
 	public static XSSFWorkbook loadFile(MultipartFile file) throws IOException {
 		
-		FileInputStream thisxls;
+		//FileInputStream thisxls;
 		XSSFWorkbook wb;
 		XSSFSheet sheet;
-
-		//thisxls = new FileInputStream(file);
 		wb = new XSSFWorkbook(file.getInputStream());
 		sheet = wb.getSheetAt(0);
 
