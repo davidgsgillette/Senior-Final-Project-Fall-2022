@@ -31,7 +31,7 @@ import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 import edu.sru.group3.WebBasedEvaluations.controller.UserController;
-import edu.sru.group3.WebBasedEvaluations.controller.AddUserController;
+import edu.sru.group3.WebBasedEvaluations.controller.AddUserControllerTest;
 
 //https://junit.org/junit5/docs/current/user-guide/#overview
 @Suite
