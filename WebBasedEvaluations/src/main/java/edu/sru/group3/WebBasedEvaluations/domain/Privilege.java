@@ -25,16 +25,24 @@ public class Privilege {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
-	
+		
+	//read
 	@NonNull
 	private boolean r;
-	
+		
+	//write
 	@NonNull
 	private boolean w;
-	
+		
+	//delete
 	@NonNull
 	private boolean d;
+	
+	@NonNull
+	private boolean evaluate;
 
+	
+	
 	@NonNull
 	@Column(unique=true)
     private String name;
@@ -64,19 +72,20 @@ public class Privilege {
     }
     
     
-    public Privilege(String name, Role role, boolean read, boolean write, boolean delete) {
+    public Privilege(String name, Role role, boolean read, boolean write, boolean delete, boolean evaluate) {
     	this.name = name;
     	this.roles = new ArrayList<Role>();
     	this.roles.add(role);
     	this.depts = new ArrayList<Department>();
     	this.locationGroups = new ArrayList<LocationGroup>(); 
     	this.r = read;
-//    	this.write = write;
-//    	this.delete = delete;
+    	this.w = write;
+    	this.d = delete;
+    	this.evaluate = evaluate;
     }
     
     
-	public Privilege(String name, Role role, LocationGroup locGroup, Department dept, boolean read, boolean write, boolean delete) {
+	public Privilege(String name, Role role, LocationGroup locGroup, Department dept, boolean read, boolean write, boolean delete, boolean evaluate) {
     	this.name = name;
     	this.roles = new ArrayList<Role>();
     	this.roles.add(role);
@@ -87,10 +96,11 @@ public class Privilege {
     	this.r = read;
     	this.w = write;
     	this.d = delete;
+    	this.evaluate = evaluate;
     }
 	
 	
-    public Privilege(String name, List<Role> roles, List<LocationGroup> locGroups, List<Department> depts, boolean read,boolean write,boolean delete) {
+    public Privilege(String name, List<Role> roles, List<LocationGroup> locGroups, List<Department> depts, boolean read,boolean write,boolean delete, boolean evaluate) {
     	this.name = name;
     	this.roles = roles;
     	this.locationGroups = locGroups;
@@ -98,6 +108,7 @@ public class Privilege {
     	this.r = read;
     	this.w = write;
     	this.d = delete;
+    	this.evaluate = evaluate;
     }
     
     

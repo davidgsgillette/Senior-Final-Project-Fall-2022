@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 
+import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.controller.AddUserController;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
@@ -34,7 +35,7 @@ public class AddUserControllerTest {
 		user.setLastName("Thangiah");
 		user.setCompanyName("Thangiah Inc");
 		user.setDivisionBranch("Retroville");
-		user.setRoles("USER");
+		user.setRole(new Role("USER"));
 		user.setSupervisor("Jimmy");
 		user.setEmail("sam.thangiah@sru.edu");
 		user.setEncryptedPassword("test");

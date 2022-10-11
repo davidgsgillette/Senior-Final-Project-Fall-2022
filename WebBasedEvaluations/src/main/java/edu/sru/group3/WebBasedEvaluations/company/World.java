@@ -10,11 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.lang.NonNull;
-
-import edu.sru.group3.WebBasedEvaluations.domain.User;
 
 
 /**Class for methods of a World object, almost exclusively made out of getters and setters.
@@ -36,6 +35,9 @@ public class World {
 	@NonNull
 	@OneToMany(mappedBy = "parentWorld", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Continent> childContinents;
+	
+	
+	
 	
 	
 	public World() {

@@ -236,8 +236,8 @@ public class GroupController {
 		model.addAttribute("sync", synclist);
 		model.addAttribute("prev", prevlist);
 		model.addAttribute("revedit", revid);
-		model.addAttribute("users", userRepository.findByRolesOrRoles("USER","EVALUATOR_EVAL",Sort.by(Sort.Direction.ASC, "lastName")));
-		model.addAttribute("usersEval", userRepository.findByRolesOrRoles("EVALUATOR","EVALUATOR_EVAL",Sort.by(Sort.Direction.ASC, "lastName")));
+		model.addAttribute("users", userRepository.findByRoleName("USER","EVALUATOR_EVAL",Sort.by(Sort.Direction.ASC, "lastName")));
+		model.addAttribute("usersEval", userRepository.findByRoleName("EVALUATOR","EVALUATOR_EVAL",Sort.by(Sort.Direction.ASC, "lastName")));
 		model.addAttribute("rolles", roles);
 		model.addAttribute("forms", evalFormRepo.findAll());
 		log.info("group_edit open");

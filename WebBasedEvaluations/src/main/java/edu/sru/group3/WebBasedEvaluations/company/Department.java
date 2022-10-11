@@ -39,6 +39,8 @@ public class Department {
 			joinColumns = @JoinColumn(name = "dept_id"), 
 			inverseJoinColumns = @JoinColumn(name = "location_id"))
 	private List<Location> locations;
+	
+	
 	//users
 	@ManyToMany
 	@JoinTable(

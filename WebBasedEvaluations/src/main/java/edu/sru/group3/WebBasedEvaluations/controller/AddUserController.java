@@ -1,5 +1,7 @@
 package edu.sru.group3.WebBasedEvaluations.controller;
 
+import java.util.List;
+
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import edu.sru.group3.WebBasedEvaluations.company.Department;
 import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
+import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.excel.ExcelRead_group;
+import edu.sru.group3.WebBasedEvaluations.repository.RoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 import edu.sru.group3.WebBasedEvaluations.service.UserService;
@@ -33,6 +38,7 @@ import edu.sru.group3.WebBasedEvaluations.service.UserService;
 public class AddUserController {
 	// set up a UserRepositoty variable
 	private UserRepository userRepository;
+	private RoleRepository roleRepository;
 
 	@Autowired
 	private AdminMethodsService adminMethodsService;
@@ -86,7 +92,14 @@ public class AddUserController {
 
 		if (userRepository.findByEmail(user.getEmail()) == null) {
 
+			
 			check = adminMethodsService.checkAndUpdate(user);
+//			//check if admin has permission to add this user to the dept/location/role
+//			//departments of the user being added
+//			List<Department> userDept = user.getDepartments();
+//			//departments of the admin user
+//			List<Department> adminDept = userD.
+//			
 			if (check == true) {
 
 				user.setFirstName(adminMethodsService.capitalize(user.getFirstName()));
@@ -107,7 +120,7 @@ public class AddUserController {
 				if (auth == null) {
 				} else {
 					log.info("ADMIN User - ID:" + adminUser.getId() + " First Name: " + adminUser.getFirstName()
-							+ " Last Name: " + " added a " + user.getRoles() + " user");
+							+ " Last Name: " + " added a " + user.getRole().getName() + " user");
 				}
 				mess = "User successfully added!";
 				ansr = "addPass";
@@ -235,7 +248,18 @@ public class AddUserController {
 						}
 						user2.setEmail(ExcelRead_group.checkStringType(sheet.getRow(i).getCell(3)));
 						user2.setPassword(ExcelRead_group.checkStringType(sheet.getRow(i).getCell(4)));
-						user2.setRoles(ExcelRead_group.checkStringType(sheet.getRow(i).getCell(5)));
+						
+						//if the role exists add it to the user, otherwise create a role that has that name, but no permissions. 
+						String roleName = (ExcelRead_group.checkStringType(sheet.getRow(i).getCell(5)));
+						Role role = roleRepository.findByName(roleName);
+						if(role == null) {
+							Role newRole = new Role(roleName);
+							user2.setRole(newRole);
+						}
+						else {
+							user2.setRole(role);
+						}
+						
 						user2.setReset(true);
 
 						// preload

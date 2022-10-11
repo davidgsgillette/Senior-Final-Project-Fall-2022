@@ -22,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import edu.sru.group3.WebBasedEvaluations.controller.AddUserController;
 import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
+import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
@@ -71,7 +72,7 @@ public class RepositoryTest {
 		user2.setFirstName("test2");
 		user2.setLastName("Stenzel");
 		user2.setEmail("test2@gmail.com");
-		user2.setRoles("USER");
+		user2.setRole(new Role("USER"));
 		user2.setEncryptedPassword("test");
 
 		user2.setCompanyName("Thangiah Inc");

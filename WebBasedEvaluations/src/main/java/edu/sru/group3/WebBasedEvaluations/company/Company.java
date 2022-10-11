@@ -11,12 +11,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.lang.NonNull;
+
+import edu.sru.group3.WebBasedEvaluations.company.Company;
+import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 
 /*
@@ -36,7 +39,6 @@ public class Company {
 	
 	@NonNull
 	private int numEmployees;
-
 	
 	@NonNull
 	private int numLocations;
@@ -52,6 +54,15 @@ public class Company {
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Location> locations;
 	
+	
+	@ManyToMany
+    @JoinTable(
+            name = "company_roles", 
+            joinColumns = @JoinColumn(name = "company_id"), 
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles;
+	
+	
 	public Company() {
 		
 	}
@@ -59,7 +70,6 @@ public class Company {
 	
 	public Company(String companyName) {
 		this.companyName = companyName;
-		//this.ceo = ceo;
 		this.numEmployees = 0;
 		this.numLocations = 0;
 		this.locations = new ArrayList<Location>();
@@ -90,8 +100,6 @@ public class Company {
 		}
 		return false;
 	}
-	
-	
 	
 	public boolean addUser(User user) {
 		this.users.add(user);
@@ -145,24 +153,22 @@ public class Company {
 		this.numEmployees = numEmployees;
 	}
 
-	/*
-	public User getCeo() {
-		return ceo;
-	}
-
-	public void setCeo(User ceo) {
-		this.ceo = ceo;
-	}
-	*/
-
 	public int getNumLocations() {
 		return numLocations;
+	}
+
+	public List<Location> getLocations() {
+		return locations;
+	}
+
+	public void setLocations(List<Location> locations) {
+		this.locations = locations;
 	}
 
 	public void setNumLocations(int numLocations) {
 		this.numLocations = numLocations;
 	}
-/*
+
 	public List<User> getUsers() {
 		return users;
 	}
@@ -170,7 +176,7 @@ public class Company {
 	public void setUsers(List<User> users) {
 		this.users = users;
 	}
-	*/
+	
 	
 	
 }

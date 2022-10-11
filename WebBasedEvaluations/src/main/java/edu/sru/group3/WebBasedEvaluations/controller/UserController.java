@@ -19,6 +19,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import edu.sru.group3.WebBasedEvaluations.domain.Evaluator;
 import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
+import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
@@ -31,6 +32,7 @@ import edu.sru.group3.WebBasedEvaluations.service.UserService;
  * admin_user webpage.
  * 
  * @author Dalton Stenzel
+ * @author David Gillette
  *
  */
 @Controller
@@ -39,17 +41,19 @@ public class UserController {
 	private UserRepository userRepository;
 	private EvaluatorRepository evaluatorRepository;
 	private EvaluationRepository evaluationRepository;
+	private Authentication auth; 
 
 	private AddUserController addUserController;
 
 	private Logger log = LoggerFactory.getLogger(UserController.class);
 
-	private static final String ADMIN = "ADMIN";
-	private static final String COMPANY_ADMIN = "COMPANY_ADMIN";
-	private static final String EVALUATOR_EVAL = "EVALUATOR_EVAL";
-	private static final String EVAL_ADMIN = "EVAL_ADMIN";
-	private static final String EVALUATOR = "EVALUATOR";
-	private static final String USER = "USER";
+//	private static final String ADMIN = "ADMIN";
+//	private static final String COMPANY_ADMIN = "COMPANY_ADMIN";
+//	private static final String EVALUATOR_EVAL = "EVALUATOR_EVAL";
+//	private static final String EVAL_ADMIN = "EVAL_ADMIN";
+//	private static final String EVALUATOR = "EVALUATOR";
+//	private static final String USER = "USER";
+	
 
 	@Autowired
 	private AdminMethodsService adminMethodsService;
@@ -162,8 +166,8 @@ public class UserController {
 		} else {
 			groupButton = true;
 		}
-
-		model.addAttribute("role", user.getRoles());
+//changed
+		model.addAttribute("role", user.getRole());
 		model.addAttribute("id", user.getId());
 		model.addAttribute("groupButton", groupButton);
 
@@ -310,7 +314,7 @@ public class UserController {
 	public Object deleteUser(@PathVariable("id") long id, @RequestParam("keyword") String keyword,
 			@RequestParam("perPage") Integer perPage, Model model, @RequestParam("sort") String sort,
 			@RequestParam("currPage") Integer currPage, @RequestParam("sortOr") Integer sortOr, User deletedUser,
-			RedirectAttributes redir) {
+			RedirectAttributes redir, Authentication auth) {
 		String ansr = null;
 		String mess = null;
 
@@ -327,7 +331,8 @@ public class UserController {
 			return redirectView;
 		} else {
 			//if user to be deleted is an admin
-			if (user.getRoles().equals(ADMIN)) {
+			MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+			if(!userD.getUsers().contains(user)){
 				// System.out.println("Detected Admin");
 
 				ansr = "addFail";
@@ -340,7 +345,7 @@ public class UserController {
 			} else {
 
 				log.info("User Deleted- Id:" + user.getId() + " | First Name:" + user.getFirstName() + " | Last Name:"
-						+ user.getLastName() + " | Role:" + user.getRoles());
+						+ user.getLastName() + " | Role:" + user.getRole().getName());
 
 				userRepository.delete(user);
 				ansr = "addPass";
@@ -375,8 +380,8 @@ public class UserController {
 		User user2 = userRepository.findByid(id);
 
 		User user3 = adminMethodsService.comparingMethod(id, user, user2, model);
-
-		model.addAttribute("role", user2.getRoles());
+//changed
+		model.addAttribute("role", user2.getRole());
 		model.addAttribute("id", user2.getId());
 
 		model.addAttribute("user", user2);

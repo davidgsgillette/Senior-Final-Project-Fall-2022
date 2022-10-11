@@ -20,6 +20,7 @@ import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 
  * @author Dalton Stenzel
  * @author J Abbigail Rowe
+ * @Author David Gillette
  * 
  *
  */
@@ -29,11 +30,11 @@ public class AdminMethodsService {
 	private UserRepository userRepository;
 	private Logger log = LoggerFactory.getLogger(AdminMethodsService.class);
 	private static final int PASSWORDSIZE = 5;
-	private static final String ADMIN = "ADMIN";
-	private static final String EVALUATOR_EVAL = "EVALUATOR_EVAL";
-	private static final String EVAL_ADMIN = "EVAL_ADMIN";
-	private static final String EVALUATOR = "EVALUATOR";
-	private static final String USER = "USER";
+	//	private static final String ADMIN = "ADMIN";
+	//	private static final String EVALUATOR_EVAL = "EVALUATOR_EVAL";
+	//	private static final String EVAL_ADMIN = "EVAL_ADMIN";
+	//	private static final String EVALUATOR = "EVALUATOR";
+	//	private static final String USER = "USER";
 
 	/**
 	 * @param userRepository is a user repository, contains list of users
@@ -182,7 +183,10 @@ public class AdminMethodsService {
 
 			return false;
 
-		}  else {
+
+		}
+		
+		else {
 
 			return true;
 
@@ -378,23 +382,22 @@ public class AdminMethodsService {
 
 		log.info("User Pre Changes- Id:" + user2.getId() + " | First Name:" + user2.getFirstName() + " | Last Name:"
 				+ user2.getLastName() + " | Suffix Name:" + user2.getSuffixName() + " | Email:" + user2.getEmail()
-				+ " | Role:" + user2.getRoles() + " | Company Name:" + user2.getCompanyName() + " | Division Branch:"
+				+ " | Role:" + user2.getRole().getName() + " | Company Name:" + user2.getCompanyName() + " | Division Branch:"
 				+ user2.getDivisionBranch() + " | Job Title:" + user2.getJobTitle() + " | Supervisor:"
 				+ user2.getSupervisor() + " | Date of Hire:" + user2.getDateOfHire());
 
 		log.info("User Attempted Changes- Id:" + user.getId() + " | First Name:" + user.getFirstName() + " | Last Name:"
 				+ user.getLastName() + " | Suffix Name:" + user.getSuffixName() + " | Email:" + user.getEmail()
-				+ " | Role:" + user.getRoles() + " | Company Name:" + user.getCompanyName() + " | Division Branch:"
+				+ " | Role:" + user.getRole().getName() + " | Company Name:" + user.getCompanyName() + " | Division Branch:"
 				+ user.getDivisionBranch() + " | Job Title:" + user.getJobTitle() + " | Supervisor:"
 				+ user.getSupervisor() + " | Date of Hire:" + user.getDateOfHire());
 		if (true) {
-			
+
 			if (user.getPassword() == "" || user.getPassword() == null || user.getPassword().length() < PASSWORDSIZE) {
 
 				user.setPassword(user2.getPassword());
 			} else if (hasSpace(user.getPassword())) {
 				user.setPassword(user2.getPassword());
-
 			}
 
 			else if (user.getPassword().equals(user2.getPassword())) {
@@ -502,26 +505,21 @@ public class AdminMethodsService {
 			}
 
 		}
+//CHANGED
 		if (true) {
-			/*
-			System.out.println(user.getId());
-			System.out.println(id);
-			System.out.println(user.getRoles());
-			*/
 
-			if (/*user.getId() == id ||*/ user.getRoles() == ADMIN) {
-				user.setRoles(user2.getRoles());
-
+			if (user.getRole() == null || user.getRole().equals("NO ROLE ASSIGNED")) { //user.getRoles() == ADMIN) {
+				user.setRole(user2.getRole());
 			} else {
-				if (user.getRoles() == null) {
-					user.setRoles(user2.getRoles());
+				if (user.getRole() == null) {
+					user.setRole(user2.getRole());
 				}
 
-				else if (user.getRoles().equals(user2.getRoles())) {
-					user2.setRoles(user.getRoles());
+				else if (user.getRole().getName().equals(user2.getRole().getName())) {
+					user2.setRole(user.getRole());
 
 				} else {
-					user2.setRoles(user.getRoles());
+					user2.setRole(user.getRole());
 
 					check = true;
 				}
@@ -535,11 +533,11 @@ public class AdminMethodsService {
 				user.setCompanyName(user2.getCompanyName());
 
 			} /*
-				 * else if (hasSpace(user.getFirstName())) {
-				 * user.setFirstName(user2.getFirstName());
-				 * 
-				 * }
-				 */
+			 * else if (hasSpace(user.getFirstName())) {
+			 * user.setFirstName(user2.getFirstName());
+			 * 
+			 * }
+			 */
 
 			else if (user.getCompanyName().equals(user2.getCompanyName())) {
 				user2.setCompanyName(user.getCompanyName());
@@ -558,11 +556,11 @@ public class AdminMethodsService {
 				user.setSupervisor(user2.getSupervisor());
 
 			} /*
-				 * else if (hasSpace(user.getFirstName())) {
-				 * user.setFirstName(user2.getFirstName());
-				 * 
-				 * }
-				 */
+			 * else if (hasSpace(user.getFirstName())) {
+			 * user.setFirstName(user2.getFirstName());
+			 * 
+			 * }
+			 */
 
 			else if (user.getSupervisor().equals(user2.getSupervisor())) {
 				user2.setSupervisor(user.getSupervisor());
@@ -580,11 +578,11 @@ public class AdminMethodsService {
 				user.setDivisionBranch(user2.getDivisionBranch());
 
 			} /*
-				 * else if (hasSpace(user.getFirstName())) {
-				 * user.setFirstName(user2.getFirstName());
-				 * 
-				 * }
-				 */
+			 * else if (hasSpace(user.getFirstName())) {
+			 * user.setFirstName(user2.getFirstName());
+			 * 
+			 * }
+			 */
 
 			else if (user.getDivisionBranch().equals(user2.getDivisionBranch())) {
 				user2.setDivisionBranch(user.getDivisionBranch());
@@ -603,11 +601,11 @@ public class AdminMethodsService {
 				user.setJobTitle(user2.getJobTitle());
 
 			} /*
-				 * else if (hasSpace(user.getFirstName())) {
-				 * user.setFirstName(user2.getFirstName());
-				 * 
-				 * }
-				 */
+			 * else if (hasSpace(user.getFirstName())) {
+			 * user.setFirstName(user2.getFirstName());
+			 * 
+			 * }
+			 */
 
 			else if (user.getJobTitle().equals(user2.getJobTitle())) {
 				user2.setJobTitle(user.getJobTitle());
@@ -625,11 +623,11 @@ public class AdminMethodsService {
 				user.setDateOfHire(user2.getDateOfHire());
 
 			} /*
-				 * else if (hasSpace(user.getFirstName())) {
-				 * user.setFirstName(user2.getFirstName());
-				 * 
-				 * }
-				 */
+			 * else if (hasSpace(user.getFirstName())) {
+			 * user.setFirstName(user2.getFirstName());
+			 * 
+			 * }
+			 */
 
 			else if (user.getDateOfHire().equals(user2.getDateOfHire())) {
 				user2.setDateOfHire(user.getDateOfHire());
@@ -668,12 +666,12 @@ public class AdminMethodsService {
 
 		}
 
-		if (user.getRoles() != null) {
-			user2.setRoles(user.getRoles());
+		if (user.getRole() != null) {
+			user2.setRole(user.getRole());
 		}
 		log.info("User Post Changes- Id:" + user2.getId() + " | First Name:" + user2.getFirstName() + " | Last Name:"
 				+ user2.getLastName() + " | Suffix Name:" + user2.getSuffixName() + " | Email:" + user2.getEmail()
-				+ " | Role:" + user2.getRoles() + " | Company Name:" + user2.getCompanyName() + " | Division Branch:"
+				+ " | Role:" + user2.getRole().getName() + " | Company Name:" + user2.getCompanyName() + " | Division Branch:"
 				+ user2.getDivisionBranch() + " | Job Title:" + user2.getJobTitle() + " | Supervisor:"
 				+ user2.getSupervisor() + " | Date of Hire:" + user2.getDateOfHire());
 

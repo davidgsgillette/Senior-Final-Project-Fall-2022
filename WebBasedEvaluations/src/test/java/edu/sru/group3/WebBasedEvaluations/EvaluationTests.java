@@ -23,6 +23,7 @@ import edu.sru.group3.WebBasedEvaluations.domain.EvalRole;
 import edu.sru.group3.WebBasedEvaluations.domain.Evaluator;
 import edu.sru.group3.WebBasedEvaluations.domain.Group;
 import edu.sru.group3.WebBasedEvaluations.domain.Reviewee;
+import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.repository.EvalRoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
@@ -51,7 +52,7 @@ public class EvaluationTests {
 			user.setLastName("Thangiah");
 			user.setCompanyName("Thangiah Inc");
 			user.setDivisionBranch("Retroville");
-			user.setRoles("USER");
+			user.setRole(new Role("USER"));
 			user.setSupervisor("Jimmy");
 			user.setEmail("sam.thangiah@sru.edu");
 			user.setEncryptedPassword("test");
@@ -60,7 +61,7 @@ public class EvaluationTests {
 			user2.setFirstName("Dalton");
 			user2.setLastName("Stenzel");
 			user2.setEmail("daltonrstenzel@gmail.com");
-			user2.setRoles("USER");
+			user2.setRole(new Role("USER"));
 			user2.setEncryptedPassword("test");
 			
 			user2.setCompanyName("Thangiah Inc");
@@ -73,7 +74,7 @@ public class EvaluationTests {
 			user3.setFirstName("Dalton");
 			user3.setLastName("Stenzel");
 			user3.setEmail("daltonrstenzel @gmail.com");
-			user3.setRoles("USER");
+			user3.setRole(new Role("USER"));
 			user3.setEncryptedPassword("test");
 			
 			user3.setCompanyName("Thangiah Inc");

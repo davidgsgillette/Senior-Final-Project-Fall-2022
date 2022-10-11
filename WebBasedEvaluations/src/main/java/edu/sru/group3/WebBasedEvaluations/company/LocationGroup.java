@@ -32,6 +32,8 @@ public class LocationGroup {
 	
 	
 	@NonNull
+	private String name;
+	
 	@OneToMany(mappedBy = "locGroup", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Location> locations;
 	
@@ -49,13 +51,22 @@ public class LocationGroup {
 	}
 	
 	
-	public LocationGroup(List<Location> locations, List<Privilege> privileges) {
+	public LocationGroup(String name) {
+		this.name = name;
+		this.locations = new ArrayList<Location>();
+		this.numLocations = 0;
+	}
+	
+	
+	public LocationGroup(List<Location> locations, List<Privilege> privileges, String name) {
+		this.name = name;
 		this.locations = locations;
 		this.privileges = privileges;
 		this.numLocations = this.locations.size();
 	}
 	
-	public LocationGroup(Location location, Privilege privilege) {
+	public LocationGroup(Location location, Privilege privilege, String name) {
+		this.name = name;
 		this.locations = new ArrayList<Location>();
 		this.numLocations = 0;
 		this.addLocation(location);

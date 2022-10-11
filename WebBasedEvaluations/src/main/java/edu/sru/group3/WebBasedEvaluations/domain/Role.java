@@ -7,6 +7,9 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
+
+
 /*
  * This class is adapted from https://www.baeldung.com/role-and-privilege-for-spring-security-registration.
  * This class includes a role and holds the users that have that role and the privileges associated with this role. 
@@ -27,9 +30,7 @@ public class Role {
     private String name;
 	
 	
-	
-	@NonNull
-    @ManyToMany(mappedBy = "roles")
+    @OneToMany(mappedBy = "role")
     private List<User> users;	
 
 	@ManyToMany
@@ -39,10 +40,15 @@ public class Role {
             inverseJoinColumns = @JoinColumn(name = "privilege_id"))
     private List<Privilege> privileges;
 	
+	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Company> companies;
 	
-    
-    public Role() {
-    	
+	public Role() {
+		 
+	}
+	 
+    public Role(String name) {
+    	this.name = name;
     }
     
     public Role(String name, User user, Privilege priv) {
@@ -132,7 +138,9 @@ public class Role {
 	}
 	
     
-    
+    public boolean compareTo(Role role) {
+    	return (this.id ==role.id && this.name == role.name && this.privileges.equals(role.privileges) && this.users.equals(role.users));
+	}
 	
     
     

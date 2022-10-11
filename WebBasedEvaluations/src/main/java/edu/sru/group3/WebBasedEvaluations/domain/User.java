@@ -51,7 +51,7 @@ public class User {
 	@NonNull
 	private String password;
 	@NonNull
-	private String rolesStr;
+	private String roleName;
 
 	@NonNull
 	private boolean resetP;
@@ -77,14 +77,10 @@ public class User {
 			inverseJoinColumns = @JoinColumn(name = "location_id"))
 	private List<Location> locations;
 	
-	
-	
-	@ManyToMany
-	@JoinTable(
-			name = "user_roles", 
-			joinColumns = @JoinColumn(name = "user_id"), 
-			inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private List<Role> roles;
+	@NonNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "role_id", nullable = false)
+	private Role role;
 	
 	
 	
@@ -104,7 +100,7 @@ public class User {
 	}
 
 	//adds user to a no location
-	public User(String name, String firstName, String lastName, String email, String password, String role,
+	public User(String name, String firstName, String lastName, String email, String password, /*String role,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor,
 			String divisionBranch, Company co) {
 		this.firstName = firstName;
@@ -112,7 +108,7 @@ public class User {
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.rolesStr = role;
+		
 		this.resetP = true;
 		//this.companyID = companyID;
 		this.companyName = co.getCompanyName();
@@ -125,13 +121,14 @@ public class User {
 		this.divisionBranch = divisionBranch;
 		this.locations = new ArrayList<Location>();
 		this.departments = new ArrayList<Department>(); 
-		this.roles = new ArrayList<Role>();
+		this.role = new Role("NO ROLE ASSIGNED");
+		this.roleName = role.getName();
 
 
 	}
 
 	//adds user to a single location
-	public User(String name, String firstName, String lastName, String email, String password, String roleStr,
+	public User(String name, String firstName, String lastName, String email, String password, /*String roleStr,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor, 
 			String divisionBranch, Company co, Location location, Department dept, Role role) {
 		this.firstName = firstName;
@@ -139,7 +136,6 @@ public class User {
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.rolesStr = roleStr;
 		this.resetP = true;
 		//this.companyID = companyID;
 		this.companyName = co.getCompanyName();
@@ -154,22 +150,25 @@ public class User {
 		this.locations.add(location);
 		this.departments = new ArrayList<Department>(); 
 		this.departments.add(dept);
-		this.roles = new ArrayList<Role>();
-		this.roles.add(role);
+		this.role = role;
+		if(this.role == null) {
+			this.role = new Role("NO ROLE ASSIGNED");
+		}
+		this.roleName = role.getName();
 		
 
 	}
 
 	//adds user to multiple locations. 
-	public User(String name, String firstName, String lastName, String email, String password, String role,
+	public User(String name, String firstName, String lastName, String email, String password, /*String role,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor,
-			String divisionBranch, Company co, List<Location> locations, List<Department> depts, List<Role> roles) {
+			String divisionBranch, Company co, List<Location> locations, List<Department> depts, Role role) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.rolesStr = role;
+		
 		this.resetP = true;
 		//this.companyID = companyID;
 		this.companyName = co.getCompanyName();
@@ -182,7 +181,11 @@ public class User {
 		this.divisionBranch = divisionBranch;
 		this.locations = locations;
 		this.departments = depts;
-		this.roles = roles;
+		this.role = role;
+		if(this.role == null) {
+			this.role = new Role("NO ROLE ASSIGNED");
+		}
+		this.roleName = role.getName();
 
 	}
 	
@@ -193,18 +196,26 @@ public class User {
 		return departments;
 	}
 
-	public String getRolesStr() {
-		return rolesStr;
+//	public String getRolesStr() {
+//		return rolesStr;
+//	}
+//
+//	public void setRolesStr(String rolesStr) {
+//		this.rolesStr = rolesStr;
+//	}
+
+	public void setRole(Role role) {
+		this.role = role;
+		this.roleName = role.getName();
 	}
 
-	public void setRolesStr(String rolesStr) {
-		this.rolesStr = rolesStr;
+	public Role getRole() {
+		if(this.role ==null) {
+			return new Role("NO ROLE ASSIGNED");
+		}
+		return role;
 	}
-
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
-	}
-
+	
 	public void setDepartments(List<Department> departments) {
 		this.departments = departments;
 	}
@@ -256,9 +267,7 @@ public class User {
 		this.email = email/*.replaceAll("\\s", "")*/;
 	}
 
-	public String getRoles() {
-		return rolesStr;
-	}
+
 
 	public List<Location> getLocations() {
 		return locations;
@@ -285,11 +294,11 @@ public class User {
 		}
 		return false;
 	}
-	
-	public void setRoles(String roles) {
-
-		this.rolesStr = roles;
+		
+	public String getRoleName() {
+		return roleName;
 	}
+
 	/*
 	public List<Evaluator> getEvaluator() {
 		return evaluator;
@@ -419,6 +428,9 @@ public class User {
 		this.company = company;
 	}
 
+	
+	
+	
 
 
 }
