@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.apache.commons.codec.binary.Base32;
 import org.springframework.lang.NonNull;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -45,6 +46,7 @@ public class User {
 	private String roles;
 	@NonNull
 	private boolean using2FA;
+	private String secret;
 	
 	@NonNull
 	private String secQuest1;
@@ -76,6 +78,8 @@ public class User {
 	public User(String name, String firstName, String lastName, String email, String password, String role,
 			int employeeId, String dateOfHire, String jobTitle, String supervisor, String companyName,
 			String divisionBranch) {
+		
+		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
@@ -84,6 +88,7 @@ public class User {
 		this.roles = role;
 		this.using2FA = false; // set it to false for now, building in capability to toggle later
 		this.resetP = true;
+		
 
 		// Preload
 		//this.employeeId = employeeId;

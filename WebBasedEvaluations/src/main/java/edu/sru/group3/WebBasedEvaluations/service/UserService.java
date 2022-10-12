@@ -61,6 +61,11 @@ public class UserService {
 		return list2;
 	}
 
+	/*
+	public void register(UserData user) throws UserAlreadyExistException {
+		
+	}
+	*/
 	/**Method that sorts a given list with the given type of sort and sort order.
 	 * @param list is the list of users that is provided to be arranged.
 	 * @param type is the type of sort type: firstName, lastName, id, email, and role.

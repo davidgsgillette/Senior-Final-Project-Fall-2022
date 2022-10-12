@@ -89,17 +89,6 @@ public class HomePage {
 		return "login";
 	}
 	
-	@GetMapping("/verify")
-		public String verify(Authentication auth) {
-		
-			MyUserDetails user = (MyUserDetails) auth.getPrincipal();
-			User user2 = userRepository.findByid(user.getID());
-			TwoFactorLoginController twoFactor = new TwoFactorLoginController();
-			twoFactor.loginRequest(user2.getEmail(), null);	// need to figure out what model to add here
-			
-			return "redirect:/home";
-		}
-	
 
 	
 	/**Method for logging users who have logged in.
