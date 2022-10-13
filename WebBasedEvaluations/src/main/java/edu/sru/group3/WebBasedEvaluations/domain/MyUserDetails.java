@@ -15,12 +15,11 @@ import org.springframework.stereotype.Component;
  *
  */
 public class MyUserDetails implements UserDetails {
-	 private User user;
+	private User user;
 	 private String userName;
 	 private String password;
 	 private String role;
 	 private long Id;
-	 private Long companyID;
 	    //private boolean active;
 	 private List<GrantedAuthority> authorities;
 	
@@ -30,7 +29,6 @@ public class MyUserDetails implements UserDetails {
 	        this.userName = user.getEmail();
 	        this.password = user.getPassword();
 	        this.role = user.getRoles();
-//	        this.companyID = user.getCompany().getId();
 
 	        //this.active = user.isActive();
 	        this.authorities = Arrays.stream(user.getRoles().split(","))
@@ -66,12 +64,6 @@ public class MyUserDetails implements UserDetails {
 		return userName;
 	}
 
-	public Long getCompanyID() {
-		return companyID;
-	}
-	public void setCompanyID(Long companyID) {
-		this.companyID = companyID;
-	}
 	@Override
 	public boolean isAccountNonExpired() {
 		// TODO Auto-generated method stub

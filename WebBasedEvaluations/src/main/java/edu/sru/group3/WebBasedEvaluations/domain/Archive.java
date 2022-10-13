@@ -49,7 +49,7 @@ public class Archive {
 	/**
 	 * @param log is SelfEvaluation
 	 */
-	public  Archive(SelfEvaluation log) {
+	public Archive(SelfEvaluation log) {
 		this.dateEdited = log.getDateEdited();
 		this.evaluator =log.getReviewee().getUser().getName();
 		this.path =  log.getPath();
