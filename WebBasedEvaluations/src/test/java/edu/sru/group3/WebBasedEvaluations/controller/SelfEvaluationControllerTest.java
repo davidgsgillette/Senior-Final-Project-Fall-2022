@@ -1,8 +1,6 @@
 package edu.sru.group3.WebBasedEvaluations.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.suite.api.Suite;
@@ -12,15 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 
-
-
 @Suite
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class AddUserControllerTest {
-	
+public class SelfEvaluationControllerTest {
 	
 	@Autowired
-	AddUserController controller;
+	SelfEvaluationController controller;
 	
 	@LocalServerPort
 	private int port;
@@ -32,21 +27,23 @@ public class AddUserControllerTest {
 	public void SanityCheckTest() throws Exception {
 		assertThat(controller).isNotNull();
 	}
-
+	
 	@Test
-	public void addUserTest() throws Exception {
-		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/adduser/", String.class)).isNotEmpty();
+	public void submitSelfEvalTest() throws Exception {
+		
+		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/selfeval/1", String.class)).isNotEmpty();
 	}
 	
 	@Test
-	public void uploadUser2Test() {
+	public void viewSelfEvalTest() throws Exception {
 		
-		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/uploaduser2", String.class)).isNotEmpty();
-		
+		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/viewselfeval/1/\"User\"", String.class)).isNotEmpty();
 	}
 	
-	
-	
-	
+	@Test
+	public void saveSelfEvalForm() throws Exception {
+		
+		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/save_selfeval/1", String.class)).isNotEmpty();
+	}
 
 }
