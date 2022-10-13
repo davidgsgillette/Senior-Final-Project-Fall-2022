@@ -3,7 +3,9 @@ package edu.sru.group3.WebBasedEvaluations.company;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import edu.sru.group3.WebBasedEvaluations.domain.Privilege;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 
 
@@ -26,6 +29,9 @@ public class Department {
 	
 	//department name
 	private String name;
+	
+	
+	
 	//locations
 	@ManyToMany
 	@JoinTable(
@@ -42,26 +48,48 @@ public class Department {
 	private List<User> users;
 	
 	
+	@ManyToMany(mappedBy = "depts", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Privilege> privileges;
+	
+	
+	
 	public Department() {
 		users = new ArrayList<User>();
 		locations = new ArrayList<Location>();
 		this.name = "";
 	}
 	
-	public Department(User user, Location loc, String name) {
+	public Department(User user, Location loc, String name, Privilege priv) {
 		users = new ArrayList<User>();
 		users.add(user);
 		locations = new ArrayList<Location>();
+		this.privileges = new ArrayList<Privilege>();
+		this.privileges.add(priv);
 		locations.add(loc);
 		this.name = name;
 	}
 	
-	public Department(List<User> users, List<Location> locations, String name) {
+	public Department(List<User> users, List<Location> locations, String name, List<Privilege> privs) {
 		this.users = users;
 		this.locations = locations;
 		this.name = name;
+		this.privileges = privs;
 	}
 	
+	
+	
+	
+	public void addPrivilege(Privilege priv) {
+		this.privileges.add(priv);
+	}
+	
+	public boolean removePrivilege(Privilege priv) {
+		if(this.privileges.contains(priv)) {
+			this.privileges.remove(priv);
+			return true;
+		}
+		return false;
+	}
 	
 	public boolean addUser(User user) {
 		this.users.add(user);
@@ -113,6 +141,22 @@ public class Department {
 	public String getName() {
 		return name;
 	}
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public List<Privilege> getPrivileges() {
+		return privileges;
+	}
+
+	public void setPrivileges(List<Privilege> privileges) {
+		this.privileges = privileges;
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}

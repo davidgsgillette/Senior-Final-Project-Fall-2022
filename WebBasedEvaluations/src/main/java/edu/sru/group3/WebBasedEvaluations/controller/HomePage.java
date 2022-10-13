@@ -88,7 +88,7 @@ public class HomePage {
 	public String login() {
 		return "login";
 	}
-
+	
 	
 	/**Method for logging users who have logged in.
 	 * @param auth is an Authentication object used to identify who has logged in.
@@ -114,11 +114,11 @@ public class HomePage {
 	public String home(Authentication auth, User user3, /*BindingResult result,*/ Model model) {
 
 
-
+		
 		MyUserDetails user = (MyUserDetails) auth.getPrincipal();
 		User user2 = userRepository.findByid(user.getID());
 		
-
+		
 
 		boolean groupButton = false;
 		/*

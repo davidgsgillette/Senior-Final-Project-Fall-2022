@@ -45,6 +45,7 @@ public class UserController {
 	private Logger log = LoggerFactory.getLogger(UserController.class);
 
 	private static final String ADMIN = "ADMIN";
+	private static final String COMPANY_ADMIN = "COMPANY_ADMIN";
 	private static final String EVALUATOR_EVAL = "EVALUATOR_EVAL";
 	private static final String EVAL_ADMIN = "EVAL_ADMIN";
 	private static final String EVALUATOR = "EVALUATOR";
