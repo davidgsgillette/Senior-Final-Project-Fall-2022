@@ -8,11 +8,14 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.lang.model.element.UnknownElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import dev.samstevens.totp.exceptions.QrGenerationException;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 
@@ -60,12 +63,7 @@ public class UserService {
 		}
 		return list2;
 	}
-
-	/*
-	public void register(UserData user) throws UserAlreadyExistException {
-		
-	}
-	*/
+	
 	/**Method that sorts a given list with the given type of sort and sort order.
 	 * @param list is the list of users that is provided to be arranged.
 	 * @param type is the type of sort type: firstName, lastName, id, email, and role.

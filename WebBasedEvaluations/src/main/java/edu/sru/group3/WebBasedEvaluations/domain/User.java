@@ -46,7 +46,10 @@ public class User {
 	private String roles;
 	@NonNull
 	private boolean using2FA;
-	private String secret;
+	
+	private final String secret;
+	
+	private final String answer;
 	
 	@NonNull
 	private String secQuest1;
@@ -72,10 +75,12 @@ public class User {
 	private String divisionBranch;
 
 	public User() {
+		this.secret = "";
+		this.answer = "";
 
 	}
 
-	public User(String name, String firstName, String lastName, String email, String password, String role,
+	public User(String name, String firstName, String lastName, String email, String password, String role, String secret, String answer,
 			int employeeId, String dateOfHire, String jobTitle, String supervisor, String companyName,
 			String divisionBranch) {
 		
@@ -97,6 +102,8 @@ public class User {
 		this.supervisor = supervisor;
 		this.companyName = companyName;
 		this.divisionBranch = divisionBranch;
+		this.secret = secret;
+		this.answer = answer;
 
 	}
 
@@ -297,6 +304,14 @@ public class User {
 
 	public void setDivisionBranch(String divisionBranch) {
 		this.divisionBranch = divisionBranch;
+	}
+
+	public String getSecret() {
+		return secret;
+	}
+
+	public String getAnswer() {
+		return answer;
 	}
 
 }
