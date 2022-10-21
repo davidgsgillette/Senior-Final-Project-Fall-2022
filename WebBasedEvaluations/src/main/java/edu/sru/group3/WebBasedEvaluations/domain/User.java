@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.FetchType;
 
@@ -50,18 +51,23 @@ public class User {
 	private String email;
 	@NonNull
 	private String password;
-	@NonNull
-	private String roleName;
 
 	@NonNull
 	private boolean resetP;
 
 	@NonNull
 	private String companyName;
+	
+	@NonNull
+	private String roleName;
 
 
-	//@OneToMany(mappedBy = "user")
-	//private List<Evaluator> evaluator = new ArrayList<>();
+//	@NonNull
+//	private List<User> evaluatees;
+	
+	
+	@OneToMany(mappedBy = "user")
+	private List<Evaluator> evaluator = new ArrayList<>();
 
 
 	@NonNull
@@ -83,10 +89,13 @@ public class User {
 	private Role role;
 	
 	
+//	@NonNull
+//	@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//	private List<Role> roles;
+	
 	
 	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Department> departments;
-
 
 	// Preload
 	//private long employeeId;
@@ -102,7 +111,7 @@ public class User {
 	//adds user to a no location
 	public User(String name, String firstName, String lastName, String email, String password, /*String role,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor,
-			String divisionBranch, Company co) {
+			String divisionBranch, Company co, Role role) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
@@ -121,7 +130,7 @@ public class User {
 		this.divisionBranch = divisionBranch;
 		this.locations = new ArrayList<Location>();
 		this.departments = new ArrayList<Department>(); 
-		this.role = new Role("NO ROLE ASSIGNED");
+		this.role = role;
 		this.roleName = role.getName();
 
 
@@ -151,9 +160,6 @@ public class User {
 		this.departments = new ArrayList<Department>(); 
 		this.departments.add(dept);
 		this.role = role;
-		if(this.role == null) {
-			this.role = new Role("NO ROLE ASSIGNED");
-		}
 		this.roleName = role.getName();
 		
 
@@ -182,12 +188,49 @@ public class User {
 		this.locations = locations;
 		this.departments = depts;
 		this.role = role;
-		if(this.role == null) {
-			this.role = new Role("NO ROLE ASSIGNED");
-		}
 		this.roleName = role.getName();
 
 	}
+	
+	
+	public boolean hasRead() {
+		for(Privilege priv : this.role.getPrivileges()) {
+			if(priv.getRead() == true)
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean hasWrite() {
+		for(Privilege priv : this.role.getPrivileges()) {
+			if(priv.getWrite() == true)
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean hasDelete() {
+		for(Privilege priv : this.role.getPrivileges()) {
+			if(priv.getDelete() == true)
+				return true;
+		}
+		return false;
+	}
+	
+	
+	public boolean hasEvaluator() {
+		return this.evaluator.size() > 0;
+	}
+	
+	//has permission to deligate evaluator permission. 
+	public boolean hasEvalPerm() {
+		for(Privilege priv : this.role.getPrivileges()) {
+			if(priv.getEvaluate() == true)
+				return true;
+		}
+		return false;
+	}
+	
 	
 	public void addDepartment(Department dept) {
 		this.departments.add(dept);
@@ -195,27 +238,51 @@ public class User {
 	public List<Department> getDepartments() {
 		return departments;
 	}
-
-//	public String getRolesStr() {
-//		return rolesStr;
+	
+//	public void setRoles(List<Role> roles) {
+//		this.roles = roles;
 //	}
 //
-//	public void setRolesStr(String rolesStr) {
-//		this.rolesStr = rolesStr;
+//	public List<Role> getRoles() {
+//		if(this.roles == null) {
+//			roles.add(new Role("USER"));
+//			return roles;
+//		}
+//		return roles;
 //	}
+//	
+//	public boolean addRole(Role role) {
+//		this.roles.add(role);
+//		return true;
+//	}
+//	
+//	public boolean removeRole(Role role) {
+//		if(this.roles.contains(role)) {
+//			this.roles.remove(role);
+//			return true;
+//		}
+//		return false;
+//	}
+	public String getPrivilegeNames(){
+		String list = "";
+		for(Privilege priv : role.getPrivileges()) {
+			list += priv.getName()+",";
+		}
+		return list.substring(0,list.length()-1);
+		
+	}
+	public Role getRole() {
+		if(this.role != null)
+			return role;
+		
+		return new Role("NO ROLL ASSIGNED");
+	}
 
 	public void setRole(Role role) {
 		this.role = role;
 		this.roleName = role.getName();
 	}
 
-	public Role getRole() {
-		if(this.role ==null) {
-			return new Role("NO ROLE ASSIGNED");
-		}
-		return role;
-	}
-	
 	public void setDepartments(List<Department> departments) {
 		this.departments = departments;
 	}
@@ -226,6 +293,29 @@ public class User {
 			return true;
 		}
 		return false;
+	}
+
+	
+	
+	
+//	public List<User> getEvaluatees() {
+//		return evaluatees;
+//	}
+//
+//	public void setEvaluatees(List<User> evaluatees) {
+//		this.evaluatees = evaluatees;
+//	}
+
+	public List<Evaluator> getEvaluator() {
+		return evaluator;
+	}
+
+	public void setEvaluator(List<Evaluator> evaluator) {
+		this.evaluator = evaluator;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
 	}
 
 	public String getPassword() {
@@ -294,7 +384,7 @@ public class User {
 		}
 		return false;
 	}
-		
+
 	public String getRoleName() {
 		return roleName;
 	}

@@ -104,12 +104,9 @@ public class UserController {
 
 		// No keyword
 		if (keyword == null || keyword.equals("")/* && count !=null */) {
-
 			list = adminMethodsService.sortCheck(sort, listTotal, sortOr, model);
+			
 			list = adminMethodsService.pageCalc(list, currPage, perPage, sort, keyword, model);
-
-
-
 		}
 		// Has keyword
 		else {
@@ -167,7 +164,37 @@ public class UserController {
 			groupButton = true;
 		}
 //changed
-		model.addAttribute("role", user.getRole());
+		if((user.hasRead() || user.hasWrite() || user.hasDelete()) && user.hasEvalPerm()) {
+			model.addAttribute("EVAL_ADMIN", true);
+		}
+		else {
+			model.addAttribute("EVAL_ADMIN", false);
+		}
+		
+		
+		if(evaluatorRepository.findById(user.getId()) != null) {
+			model.addAttribute("EVALUATOR", true);
+		}
+		else {
+			model.addAttribute("EVALUATOR", false);
+		}
+		
+		
+		if(user.hasEvaluator()) {
+			model.addAttribute("USER", true);
+		}
+		else {
+			model.addAttribute("USER", false);
+		}
+		
+		
+		if((user.hasRead() || user.hasWrite() || user.hasDelete())) {
+			model.addAttribute("ADMIN", true);
+		}
+		else {
+			model.addAttribute("ADMIN", false);
+		}
+//		model.addAttribute("roles", user.getRole().getName());
 		model.addAttribute("id", user.getId());
 		model.addAttribute("groupButton", groupButton);
 

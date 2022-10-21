@@ -236,8 +236,9 @@ public class GroupController {
 		model.addAttribute("sync", synclist);
 		model.addAttribute("prev", prevlist);
 		model.addAttribute("revedit", revid);
-		model.addAttribute("users", userRepository.findByRoleName("USER","EVALUATOR_EVAL",Sort.by(Sort.Direction.ASC, "lastName")));
-		model.addAttribute("usersEval", userRepository.findByRoleName("EVALUATOR","EVALUATOR_EVAL",Sort.by(Sort.Direction.ASC, "lastName")));
+//need to add new role in here. 
+//		model.addAttribute("users", userRepository.findByRoleName("USER","EVALUATOR_EVAL",Sort.by(Sort.Direction.ASC, "lastName")));
+//		model.addAttribute("usersEval", userRepository.findByRoleName("EVALUATOR","EVALUATOR_EVAL",Sort.by(Sort.Direction.ASC, "lastName")));
 		model.addAttribute("rolles", roles);
 		model.addAttribute("forms", evalFormRepo.findAll());
 		log.info("group_edit open");
@@ -612,7 +613,7 @@ public class GroupController {
 		
 		List<EvalRole> roles = (List<EvalRole>) roleRepository.findAll();
 	
-		model.addAttribute("myRole", userD.getRoles());
+		model.addAttribute("myRole", userD.getRole());
 		model.addAttribute("roles", roles);
 		model.addAttribute("id", userD.getID());
 		model.addAttribute("evalu", user);

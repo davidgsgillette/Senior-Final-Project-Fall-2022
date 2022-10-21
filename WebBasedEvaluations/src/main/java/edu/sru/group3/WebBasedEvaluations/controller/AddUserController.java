@@ -251,14 +251,19 @@ public class AddUserController {
 						
 						//if the role exists add it to the user, otherwise create a role that has that name, but no permissions. 
 						String roleName = (ExcelRead_group.checkStringType(sheet.getRow(i).getCell(5)));
-						Role role = roleRepository.findByName(roleName);
-						if(role == null) {
-							Role newRole = new Role(roleName);
-							user2.setRole(newRole);
+						String[] roleNames = roleName.split(",");
+//need to add privileges in here too. 						
+						for(String strRoleName : roleNames) {
+							Role role = roleRepository.findByName(strRoleName);
+							if(role == null) {
+								Role newRole = new Role(strRoleName);
+								user2.setRole(newRole);
+							}
+							else {
+								user2.setRole(role);
+							}
 						}
-						else {
-							user2.setRole(role);
-						}
+						
 						
 						user2.setReset(true);
 

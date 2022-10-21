@@ -39,7 +39,7 @@ public class Privilege {
 	private boolean d;
 	
 	@NonNull
-	private boolean evaluate;
+	private boolean editEvaluator;
 
 	
 	
@@ -81,7 +81,7 @@ public class Privilege {
     	this.r = read;
     	this.w = write;
     	this.d = delete;
-    	this.evaluate = evaluate;
+    	this.editEvaluator = evaluate;
     }
     
     
@@ -96,7 +96,7 @@ public class Privilege {
     	this.r = read;
     	this.w = write;
     	this.d = delete;
-    	this.evaluate = evaluate;
+    	this.editEvaluator = evaluate;
     }
 	
 	
@@ -108,7 +108,7 @@ public class Privilege {
     	this.r = read;
     	this.w = write;
     	this.d = delete;
-    	this.evaluate = evaluate;
+    	this.editEvaluator = evaluate;
     }
     
     
@@ -156,6 +156,47 @@ public class Privilege {
     public boolean getRead() {
 		return r;
 	}
+    
+	public boolean isR() {
+		return r;
+	}
+
+
+	public void setR(boolean r) {
+		this.r = r;
+	}
+
+
+	public boolean isW() {
+		return w;
+	}
+
+
+	public void setW(boolean w) {
+		this.w = w;
+	}
+
+
+	public boolean isD() {
+		return d;
+	}
+
+
+	public void setD(boolean d) {
+		this.d = d;
+	}
+
+
+	public boolean getEvaluate() {
+		return editEvaluator;
+	}
+
+
+	public void setEvaluate(boolean evaluate) {
+		this.editEvaluator = evaluate;
+	}
+
+
 	public void setRead(boolean read) {
 		this.r = read;
 	}

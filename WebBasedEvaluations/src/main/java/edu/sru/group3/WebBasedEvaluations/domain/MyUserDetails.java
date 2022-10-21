@@ -40,15 +40,17 @@ public class MyUserDetails implements UserDetails {
 		//	        this.companyID = user.getCompany().getId();
 
 		//this.active = user.isActive();
-		this.authorities = Arrays.stream(user.getRole().getName().split(","))
+//		System.out.println("this is the thing: " + user.getRole().getName().split(","));
+		this.authorities = Arrays.stream(user.getPrivilegeNames().split(","))
 				.map(SimpleGrantedAuthority::new)
 				.collect(Collectors.toList());
 		this.usersUnderAuth = new ArrayList<User>();
 		this.deptsUnderAuth = new ArrayList<Department>();
 		this.locsUnderAuth = new ArrayList<Location>();
 		//makes a list of the users that this user has privilege over. 
+		//		for(Role role : roles) {
 		for(Privilege priv : role.getPrivileges()) {
-			
+
 			//gets the depts this user has auth over. 
 			this.deptsUnderAuth = priv.getDepts();
 			for(Department dept : this.deptsUnderAuth) {
@@ -57,7 +59,7 @@ public class MyUserDetails implements UserDetails {
 				}
 			}
 			for(LocationGroup locGrp : priv.getLocationGroups()) {
-				
+
 				//gets the locations this user has auth over
 				this.locsUnderAuth = locGrp.getLocations();
 				for(Location loc : this.locsUnderAuth) {
@@ -68,6 +70,7 @@ public class MyUserDetails implements UserDetails {
 					}
 				}
 			}
+			//			}
 
 		}
 	}
@@ -91,14 +94,6 @@ public class MyUserDetails implements UserDetails {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
-	}
-
-	public Role getRole() {
-		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
 	}
 
 	public long getId() {
@@ -151,14 +146,26 @@ public class MyUserDetails implements UserDetails {
 		return Id;
 	}
 
-	public Role getRoles() {
-		// TODO Auto-generated method stub
-		return role;
-	}
+//	public List<Role> getRoles() {
+//		return roles;
+//	}
+//
+//	public void setRoles(List<Role> roles) {
+//		this.roles = roles;
+//	}
+	
 
 	public String getUsername() {
 		// TODO Auto-generated method stub
 		return userName;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	public Long getCompanyID() {

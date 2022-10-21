@@ -30,7 +30,11 @@ public class Role {
     private String name;
 	
 	
-    @OneToMany(mappedBy = "role")
+	@ManyToMany
+    @JoinTable(
+            name = "roles_users", 
+            joinColumns = @JoinColumn(name = "role_id"), 
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> users;	
 
 	@ManyToMany
@@ -49,6 +53,17 @@ public class Role {
 	 
     public Role(String name) {
     	this.name = name;
+    	this.users = new ArrayList<User>();
+    	this.privileges = new ArrayList<Privilege>();
+    }
+    
+    
+    public Role(String name,  Privilege priv) {
+    	this.name = name;
+    	this.privileges = new ArrayList<Privilege>();
+    	this.privileges.add(priv);
+    	this.users = new ArrayList<User>();
+    	
     }
     
     public Role(String name, User user, Privilege priv) {

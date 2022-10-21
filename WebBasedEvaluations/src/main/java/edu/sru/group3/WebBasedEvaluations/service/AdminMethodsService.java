@@ -508,7 +508,7 @@ public class AdminMethodsService {
 //CHANGED
 		if (true) {
 
-			if (user.getRole() == null || user.getRole().equals("NO ROLE ASSIGNED")) { //user.getRoles() == ADMIN) {
+			if (user.getRole() == null || user.getRole().getName().equals("NO ROLL")) { //user.getRoles() == ADMIN) {
 				user.setRole(user2.getRole());
 			} else {
 				if (user.getRole() == null) {
@@ -666,7 +666,7 @@ public class AdminMethodsService {
 
 		}
 
-		if (user.getRole() != null) {
+		if (user.getRole() == null) {
 			user2.setRole(user.getRole());
 		}
 		log.info("User Post Changes- Id:" + user2.getId() + " | First Name:" + user2.getFirstName() + " | Last Name:"

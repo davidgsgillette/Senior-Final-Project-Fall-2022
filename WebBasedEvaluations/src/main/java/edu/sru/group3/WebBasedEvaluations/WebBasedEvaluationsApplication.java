@@ -37,13 +37,15 @@ public class WebBasedEvaluationsApplication {
 	public static void main(String[] args) {
 		System.setProperty("spring.devtools.restart.enabled", "false");
 		
+		System.out.println("STARTING WEB APP\n");
 		ConfigurableApplicationContext configurableApplicationContext = SpringApplication.run(WebBasedEvaluationsApplication.class, args);
-		
+		System.out.println("\nFINISHED STARTING WEB APP app\n");
+		System.out.println("STARTING LOADING OF TEST ADMIN USER\n");
 		
 		//comment these out if you are not creating the DB fresh, They just add one company for the admin user. 
 		InitUsers startingUsers = new InitUsers();
 		startingUsers.createBaseUsers(configurableApplicationContext);
-
+		System.out.println("\nFINISHED LOADING TEST ADMIN USER");
 	}
 	
 }
@@ -119,12 +121,19 @@ class InitUsers{
 		
 		Location loc = new Location("testLocation", city, co, locGroup);
 		locationRepo.save(loc);
+			
+			
+		Role adminRole = new Role("ADMIN");
+		roleRepo.save(adminRole);
 		
 		
-				
-				
-		User use1 = new User("jimmy neutron","fname","lname","admin@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ", 999991, "N/A", "N/A", "N/A", "N/A", co);
+		User use1 = new User("jimmy neutron","fname","lname","admin@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ", 999991, "N/A", "N/A", "N/A", "N/A", co, adminRole);
+//		adminRole.addUser(use1);
+//		roleRepo.save(adminRole);
+		userRepo.save(use1);
+		
 		use1.setEncryptedPassword("test");
+		use1.setReset(false);
 		userRepo.save(use1);
 		
 		
@@ -141,6 +150,7 @@ class InitUsers{
 		
 		
 		
+		
 		locGroup.addLocation(loc);
 		locGroupRepo.save(locGroup);
 		
@@ -153,12 +163,16 @@ class InitUsers{
 		companyRepo.save(co);
 		
 		
-		Role adminRole = new Role("Global Admin",use1,null);
-		roleRepo.save(adminRole);
+//		Role adminRole = new Role("Global Admin");
+//		roleRepo.save(adminRole);
 		
-		Privilege priv = new Privilege("superAdmin",adminRole, locGroup,dept, true,true,true,false);
+		Privilege priv = new Privilege("ADMIN",adminRole, locGroup,dept, true,true,true,false);
 		privRepo.save(priv);
 		
+		adminRole.addPrivilege(priv);
+		priv.addRole(adminRole);
+		privRepo.save(priv);
+		roleRepo.save(adminRole);
 		
 		co.addUser(use1);
 		use1.addLocation(loc);

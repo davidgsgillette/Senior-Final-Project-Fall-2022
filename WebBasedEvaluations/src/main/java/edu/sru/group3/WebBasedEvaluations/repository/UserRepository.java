@@ -29,7 +29,7 @@ public interface UserRepository extends CrudRepository<User,Long>{
 	List<User> findByKeyword(@Param("keyword") String keyword);
 	//public User findById(long id);
 	public Object findAll(Sort by);
-	public List<User>findByRoleName(String name, String name2,Sort by);
+//	public List<User>findByRoleName(String name, String name2,Sort by);
 
 /*
  * this version uses the company ID to serve up users as well as the fname/lname/email of the user. 

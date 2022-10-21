@@ -71,7 +71,7 @@ public class RevieweeController {
     	List<EvalRole>roles = (List<EvalRole>) roleRepository.findAll();
     	
 
-    	model.addAttribute("myRole", userD.getRoles());
+    	model.addAttribute("myRole", userD.getRole());
     	model.addAttribute("role", roles);
     	model.addAttribute("id", userD.getID());
     	model.addAttribute("groups", grouplist);
