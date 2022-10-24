@@ -1,4 +1,4 @@
-package edu.sru.group3.WebBasedEvaluations;
+package edu.sru.group3.WebBasedEvaluations.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,7 +31,7 @@ import edu.sru.group3.WebBasedEvaluations.controller.AddUserControllerTest;
 @Suite
 @SuiteDisplayName("Admin Methods")
 @IncludeClassNamePatterns(".*Tests")
-public class AdminMethodsServicesTest {
+public class AdminMethodsServiceTest {
 	private static User user = new User();
 	private static User user2 = new User();
 	private static User user3 = new User();
