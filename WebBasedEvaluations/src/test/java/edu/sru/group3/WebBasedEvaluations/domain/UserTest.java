@@ -52,14 +52,14 @@ public class UserTest {
 		user.setRoles(actual);
 		assertEquals(user.getRoles(), actual);
 	}
-
+/*
 	@Test
 	void getEvaluatorTest() {
 		List<Evaluator> actual = new ArrayList<>();
 		user.setEvaluator(actual);
 		assertEquals(user.getEvaluator(), actual);
 	}
-
+*/
 	@Test
 	void getFirstNameTest() {
 		String actual = "Test";

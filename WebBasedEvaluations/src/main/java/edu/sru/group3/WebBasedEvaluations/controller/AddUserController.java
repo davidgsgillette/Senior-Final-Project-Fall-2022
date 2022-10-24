@@ -1,20 +1,27 @@
 package edu.sru.group3.WebBasedEvaluations.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.excel.ExcelRead_group;
@@ -43,6 +50,36 @@ public class AddUserController {
 		this.userRepository = userRepository;
 
 	}
+	
+	@PostMapping
+	(value = "/adduser/")
+    public ResponseEntity<User> addUserPost(HttpServletRequest request,
+                                        UriComponentsBuilder uriComponentsBuilder) {
+
+        var content = request.getParameter("content");
+
+        String name = request.getParameter("name");
+    	String firstName = request.getParameter("firstName");
+    	String lastName = request.getParameter("lastName");
+    	String email = request.getParameter("email");
+    	String password = request.getParameter("password");
+    	String role = request.getParameter("role");
+		String dateOfHire = request.getParameter("dateOfHire");
+		String jobTitle = request.getParameter("jobTitle");
+		String supervisor = request.getParameter("supervisor");
+		String divisionBranch = request.getParameter("divisonBranch");
+		Company co = new Company(null);
+        
+        User user = new User(name, firstName, lastName, email, password, role, 1, dateOfHire, jobTitle, supervisor, divisionBranch, co);
+        
+        //this.addUser(user);
+
+        UriComponents uriComponents =
+                uriComponentsBuilder.path("/admin_users/{id}").buildAndExpand(user.getId());
+        var location = uriComponents.toUri();
+
+        return ResponseEntity.created(location).build();
+    }
 
 	/**
 	 * Method for manually adding users from the admin user page. It calls a few
