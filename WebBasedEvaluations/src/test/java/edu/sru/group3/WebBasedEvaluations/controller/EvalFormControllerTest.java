@@ -1,9 +1,15 @@
 package edu.sru.group3.WebBasedEvaluations.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.suite.api.Suite;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,268 +24,63 @@ import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.GroupRepository;
 
 @Suite
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class EvalFormControllerTest {
 	
-	EvaluationRepository evalFormRepo; 
-	EvaluationLogRepository evalLogRepo; 
-	GroupRepository groupRepo;
-	Model model;
-	MultipartFile file;
-	RedirectAttributes redir;
-	Evaluation eval;
-	HttpStatus status;
+	@Autowired
+	EvalFormController controller;
 	
-	EvalFormController controller = new EvalFormController(evalFormRepo, evalLogRepo, groupRepo);
+	@LocalServerPort
+	private int port;
+
+	@Autowired
+	private TestRestTemplate restTemplate;
+	
+	@Test
+	public void SanityCheckTest() throws Exception {
+		assertThat(controller).isNotNull();
+	}
 	
 	@Test
 	public void adminEvaluationsTest() {
 		
-		String result = "";
-		boolean attempt = false;
-		
-		try {
-			
-			result = controller.adminEvaluations(null);
-			attempt = true;
-			
-		}
-		catch (Exception e) {
-			attempt = false;
-		}
-		
-		assertTrue(attempt && !result.isEmpty());
-		
-		result = "";
-		attempt = false;
-		
-		try {
-			
-			result = controller.adminEvaluations(model);
-			attempt = true;
-			
-		}
-		catch (Exception e) {
-			attempt = false;
-		}
-		
-		assertTrue(attempt && !result.isEmpty());
+		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/admin_evaluations", String.class)).isNotEmpty();
 	}
 
 	@Test
 	public void uploadEvalTemplateTest() {
 		
-		Object thing = new Object();
-		boolean attempt = false;
-		
-		try {
-			
-			thing = controller.uploadEvalTemplate(null, null);
-			attempt = true;
-			
-		}
-		
-		catch (Exception e) {
-			
-			attempt = false;
-			
-		}
-		
-		assertTrue(attempt && !thing.toString().isEmpty());
-		
-		thing = new Object();
-		attempt = false;
-		
-		try {
-			
-			thing = controller.uploadEvalTemplate(file, redir);
-			attempt = true;
-			
-		}
-		
-		catch (Exception e) {
-			
-			attempt = false;
-			
-		}
-		
-		assertTrue(attempt && !thing.toString().isEmpty());
-		
+		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/upload_eval", String.class)).isNotEmpty();
 	}
 
 	@Test
 	public void saveEvalTemplateTest() {
 		
-		RedirectView view = new RedirectView();
-		boolean attempt = false;
-		
-		try {
-			
-			view = controller.saveEvalTemplate(null, null);
-			attempt = true;
-			
-		}
-		catch (Exception e) {
-			
-			attempt = false;
-			
-		}
-		
-		assertTrue(attempt && !view.toString().isEmpty());
-		
-		view = new RedirectView();
-		attempt = false;
-		
-		try {
-			
-			view = controller.saveEvalTemplate(eval, model);
-			attempt = true;
-			
-		}
-		catch (Exception e) {
-			
-			attempt = false;
-			
-		}
-		
-		assertTrue(attempt && !view.toString().isEmpty());
-		
+		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/eval_form", String.class)).isNotEmpty();
 	}
 
 	@Test
 	public void downloadEvalResultsTest() {
 		
-		ResponseEntity<Resource> reasources = new ResponseEntity<Resource>(status);
-		boolean attempt = false;
-		
-		try {
-			reasources = controller.downloadEvalResults(null);
-			
-		}
-		catch (Exception e) {
-			
-			attempt = false;
-		}
-		
-		assertTrue(attempt && !reasources.toString().isEmpty());
-		
-		reasources = new ResponseEntity<Resource>(status);
-		attempt = false;
-		
-		try {
-			reasources = controller.downloadEvalResults("1");
-			
-		}
-		catch (Exception e) {
-			
-			attempt = false;
-		}
-		
-		assertTrue(attempt && !reasources.toString().isEmpty());
-		
-		
-		
+		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/download_eval_results/1", String.class)).isNotEmpty();
 	}
 
 	@Test
 	public void downloadEvalExcelTest() {
 		
-		ResponseEntity<Resource> reasources = new ResponseEntity<Resource>(status);
-		boolean attempt = false;
 		
-		try {
-			reasources = controller.downloadEvalExcel(null);
-			
-		}
-		catch (Exception e) {
-			
-			attempt = false;
-		}
-		
-		assertTrue(attempt && !reasources.toString().isEmpty());
-		
-		reasources = new ResponseEntity<Resource>(status);
-		attempt = false;
-		
-		try {
-			reasources = controller.downloadEvalExcel("1");
-			
-		}
-		catch (Exception e) {
-			
-			attempt = false;
-		}
-		
-		assertTrue(attempt && !reasources.toString().isEmpty());
-		
+		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/download_eval_excel/1", String.class)).isNotEmpty();
 	}
 
 	@Test
 	public void downloadErrorLogTest() {
 		
-		ResponseEntity<Resource> reasources = new ResponseEntity<Resource>(status);
-		boolean attempt = false;
-		
-		try {
-			reasources = controller.downloadEvalExcel(null);
-			
-		}
-		catch (Exception e) {
-			
-			attempt = false;
-		}
-		
-		assertTrue(attempt && !reasources.toString().isEmpty());
-		
-		reasources = new ResponseEntity<Resource>(status);
-		attempt = false;
-		
-		try {
-			reasources = controller.downloadEvalExcel("1");
-			
-		}
-		catch (Exception e) {
-			
-			attempt = false;
-		}
-		
-		assertTrue(attempt && !reasources.toString().isEmpty());
+		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/dl_error_log/1", String.class)).isNotEmpty();
 	}
 
 	@Test
 	public void deleteEvalTemplateTest() {
 		
-		RedirectView view = new RedirectView();
-		boolean attempt = false;
-		
-		try {
-			
-			view = controller.deleteEvalTemplate(null, null);
-			attempt = true;
-			
-		}
-		catch (Exception e) {
-			
-			attempt = false;
-			
-		}
-		
-		assertTrue(attempt && !view.toString().isEmpty());
-		
-		view = new RedirectView();
-		attempt = false;
-		
-		try {
-			
-			view = controller.deleteEvalTemplate("1", redir);
-			attempt = true;
-			
-		}
-		catch (Exception e) {
-			
-			attempt = false;
-			
-		}
-		
-		assertTrue(attempt && !view.toString().isEmpty());
+		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/del_eval_form/1", String.class)).isNotEmpty();
 	}
 }

@@ -5,17 +5,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.suite.api.Suite;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.boot.test.context.SpringBootTest;
 
 @Suite
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class ArchiveControllerTest {
+public class RevieweeControllerTest {
 	
 	@Autowired
-	ArchiveController controller;
+	RevieweeController controller;
 	
 	@LocalServerPort
 	private int port;
@@ -24,21 +24,20 @@ public class ArchiveControllerTest {
 	private TestRestTemplate restTemplate;
 	
 	@Test
-	public void sanityCheckTest() throws Exception {
+	public void SanityCheckTest() throws Exception {
 		assertThat(controller).isNotNull();
 	}
-	
-	@Test
-	public void evalGroupsTest() throws Exception {
-		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/Archivegroups", String.class)).isNotEmpty();
-	}
-	
-	@Test
-	public void ViewViewArchiveTest() throws Exception {
-		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/ViewArchive/1", String.class)).isNotEmpty();
-	}
-		
-		
-		
 
+	@Test
+	public void	getrevieweeTest() throws Exception {
+		
+		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/myeval", String.class)).isNotEmpty();
+	}
+	
+	@Test
+	public void getrevieweegrouptest() throws Exception {
+		
+		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/admineval/1", String.class)).isNotEmpty();
+	}
+	
 }

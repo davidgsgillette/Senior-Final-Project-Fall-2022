@@ -60,8 +60,8 @@ public class User {
 	private String companyName;
 
 
-	//@OneToMany(mappedBy = "user")
-	//private List<Evaluator> evaluator = new ArrayList<>();
+//	@OneToMany(mappedBy = "user")
+//	private List<Evaluator> evaluator = new ArrayList<>();
 
 
 	@NonNull
