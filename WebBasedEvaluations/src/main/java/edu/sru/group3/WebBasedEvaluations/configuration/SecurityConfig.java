@@ -1,6 +1,7 @@
 package edu.sru.group3.WebBasedEvaluations.configuration;
 
 
+
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
@@ -29,6 +30,8 @@ import edu.sru.group3.WebBasedEvaluations.service.MfaTrustResolver;
 
 @Configuration
 public class SecurityConfig {
+	
+	
 	@Bean
 	SecurityFilterChain web(HttpSecurity http,
 			AuthorizationManager<RequestAuthorizationContext> mfaAuthorizationManager) throws Exception {
@@ -36,8 +39,8 @@ public class SecurityConfig {
 		// @formatter:off
 		http
 			.authorizeHttpRequests((authorize) -> authorize
-				.requestMatchers("/favicon.ico").permitAll()
-				.requestMatchers("/second-factor", "/third-factor").access(mfaAuthorizationManager)
+				.antMatchers("/favicon.ico").permitAll()
+				.antMatchers("/second-factor", "/third-factor").access(mfaAuthorizationManager)
 				.anyRequest().authenticated()
 			)
 			.formLogin((form) -> form
