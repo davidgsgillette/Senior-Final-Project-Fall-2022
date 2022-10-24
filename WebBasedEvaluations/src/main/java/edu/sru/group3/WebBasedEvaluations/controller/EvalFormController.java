@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.SerializationUtils;
@@ -95,7 +96,7 @@ public class EvalFormController {
 	 */
 	@GetMapping("/admin_evaluations")
 	public String adminEvaluations(Model model) {
-
+		System.out.println("HERE NOW adminEvaluations");
 
 		// Create the directories if they do not exist, delete any existing files
 		try {
@@ -138,10 +139,13 @@ public class EvalFormController {
 		}
 
 		model.addAttribute("hasEvals", hasEvals);
-
+		
+		
 		return "eval_templates";
 	}
 
+	
+	
 
 
 	/**
@@ -281,6 +285,7 @@ public class EvalFormController {
 	 */
 	@RequestMapping("/eval_form")
 	public RedirectView saveEvalTemplate(@Validated Evaluation eval, Model model) throws Exception {
+		System.out.println("HERE NOW saveEvalTemplate");
 
 		// Create the directories if they do not exist, delete any existing files
 		try {

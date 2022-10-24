@@ -1,6 +1,8 @@
 package edu.sru.group3.WebBasedEvaluations;
 
 
+import java.util.ArrayList;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -124,8 +126,26 @@ class InitUsers{
 			
 			
 		Role adminRole = new Role("ADMIN");
-		roleRepo.save(adminRole);
+		Role testRole1 = new Role("TEST_ROLE_1");
+		Role testRole2 = new Role("TEST_ROLE_2");
 		
+		
+		
+		
+		
+//		
+	
+		
+		co.addRole(adminRole);
+		co.addRole(testRole1);
+		co.addRole(testRole2);
+//		adminRole.addCompany(co);
+//		testRole1.addCompany(co);
+//		testRole2.addCompany(co);
+		
+		
+		roleRepo.save(testRole1);
+		roleRepo.save(testRole2);
 		
 		User use1 = new User("jimmy neutron","fname","lname","admin@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ", 999991, "N/A", "N/A", "N/A", "N/A", co, adminRole);
 //		adminRole.addUser(use1);
@@ -176,7 +196,8 @@ class InitUsers{
 		
 		co.addUser(use1);
 		use1.addLocation(loc);
-		companyRepo.save(co);
+//		companyRepo.save(co);
+		userRepo.save(use1);
 
 		
 	}

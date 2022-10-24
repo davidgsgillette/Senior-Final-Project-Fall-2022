@@ -84,7 +84,7 @@ public class User {
 	private List<Location> locations;
 	
 	@NonNull
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "role_id", nullable = false)
 	private Role role;
 	

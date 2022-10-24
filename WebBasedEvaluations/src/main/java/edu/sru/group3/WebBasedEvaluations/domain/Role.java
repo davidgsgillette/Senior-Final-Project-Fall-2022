@@ -3,7 +3,9 @@ package edu.sru.group3.WebBasedEvaluations.domain;
 import lombok.NonNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -30,11 +32,8 @@ public class Role {
     private String name;
 	
 	
-	@ManyToMany
-    @JoinTable(
-            name = "roles_users", 
-            joinColumns = @JoinColumn(name = "role_id"), 
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+	
+	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<User> users;	
 
 	@ManyToMany
@@ -45,7 +44,7 @@ public class Role {
     private List<Privilege> privileges;
 	
 	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<Company> companies;
+	private Set<Company> companies;
 	
 	public Role() {
 		 
@@ -55,7 +54,17 @@ public class Role {
     	this.name = name;
     	this.users = new ArrayList<User>();
     	this.privileges = new ArrayList<Privilege>();
+    	this.companies = new HashSet<Company>();
     }
+    
+    public Role(String name, Company co) {
+    	this.name = name;
+    	this.users = new ArrayList<User>();
+    	this.privileges = new ArrayList<Privilege>();
+    	this.companies = new HashSet<Company>();
+    	
+    }
+    
     
     
     public Role(String name,  Privilege priv) {
@@ -63,6 +72,7 @@ public class Role {
     	this.privileges = new ArrayList<Privilege>();
     	this.privileges.add(priv);
     	this.users = new ArrayList<User>();
+    	this.companies = new HashSet<Company>();
     	
     }
     
@@ -72,18 +82,15 @@ public class Role {
     	this.privileges.add(priv);
     	this.users = new ArrayList<User>();
     	this.users.add(user);
+    	this.companies = new HashSet<Company>();
     }
     
     public Role(String name, List<User> users, List<Privilege> priv) {
     	this.name = name;
     	this.privileges = priv;
     	this.users = users;
+    	this.companies = new HashSet<Company>();
     } 
-    
-    
-   
-    
-    
     
     
 //    add or remove users/privileges. 
@@ -116,7 +123,19 @@ public class Role {
     }
     
     
+    public boolean addCompany(Company co) {
+    	this.companies.add(co);
+    	return true;
+    }
     
+    public boolean removeCompany(Company co) {
+    	if(this.companies.contains(co)) {
+    		this.companies.remove(co);
+    		return true;
+    	}
+    	return false;
+    	
+    }
     //getters and setters. 
     
     

@@ -612,9 +612,41 @@ public class GroupController {
 		model.addAttribute("groups", grouplist);
 		
 		List<EvalRole> roles = (List<EvalRole>) roleRepository.findAll();
-	
-		model.addAttribute("myRole", userD.getRole());
-		model.addAttribute("roles", roles);
+		
+		
+		
+		//navbar
+		if((user.hasRead() || user.hasWrite() || user.hasDelete()) && user.hasEvalPerm()) {
+			model.addAttribute("EVAL_ADMIN", true);
+//			role = "EVAL_ADMIN";
+		}
+		else {
+			model.addAttribute("EVAL_ADMIN", false);
+		}
+		
+		
+		if(evaluatorRepository.findById(user.getId()) != null) {
+			model.addAttribute("EVALUATOR", true);
+		}
+		else {
+			model.addAttribute("EVALUATOR", false);
+		}
+		
+		
+		if(user.hasEvaluator()) {
+			model.addAttribute("USER", true);
+		}
+		else {
+			model.addAttribute("USER", false);
+		}
+		
+		
+		if((user.hasRead() || user.hasWrite() || user.hasDelete())) {
+			model.addAttribute("ADMIN", true);
+		}
+		else {
+			model.addAttribute("ADMIN", false);
+		}
 		model.addAttribute("id", userD.getID());
 		model.addAttribute("evalu", user);
 		model.addAttribute("groups", grouplist);

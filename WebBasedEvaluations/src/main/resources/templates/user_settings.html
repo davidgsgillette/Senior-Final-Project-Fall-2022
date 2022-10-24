@@ -26,7 +26,7 @@
 			class="navbar navbar-light bg-light justify-content-center">
 				<a th:href="@{/admin_users/?keyword={keyword}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage= 0,keyword='',sort='id',currPage=1,sortOr=1)}"
 				class="btn btn-outline-success" type="button">Manage Users</a>
-				<a th:href="@{/home}" class="btn btn-outline-success" style="color:#ffffff; background-color:#4CAF50" type="button"> Home </a>
+				<a th:href="@{/home}" class="btn btn-outline-success"  type="button"> Home </a>
 				<a th:href="@{/download_log_txt}" class="btn btn-outline-success d-flex" type="button">Download Log File</a>		
 			</nav>
 			
@@ -58,7 +58,7 @@
 						<li><a class="dropdown-item" th:href="@{/Evaluationgroups}">View Groups</a></li>
 					</ul>
 			</nav>
-			
+						
 			<nav th:if="${USER == true}"
 			class="navbar navbar-light bg-light  justify-content-center">
 				<a th:href="@{/myeval}" class="btn btn-outline-success"
@@ -66,7 +66,7 @@
 			</nav>
 			<div class="navbar navbar-light bg-light justify-content-center">
 				<a th:href="@{/user_settings/?keyword={keyword}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage=${perPage},keyword=${keyword},sort=${sort},currPage=${currPage}, sortOr=${sortOr})}"
-						class="btn btn-outline-success" type="button">My Account</a>
+						class="btn btn-outline-success" style="color:#ffffff; background-color:#4CAF50" type="button">My Account</a>
 				<a th:href="@{/logout}" class="btn btn-outline-danger d-flex" type="button"> Logout </a>
 			</div>
 		</div>

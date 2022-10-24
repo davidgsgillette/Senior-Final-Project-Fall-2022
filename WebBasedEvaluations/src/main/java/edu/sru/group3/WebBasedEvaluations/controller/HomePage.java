@@ -161,37 +161,43 @@ public class HomePage {
 //				role = "EVAL_ADMIN";
 			}
 			else {
-				model.addAttribute("EVAL_ADMIN", false);
+				//testing
+				model.addAttribute("EVAL_ADMIN", true);
+//				model.addAttribute("EVAL_ADMIN", false);
 			}
 			
 			
 			if(evaluatorRepository.findById(user2.getId()) != null) {
 				model.addAttribute("EVALUATOR", true);
-//				role = "EVALUATOR";
 			}
 			else {
-				model.addAttribute("EVALUATOR", false);
+				//testing
+				model.addAttribute("EVALUATOR", true);
+//				model.addAttribute("EVALUATOR", false);
 			}
 			
 			
 			if(user2.hasEvaluator()) {
 				model.addAttribute("USER", true);
-//				role = "USER";
 			}
 			else {
-				model.addAttribute("USER", false);
+				//testing
+				model.addAttribute("USER", true);
+//				model.addAttribute("USER", false);
 			}
 			
 			
 			if((user2.hasRead() || user2.hasWrite() || user2.hasDelete())) {
 				model.addAttribute("ADMIN", true);
-//				role = "ADMIN";
 			}
 			else {
-				model.addAttribute("ADMIN", false);
+				//testing
+				model.addAttribute("ADMIN", true);
+//				model.addAttribute("ADMIN", false);
 			}
-				
-							
+			
+			
+			
 			// model.addAttribute("role", user.getRoles());
 			// model.addAttribute("role", user.getRole().getName());
 //			model.addAttribute("role", role);

@@ -24,6 +24,7 @@ import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.RoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 import edu.sru.group3.WebBasedEvaluations.controller.UserController;
@@ -40,7 +41,10 @@ public class AdminMethodsServicesTest {
 	@Autowired
 	UserRepository userRepo;
 	
-	AdminMethodsService adminMeth = new AdminMethodsService(userRepo);
+	@Autowired
+	RoleRepository roleRepo;
+	
+	AdminMethodsService adminMeth = new AdminMethodsService(userRepo,roleRepo);
 
 	@BeforeAll
 	public static void newUser() {

@@ -2,7 +2,9 @@ package edu.sru.group3.WebBasedEvaluations.company;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -46,7 +48,7 @@ public class Company {
 	//maps company id to user. 
 	@NonNull
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<User> users;
+	private Set<User> users;
 	//private List<User> users = new ArrayList<>();
 	
 	
@@ -60,7 +62,7 @@ public class Company {
             name = "company_roles", 
             joinColumns = @JoinColumn(name = "company_id"), 
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles;
+    private Set<Role> roles;
 	
 	
 	public Company() {
@@ -73,8 +75,40 @@ public class Company {
 		this.numEmployees = 0;
 		this.numLocations = 0;
 		this.locations = new ArrayList<Location>();
-		this.users = new ArrayList<User>();
+		this.users = new HashSet<User>();
+		this.roles = new HashSet<Role>();
 	}
+	
+	
+	public boolean addRole(Role role) {
+		this.roles.add(role);
+		return true;
+	}
+	
+	public boolean addRoles(List<Role> roles) {
+		for(Role role : roles) {
+			this.roles.add(role);
+		}		
+		return true;
+	}
+	
+	public boolean removeRole(Role role) {
+		
+		if(this.roles.contains(role)) {
+			this.roles.remove(role);			
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	public boolean addLocation(Location loc) {
@@ -133,6 +167,16 @@ public class Company {
 		return id;
 	}
 
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -169,11 +213,11 @@ public class Company {
 		this.numLocations = numLocations;
 	}
 
-	public List<User> getUsers() {
+	public Set<User> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<User> users) {
+	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
 	

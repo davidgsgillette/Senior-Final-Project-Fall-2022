@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 
 import edu.sru.group3.WebBasedEvaluations.controller.HomePage;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
+import edu.sru.group3.WebBasedEvaluations.repository.RoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 
 /**
@@ -28,6 +29,7 @@ import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 public class AdminMethodsService {
 
 	private UserRepository userRepository;
+	private RoleRepository roleRepo;
 	private Logger log = LoggerFactory.getLogger(AdminMethodsService.class);
 	private static final int PASSWORDSIZE = 5;
 	//	private static final String ADMIN = "ADMIN";
@@ -39,9 +41,9 @@ public class AdminMethodsService {
 	/**
 	 * @param userRepository is a user repository, contains list of users
 	 */
-	public AdminMethodsService(UserRepository userRepository) {
+	public AdminMethodsService(UserRepository userRepository,RoleRepository roleRepo) {
 		this.userRepository = userRepository;
-
+		this.roleRepo = roleRepo;
 	}
 
 	@Autowired
@@ -404,7 +406,7 @@ public class AdminMethodsService {
 				user2.setPassword(user.getPassword());
 
 			} else if (hasSpace(user.getPassword())) {
-
+				user.setPassword(user2.getPassword());
 			}
 
 			else {
@@ -508,21 +510,12 @@ public class AdminMethodsService {
 //CHANGED
 		if (true) {
 
-			if (user.getRole() == null || user.getRole().getName().equals("NO ROLL")) { //user.getRoles() == ADMIN) {
+			if (user.getRole() == null || this.roleRepo.findById(user2.getRole().getId()) == null) { //user.getRoles() == ADMIN) {
 				user.setRole(user2.getRole());
-			} else {
-				if (user.getRole() == null) {
-					user.setRole(user2.getRole());
-				}
-
-				else if (user.getRole().getName().equals(user2.getRole().getName())) {
-					user2.setRole(user.getRole());
-
-				} else {
-					user2.setRole(user.getRole());
-
-					check = true;
-				}
+			} 
+			else {				
+				user2.setRole(user.getRole());
+				check = true;				
 			}
 
 		}

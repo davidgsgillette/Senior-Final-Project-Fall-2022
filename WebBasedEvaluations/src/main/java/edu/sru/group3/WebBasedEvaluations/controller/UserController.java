@@ -1,6 +1,7 @@
 package edu.sru.group3.WebBasedEvaluations.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,14 +95,19 @@ public class UserController {
 	 * @return the admin_user html page.
 	 */
 	@RequestMapping(path = { "/admin_users/", "/search" })
-	public String home(User user, Model model, String keyword, @RequestParam("perPage") Integer perPage,
+	public String home(Authentication auth, User user, Model model, String keyword, @RequestParam("perPage") Integer perPage,
 			@RequestParam("sort") String sort, @RequestParam("currPage") Integer currPage,
 			@RequestParam("sortOr") Integer sortOr) {
+		
+		
+		
+		
+		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
+		
 		List<User> listTotal = service.getAllUsers();
 		List<User> list;
 		// log.error("Loaded page");
 		// log.info("Loaded page info");
-
 		// No keyword
 		if (keyword == null || keyword.equals("")/* && count !=null */) {
 			list = adminMethodsService.sortCheck(sort, listTotal, sortOr, model);
@@ -127,6 +133,61 @@ public class UserController {
 			}
 
 		}
+		
+		
+		//fornavbar
+		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEvalPerm()) {
+			model.addAttribute("EVAL_ADMIN", true);
+//			role = "EVAL_ADMIN";
+		}
+		else {
+			//testing
+//			model.addAttribute("EVAL_ADMIN", true);
+			model.addAttribute("EVAL_ADMIN", false);
+		}
+		
+		
+		if(evaluatorRepository.findById(currentUser.getId()) != null) {
+			model.addAttribute("EVALUATOR", true);
+		}
+		else {
+			//testing
+//			model.addAttribute("EVALUATOR", true);
+			model.addAttribute("EVALUATOR", false);
+		}
+		
+		
+		if(currentUser.hasEvaluator()) {
+			model.addAttribute("USER", true);
+		}
+		else {
+			//testing
+//			model.addAttribute("USER", true);
+			model.addAttribute("USER", false);
+		}
+		
+		
+		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete())) {
+			model.addAttribute("ADMIN", true);
+		}
+		else {
+			//testing
+//			model.addAttribute("ADMIN", true);
+			model.addAttribute("ADMIN", false);
+		}
+		
+		
+		
+		// model.addAttribute("role", user.getRoles());
+		// model.addAttribute("role", user.getRole().getName());
+//		model.addAttribute("role", role);
+		//TODO: fix this. 
+		
+		Set<Role> roles = currentUser.getCompany().getRoles();
+		model.addAttribute("roles", roles);
+		model.addAttribute("EVALUATOR_EVAL", false);
+		
+		
 		model.addAttribute("keyword", keyword);
 
 		model.addAttribute("list", list);
@@ -402,13 +463,59 @@ public class UserController {
 	 * @return user_settings html webpage.
 	 */
 	@PostMapping("/change/{id}")
-	public String changeUser(@PathVariable("id") long id, @Validated User user,
+	public String changeUser(Authentication auth, @PathVariable("id") long id, @Validated User user,
 			/* BindingResult result, */ Model model) {
 		User user2 = userRepository.findByid(id);
 
 		User user3 = adminMethodsService.comparingMethod(id, user, user2, model);
 //changed
-		model.addAttribute("role", user2.getRole());
+		
+		
+		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getId());
+		
+		//navbar
+		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEvalPerm()) {
+			model.addAttribute("EVAL_ADMIN", true);
+//			role = "EVAL_ADMIN";
+		}
+		else {
+			//testing
+			model.addAttribute("EVAL_ADMIN", true);
+//			model.addAttribute("EVAL_ADMIN", false);
+		}
+		
+		
+		if(evaluatorRepository.findById(currentUser.getId()) != null) {
+			model.addAttribute("EVALUATOR", true);
+		}
+		else {
+			//testing
+			model.addAttribute("EVALUATOR", true);
+//			model.addAttribute("EVALUATOR", false);
+		}
+		
+		
+		if(currentUser.hasEvaluator()) {
+			model.addAttribute("USER", true);
+		}
+		else {
+			//testing
+			model.addAttribute("USER", true);
+//			model.addAttribute("USER", false);
+		}
+		
+		
+		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete())) {
+			model.addAttribute("ADMIN", true);
+		}
+		else {
+			//testing
+			model.addAttribute("ADMIN", true);
+//			model.addAttribute("ADMIN", false);
+		}
+		
+//		model.addAttribute("role", user2.getRole());
+		
 		model.addAttribute("id", user2.getId());
 
 		model.addAttribute("user", user2);
