@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 import edu.sru.group3.WebBasedEvaluations.domain.EvalTemplates;
 import edu.sru.group3.WebBasedEvaluations.domain.EvaluationLog;
 import edu.sru.group3.WebBasedEvaluations.domain.Group;
+import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.evalform.Evaluation;
 import edu.sru.group3.WebBasedEvaluations.evalform.GenerateEvalReport;
 import edu.sru.group3.WebBasedEvaluations.evalform.GenerateEvalReportPoi;

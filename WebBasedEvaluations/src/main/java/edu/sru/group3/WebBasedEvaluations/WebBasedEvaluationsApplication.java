@@ -147,7 +147,7 @@ class InitUsers{
 		roleRepo.save(testRole1);
 		roleRepo.save(testRole2);
 		
-		User use1 = new User("jimmy neutron","fname","lname","admin@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ", 999991, "N/A", "N/A", "N/A", "N/A", co, adminRole);
+		User use1 = new User("jimmy neutron","fname","lname","admin@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ", 999991, "N/A", "N/A", "N/A", "N/A", co, adminRole,true);
 //		adminRole.addUser(use1);
 //		roleRepo.save(adminRole);
 		userRepo.save(use1);
@@ -186,7 +186,7 @@ class InitUsers{
 //		Role adminRole = new Role("Global Admin");
 //		roleRepo.save(adminRole);
 		
-		Privilege priv = new Privilege("ADMIN",adminRole, locGroup,dept, true,true,true,false);
+		Privilege priv = new Privilege("ADMIN",adminRole, locGroup, dept, co, true,true,true,false);
 		privRepo.save(priv);
 		
 		adminRole.addPrivilege(priv);

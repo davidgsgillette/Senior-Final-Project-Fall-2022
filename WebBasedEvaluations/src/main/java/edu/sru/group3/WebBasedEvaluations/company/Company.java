@@ -2,6 +2,7 @@ package edu.sru.group3.WebBasedEvaluations.company;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,7 @@ import javax.persistence.Table;
 import org.springframework.lang.NonNull;
 
 import edu.sru.group3.WebBasedEvaluations.company.Company;
+import edu.sru.group3.WebBasedEvaluations.domain.Privilege;
 import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 
@@ -31,45 +33,48 @@ import edu.sru.group3.WebBasedEvaluations.domain.User;
 @Entity
 @Table(name = "company")
 public class Company {
-	
+
 	@Id 
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	@NonNull
 	private String companyName;
-	
+
 	@NonNull
 	private int numEmployees;
-	
+
 	@NonNull
 	private int numLocations;
-	
+
 	//maps company id to user. 
 	@NonNull
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<User> users;
 	//private List<User> users = new ArrayList<>();
-	
-	
+
+	@NonNull
+	@ManyToMany(mappedBy = "companies", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Privilege> privs;
+
 	@NonNull
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Location> locations;
-	
-	
+
+
 	@ManyToMany
-    @JoinTable(
-            name = "company_roles", 
-            joinColumns = @JoinColumn(name = "company_id"), 
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
-	
-	
+	@JoinTable(
+			name = "company_roles", 
+			joinColumns = @JoinColumn(name = "company_id"), 
+			inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles;
+
+
 	public Company() {
-		
+
 	}
-	
-	
+
+
 	public Company(String companyName) {
 		this.companyName = companyName;
 		this.numEmployees = 0;
@@ -77,46 +82,68 @@ public class Company {
 		this.locations = new ArrayList<Location>();
 		this.users = new HashSet<User>();
 		this.roles = new HashSet<Role>();
+		this.privs = new HashSet<Privilege>();
 	}
-	
-	
+
+	public boolean addPrivilege(Privilege priv) {
+		this.privs.add(priv);
+		return true;
+	}
+
+	public boolean addPrivss(Collection<Privilege> privs) {
+		this.privs.addAll(privs);
+		return true;
+	}
+
+	public boolean removePriv(Privilege priv) {
+
+		if(this.privs.contains(priv)) {
+			this.privs.remove(priv);			
+			return true;
+		}
+		return false;
+	}
+
+
+
+
 	public boolean addRole(Role role) {
 		this.roles.add(role);
 		return true;
 	}
-	
+
 	public boolean addRoles(List<Role> roles) {
 		for(Role role : roles) {
 			this.roles.add(role);
 		}		
 		return true;
 	}
-	
+
 	public boolean removeRole(Role role) {
-		
+
 		if(this.roles.contains(role)) {
 			this.roles.remove(role);			
 			return true;
 		}
 		return false;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
 	public boolean addLocation(Location loc) {
 		this.locations.add(loc);
 		this.numLocations++;
 		return true;
 	}
-	
+
 	public boolean addLocations(List<Location> locs) {
 		for(Location loc : locs) {
 			this.locations.add(loc);
@@ -124,9 +151,9 @@ public class Company {
 		}		
 		return true;
 	}
-	
+
 	public boolean removeLocation(Location loc) {
-		
+
 		if(this.locations.contains(loc)) {
 			this.locations.remove(loc);
 			this.numLocations--;
@@ -134,13 +161,13 @@ public class Company {
 		}
 		return false;
 	}
-	
+
 	public boolean addUser(User user) {
 		this.users.add(user);
 		this.numEmployees++;
 		return true;
 	}
-	
+
 	public boolean addUsers(List<User> userList) {
 		for(User user : userList) {
 			this.users.add(user);
@@ -148,9 +175,9 @@ public class Company {
 		}		
 		return true;
 	}
-	
+
 	public boolean removeUser(User user) {
-		
+
 		if(this.users.contains(user)) {
 			this.users.remove(user);
 			this.numEmployees--;
@@ -158,10 +185,10 @@ public class Company {
 		}
 		return false;
 	}
-	
-	
+
+
 	//getters and setters
-	
+
 
 	public Long getId() {
 		return id;
@@ -220,8 +247,8 @@ public class Company {
 	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
-	
-	
-	
+
+
+
 }
-	
+

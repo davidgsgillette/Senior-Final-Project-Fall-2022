@@ -61,6 +61,9 @@ public class User {
 	@NonNull
 	private String roleName;
 
+	
+	@NonNull
+	private boolean superUser;
 
 //	@NonNull
 //	private List<User> evaluatees;
@@ -111,7 +114,7 @@ public class User {
 	//adds user to a no location
 	public User(String name, String firstName, String lastName, String email, String password, /*String role,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor,
-			String divisionBranch, Company co, Role role) {
+			String divisionBranch, Company co, Role role, boolean superUser) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
@@ -132,6 +135,7 @@ public class User {
 		this.departments = new ArrayList<Department>(); 
 		this.role = role;
 		this.roleName = role.getName();
+		this.superUser = superUser;
 
 
 	}
@@ -139,7 +143,7 @@ public class User {
 	//adds user to a single location
 	public User(String name, String firstName, String lastName, String email, String password, /*String roleStr,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor, 
-			String divisionBranch, Company co, Location location, Department dept, Role role) {
+			String divisionBranch, Company co, Location location, Department dept, Role role, boolean superUser) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
@@ -161,6 +165,7 @@ public class User {
 		this.departments.add(dept);
 		this.role = role;
 		this.roleName = role.getName();
+		this.superUser = superUser;
 		
 
 	}
@@ -168,7 +173,7 @@ public class User {
 	//adds user to multiple locations. 
 	public User(String name, String firstName, String lastName, String email, String password, /*String role,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor,
-			String divisionBranch, Company co, List<Location> locations, List<Department> depts, Role role) {
+			String divisionBranch, Company co, List<Location> locations, List<Department> depts, Role role, boolean superUser) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
@@ -189,6 +194,7 @@ public class User {
 		this.departments = depts;
 		this.role = role;
 		this.roleName = role.getName();
+		this.superUser = superUser;
 
 	}
 	
@@ -305,6 +311,14 @@ public class User {
 //	public void setEvaluatees(List<User> evaluatees) {
 //		this.evaluatees = evaluatees;
 //	}
+
+	public boolean isSuperUser() {
+		return superUser;
+	}
+
+	public void setSuperUser(boolean superUser) {
+		this.superUser = superUser;
+	}
 
 	public List<Evaluator> getEvaluator() {
 		return evaluator;
