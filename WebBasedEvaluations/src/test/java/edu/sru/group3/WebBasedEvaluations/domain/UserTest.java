@@ -53,13 +53,6 @@ public class UserTest {
 		assertEquals(user.getRoleName(), actual);
 	}
 
-//	@Test
-//	void getEvaluatorTest() {
-//		List<Evaluator> actual = new ArrayList<>();
-//		user.setEvaluator(actual);
-//		assertEquals(user.getEvaluator(), actual);
-//	}
-
 	@Test
 	void getFirstNameTest() {
 		String actual = "Test";

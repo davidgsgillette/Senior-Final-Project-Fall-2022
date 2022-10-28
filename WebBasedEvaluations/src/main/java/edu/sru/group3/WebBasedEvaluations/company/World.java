@@ -70,22 +70,28 @@ public class World {
 	 * adds a list of locations
 	 */
 	public boolean addContinent(List<Continent> childContinents) {
-		for(Continent childContinent : childContinents) { 
-			this.childContinents.add(childContinent);
-			this.numContinents++;
-		}
+		
+		this.childContinents.addAll(childContinents);
+		
 		return true;
 	}
 	
 	/*
 	 * removes a continent, should not be needed though. 
 	 */
-	public boolean removeContinent(Continent childContinent) {
-		if(this.childContinents.contains(childContinent)) {
-			this.childContinents.remove(childContinent);
-			this.numContinents--;
-			return true;
+	public boolean removeContinent(long id) {
+		
+		for(int i = 0; i < childContinents.size(); i++)
+		{
+			
+			if (childContinents.get(i).getId() == id)
+			{
+				childContinents.remove(i);
+				return true;
+			}
+			
 		}
+		
 		return false;
 	}
 	

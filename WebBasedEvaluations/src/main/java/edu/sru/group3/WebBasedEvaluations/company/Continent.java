@@ -91,23 +91,30 @@ public class Continent {
 	 * adds a list of locations
 	 */
 	public boolean addCountry(List<Country> childCountries) {
-		for(Country childCountry : childCountries) { 
-			this.childCountries.add(childCountry);
-			this.numCountries++;
-		}
+		
+		this.childCountries.addAll(childCountries);
+		
+		numCountries += childCountries.size();
+		
 		return true;
 	}
 	
 	/*
 	 * removes a country, should not be needed though. 
 	 */
-	public boolean removeCountry(Country childCountry) {
-		if(this.childCountries.contains(childCountry)) {
-			this.childCountries.remove(childCountry);
-			this.numCountries--;
-			return true;
+	public boolean removeCountry(Long id) {
+		for(int i = 0; i < childCountries.size(); i++)
+		{
+			if(this.childCountries.get(i).getId() == id) {
+				this.childCountries.remove(childCountries.get(i));
+				this.numCountries--;
+				return true;
+			}
+			
 		}
+		
 		return false;
+
 	}
 
 	

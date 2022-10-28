@@ -88,22 +88,26 @@ public class Province {
 	 * adds a list of locations
 	 */
 	public boolean addCities(List<City> cities) {
-		for(City city : cities) { 
-			this.numCities++;
-			this.childCities.add(city);
-		}
+		
+		this.childCities.addAll(cities);
+		
 		return true;
 	}
 	
 	/*
 	 * removes a city, should not be needed though. 
 	 */
-	public boolean removeCity(City city) {
-		if(this.childCities.contains(city)) {
-			this.childCities.remove(city);
-			this.numCities--;			
-			return true;
+	public boolean removeCity(long id) {
+		
+		for(int i = 0; i < childCities.size(); i++) {
+			if(childCities.get(i).getId() == id) {
+				
+				childCities.remove(i);
+				return true;
+				
+			}
 		}
+		
 		return false;
 	}
 	

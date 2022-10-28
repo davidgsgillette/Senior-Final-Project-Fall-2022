@@ -109,9 +109,8 @@ public class Department {
 	 */
 	public boolean addUsers(List<User> users) {
 		
-		for(User user : users) {
-			this.users.add(user);
-		}	
+		this.users.addAll(users);
+			
 		return true;
 	}
 	
@@ -132,9 +131,9 @@ public class Department {
 	}
 	
 	public void addLocations(List<Location> locations) {
-		for(Location loc : locations) {
-			this.locations.add(loc);
-		}
+		
+		this.locations.addAll(locations);
+		
 	}
 	
 	public boolean removeLocation(Location loc) {

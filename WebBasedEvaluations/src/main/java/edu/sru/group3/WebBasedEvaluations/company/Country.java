@@ -87,10 +87,10 @@ public class Country {
 	 * adds a list of locations
 	 */
 	public boolean addProvinces(List<Province> provinces) {
-		for(Province province : provinces) { 
-			this.childProvinces.add(province);
-			this.numProvinces++;
-		}
+		
+		this.childProvinces.addAll(provinces);
+		setNumProvinces(provinces.size());
+		
 		return true;
 	}
 	

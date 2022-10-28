@@ -115,11 +115,17 @@ public class Location {
 	/*
 	 * removes a dept from a location
 	 */
-	public boolean removeDept(Department dept) {
-		if(this.departments.contains(dept)) {
-			this.departments.remove(dept);
-			return true;
+	public boolean removeDept(long id) {
+		
+		for (int i = 0; i < departments.size(); i++)
+		{
+			if (departments.get(i).getId() == id);
+			{
+				departments.remove(i);
+				return true;
+			}
 		}
+		
 		return false;
 	}	
 	
@@ -155,10 +161,7 @@ public class Location {
 	 */
 	public boolean addUsers(List<User> users) {
 		
-		for(User user : users) {
-			this.users.add(user);
-			this.numEmployees++;
-		}	
+		this.users.addAll(users);	
 		return true;
 	}
 	
