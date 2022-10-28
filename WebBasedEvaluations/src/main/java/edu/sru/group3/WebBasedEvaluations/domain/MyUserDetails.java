@@ -28,7 +28,6 @@ public class MyUserDetails implements UserDetails {
 	private String password;
 	private Role role;
 	private long Id;
-	private Long companyID;
 	//private boolean active;
 	private List<GrantedAuthority> authorities;
 	private List<User> usersUnderAuth;
@@ -44,26 +43,29 @@ public class MyUserDetails implements UserDetails {
 
 		//this.active = user.isActive();
 //		System.out.println("this is the thing: " + user.getRole().getName().split(","));
+		this.authorities = new ArrayList<GrantedAuthority>();
 		
-		
-		String roleNames = "";
-		roleNames += "USER,";
+		ArrayList<String> roleNames = new ArrayList<String>();
+		roleNames.add("USER");
 		if((user.hasRead() || user.hasWrite() || user.hasDelete()) && user.hasEvalPerm()) {
-			roleNames += "EVAL_ADMIN,";
+			roleNames.add("EVAL_ADMIN");
 		}		
 		if(user.hasEvaluator()) {
-			roleNames += "EVALUATOR,";
-			roleNames += "EVALUATOR_EVAL,";
+			roleNames.add("EVALUATOR");
+			roleNames.add("EVALUATOR_EVAL");
 		}		
 		if((user.hasRead() || user.hasWrite() || user.hasDelete())) {
-			roleNames += "ADMIN,";
+			roleNames.add("ADMIN");
+		}
+		
+		for(String roleName : roleNames) {
+			authorities.add(new SimpleGrantedAuthority(roleName));
 		}
 		
 		
-		
-		this.authorities = Arrays.stream(user.getRoleName().split(","))
-				.map(SimpleGrantedAuthority::new)
-				.collect(Collectors.toList());
+//		this.authorities = Arrays.stream(user.getRoleName().split(","))
+//				.map(SimpleGrantedAuthority::new)
+//				.collect(Collectors.toList());
 		this.usersUnderAuth = new ArrayList<User>();
 		this.deptsUnderAuth = new ArrayList<Department>();
 		this.locsUnderAuth = new ArrayList<Location>();
@@ -186,12 +188,7 @@ public class MyUserDetails implements UserDetails {
 		this.role = role;
 	}
 
-	public Long getCompanyID() {
-		return companyID;
-	}
-	public void setCompanyID(Long companyID) {
-		this.companyID = companyID;
-	}
+	
 	@Override
 	public boolean isAccountNonExpired() {
 		// TODO Auto-generated method stub
