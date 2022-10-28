@@ -4,14 +4,18 @@ package edu.sru.group3.WebBasedEvaluations.domain;
 import java.util.stream.Collectors;
 import java.util.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.company.Department;
 import edu.sru.group3.WebBasedEvaluations.company.Location;
 import edu.sru.group3.WebBasedEvaluations.company.LocationGroup;
+import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
 
 /**
  * Domain class for obtaining the currently logged in user
@@ -31,7 +35,6 @@ public class MyUserDetails implements UserDetails {
 	private List<Department> deptsUnderAuth;
 	private List<Location> locsUnderAuth;
 
-
 	public MyUserDetails(User user) {
 		this.Id = user.getId(); 
 		this.userName = user.getEmail();
@@ -41,7 +44,24 @@ public class MyUserDetails implements UserDetails {
 
 		//this.active = user.isActive();
 //		System.out.println("this is the thing: " + user.getRole().getName().split(","));
-		this.authorities = Arrays.stream(user.getPrivilegeNames().split(","))
+		
+		
+		String roleNames = "";
+		roleNames += "USER,";
+		if((user.hasRead() || user.hasWrite() || user.hasDelete()) && user.hasEvalPerm()) {
+			roleNames += "EVAL_ADMIN,";
+		}		
+		if(user.hasEvaluator()) {
+			roleNames += "EVALUATOR,";
+			roleNames += "EVALUATOR_EVAL,";
+		}		
+		if((user.hasRead() || user.hasWrite() || user.hasDelete())) {
+			roleNames += "ADMIN,";
+		}
+		
+		
+		
+		this.authorities = Arrays.stream(user.getRoleName().split(","))
 				.map(SimpleGrantedAuthority::new)
 				.collect(Collectors.toList());
 		this.usersUnderAuth = new ArrayList<User>();
@@ -70,8 +90,6 @@ public class MyUserDetails implements UserDetails {
 					}
 				}
 			}
-			//			}
-
 		}
 	}
 

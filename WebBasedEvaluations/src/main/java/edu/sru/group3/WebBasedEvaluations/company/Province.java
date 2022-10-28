@@ -37,7 +37,7 @@ public class Province {
 	private int numCities;
 
 	@NonNull
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "country_id", nullable = false)
 	private Country parentCountry;
 

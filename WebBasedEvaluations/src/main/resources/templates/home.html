@@ -22,7 +22,7 @@
 	
 
 	<!--  NAVBAR -->
-	<div class="navbar navbar-light bg-light justify-content-center">		
+	<nav class="navbar navbar-light bg-light justify-content-center">		
 		<div class="btn-group" role="group" aria-label="Button group with nested dropdown">	
 			<div class="navbar navbar-light bg-light justify-content-center">		
 				<a th:href="@{/home}" class="btn btn-outline-success" style="color:#ffffff; background-color:#4CAF50" type="button"> Home </a>
@@ -62,8 +62,7 @@
 						</ul>
 				</nav>
 				
-				<nav th:if="${USER == true}"
-				class="navbar navbar-light bg-light  justify-content-center">
+				<nav th:if="${USER == true}" class="navbar navbar-light bg-light  justify-content-center">
 					<a th:href="@{/myeval}" class="btn btn-outline-success"
 						type="button">My Evaluations</a> 
 				</nav>
@@ -74,7 +73,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</nav>
 		
 
 

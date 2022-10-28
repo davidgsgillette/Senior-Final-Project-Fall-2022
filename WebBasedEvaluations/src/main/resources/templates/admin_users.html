@@ -166,6 +166,13 @@
 											<span th:if="${#fields.hasErrors('email')}"
 												th:errors="*{email}"></span>
 										</div>
+										&nbsp
+										<div>
+											<label for="departmentName">Department</label> <input type="text"
+												th:field="*{departmentName}" id="addDepartmentName" placeholder="Department">
+											<span th:if="${#fields.hasErrors('departmentName')}"
+												th:errors="*{departmentName}"></span>
+										</div>
 									</div>
 									<div class="col" align="right">
 										<div>
@@ -180,13 +187,20 @@
 										</div>
 										&nbsp
 										<div>
-											<label for="companyName">Company Name</label> <input
-												type="text" th:field="*{companyName}" id="companyName"
-												placeholder="Company Name">
+											<label for="companyName">Company Name</label> <select th:field="*{companyName}"
+												id="companyName" name="companyName">
+										
+												<option th:each="company : ${companies}"
+													th:value="${company.companyName}"
+													th:text="${company.companyName}">
+												</option>
+
+											</select>
 										</div>
 										&nbsp
+										
 										<div>
-											<label for="divisionBranch">Division Branch</label> <input
+											<label for="divisionBranch">Division Branch(Location)</label> <input
 												type="text" th:field="*{divisionBranch}" id="divisionBranch"
 												placeholder="Division Branch">
 										</div>
@@ -213,7 +227,7 @@
 													id="roleName" name="roleName">
 											
 													<option th:each="role : ${roles}"
-														th:value="${role.id}"
+														th:value="${role.name}"
 														th:text="${role.name}">
 													</option>
 
@@ -222,7 +236,7 @@
 											&nbsp
 											<div>
 												<input type="submit" class="btn btn-outline-success "
-													value="Save User">
+													value="Add User">
 											</div>
 										</div>
 									</div>

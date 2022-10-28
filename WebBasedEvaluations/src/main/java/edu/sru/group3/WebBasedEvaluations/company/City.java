@@ -40,7 +40,7 @@ public class City {
 	private int numLocations;
 
 	@NonNull
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "province_id", nullable = false)
 	private Province parentProvince;
 

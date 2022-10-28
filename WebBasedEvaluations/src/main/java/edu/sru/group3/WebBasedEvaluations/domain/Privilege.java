@@ -47,6 +47,7 @@ public class Privilege {
 
 	
 	
+	
 	@NonNull
 	@Column(unique=true)
     private String name;

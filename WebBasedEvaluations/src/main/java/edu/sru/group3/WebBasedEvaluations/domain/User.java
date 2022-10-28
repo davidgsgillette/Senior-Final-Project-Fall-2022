@@ -3,7 +3,9 @@ package edu.sru.group3.WebBasedEvaluations.domain;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -57,48 +59,50 @@ public class User {
 
 	@NonNull
 	private String companyName;
-	
+
 	@NonNull
 	private String roleName;
 
-	
+
 	@NonNull
 	private boolean superUser;
 
-//	@NonNull
-//	private List<User> evaluatees;
-	
-	
+	//	@NonNull
+	//	private List<User> evaluatees;
+
+
 	@OneToMany(mappedBy = "user")
-	private List<Evaluator> evaluator = new ArrayList<>();
+	private Set<Evaluator> evaluator = new HashSet<Evaluator>();
 
 
 	@NonNull
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinColumn(name = "company_id", nullable = false)
 	private Company company;
 
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "user_location", 
 			joinColumns = @JoinColumn(name = "user_id"), 
 			inverseJoinColumns = @JoinColumn(name = "location_id"))
-	private List<Location> locations;
-	
+	private Set<Location> locations;
+
 	@NonNull
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "role_id", nullable = false)
 	private Role role;
-	
-	
-//	@NonNull
-//	@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//	private List<Role> roles;
-	
-	
+
+
+
+	//departments which this user is the head of (essentially this user is a supervisor over this lis tof users). 
+	@OneToMany(mappedBy = "deptHead", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Department> subDepartments;
+
+
+
 	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<Department> departments;
+	private Set<Department> departments;
 
 	// Preload
 	//private long employeeId;
@@ -106,34 +110,42 @@ public class User {
 	private String jobTitle;
 	private String supervisor;
 	private String divisionBranch;
+	private String departmentName;
 
 	public User() {
-		
+		this.locations = new HashSet<Location>();
+		this.departments = new HashSet<Department>(); 
+		this.subDepartments = new HashSet<Department>(); 
 	}
 
 	//adds user to a no location
 	public User(String name, String firstName, String lastName, String email, String password, /*String role,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor,
-			String divisionBranch, Company co, Role role, boolean superUser) {
+			String divisionBranch, String deptName, Company co, Role role, boolean superUser) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		
+		this.departmentName = deptName;
 		this.resetP = true;
 		//this.companyID = companyID;
 		this.companyName = co.getCompanyName();
 		this.company = co;
-		
+
 		//this.employeeId = employeeId;
 		this.dateOfHire = dateOfHire;
 		this.jobTitle = jobTitle;
 		this.supervisor = supervisor;
 		this.divisionBranch = divisionBranch;
-		this.locations = new ArrayList<Location>();
-		this.departments = new ArrayList<Department>(); 
-		this.role = role;
+		this.locations = new HashSet<Location>();
+		this.departments = new HashSet<Department>(); 
+		if(role == null) {
+			this.role = co.getDefaultRole();
+		}
+		else {
+			this.role = role;
+		}
 		this.roleName = role.getName();
 		this.superUser = superUser;
 
@@ -159,27 +171,32 @@ public class User {
 		this.jobTitle = jobTitle;
 		this.supervisor = supervisor;
 		this.divisionBranch = divisionBranch;
-		this.locations = new ArrayList<Location>();
+		this.locations = new HashSet<Location>();
 		this.locations.add(location);
-		this.departments = new ArrayList<Department>(); 
+		this.departments = new HashSet<Department>(); 
 		this.departments.add(dept);
-		this.role = role;
+		if(role == null) {
+			this.role = co.getDefaultRole();
+		}
+		else {
+			this.role = role;
+		}
 		this.roleName = role.getName();
 		this.superUser = superUser;
-		
+
 
 	}
 
 	//adds user to multiple locations. 
 	public User(String name, String firstName, String lastName, String email, String password, /*String role,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor,
-			String divisionBranch, Company co, List<Location> locations, List<Department> depts, Role role, boolean superUser) {
+			String divisionBranch, Company co, Set<Location> locations, Set<Department> depts, Role role, boolean superUser) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		
+
 		this.resetP = true;
 		//this.companyID = companyID;
 		this.companyName = co.getCompanyName();
@@ -192,13 +209,36 @@ public class User {
 		this.divisionBranch = divisionBranch;
 		this.locations = locations;
 		this.departments = depts;
-		this.role = role;
+		if(role == null) {
+			this.role = co.getDefaultRole();
+		}
+		else {
+			this.role = role;
+		}
 		this.roleName = role.getName();
 		this.superUser = superUser;
 
+	}	
+
+	public void addSubDept(Department dept) {
+		this.subDepartments.add(dept);
 	}
-	
-	
+
+	public void addSubDepts(Set<Department> depts) {
+		for(Department dept : depts) {
+			this.subDepartments.add(dept);
+		}
+	}
+
+	public boolean removesubDept(Department dept) {
+		if(this.subDepartments.contains(dept)) {
+			this.subDepartments.remove(dept);
+			return true;
+		}
+		return false;
+	}
+
+
 	public boolean hasRead() {
 		for(Privilege priv : this.role.getPrivileges()) {
 			if(priv.getRead() == true)
@@ -206,7 +246,7 @@ public class User {
 		}
 		return false;
 	}
-	
+
 	public boolean hasWrite() {
 		for(Privilege priv : this.role.getPrivileges()) {
 			if(priv.getWrite() == true)
@@ -214,7 +254,7 @@ public class User {
 		}
 		return false;
 	}
-	
+
 	public boolean hasDelete() {
 		for(Privilege priv : this.role.getPrivileges()) {
 			if(priv.getDelete() == true)
@@ -222,12 +262,12 @@ public class User {
 		}
 		return false;
 	}
-	
-	
+
+
 	public boolean hasEvaluator() {
 		return this.evaluator.size() > 0;
 	}
-	
+
 	//has permission to deligate evaluator permission. 
 	public boolean hasEvalPerm() {
 		for(Privilege priv : this.role.getPrivileges()) {
@@ -236,51 +276,61 @@ public class User {
 		}
 		return false;
 	}
-	
-	
+
+
 	public void addDepartment(Department dept) {
 		this.departments.add(dept);
 	}
-	public List<Department> getDepartments() {
+	public Set<Department> getDepartments() {
 		return departments;
 	}
-	
-//	public void setRoles(List<Role> roles) {
-//		this.roles = roles;
-//	}
-//
-//	public List<Role> getRoles() {
-//		if(this.roles == null) {
-//			roles.add(new Role("USER"));
-//			return roles;
-//		}
-//		return roles;
-//	}
-//	
-//	public boolean addRole(Role role) {
-//		this.roles.add(role);
-//		return true;
-//	}
-//	
-//	public boolean removeRole(Role role) {
-//		if(this.roles.contains(role)) {
-//			this.roles.remove(role);
-//			return true;
-//		}
-//		return false;
-//	}
+
+	public String getDepartmentName() {
+		return departmentName;
+	}
+
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
+
+	//	public void setRoles(List<Role> roles) {
+	//		this.roles = roles;
+	//	}
+	//
+	//	public List<Role> getRoles() {
+	//		if(this.roles == null) {
+	//			roles.add(new Role("USER"));
+	//			return roles;
+	//		}
+	//		return roles;
+	//	}
+	//	
+	//	public boolean addRole(Role role) {
+	//		this.roles.add(role);
+	//		return true;
+	//	}
+	//	
+	//	public boolean removeRole(Role role) {
+	//		if(this.roles.contains(role)) {
+	//			this.roles.remove(role);
+	//			return true;
+	//		}
+	//		return false;
+	//	}
 	public String getPrivilegeNames(){
 		String list = "";
 		for(Privilege priv : role.getPrivileges()) {
 			list += priv.getName()+",";
 		}
-		return list.substring(0,list.length()-1);
-		
+		if(list.length()>0)
+			return list.substring(0,list.length()-1);		
+		return list;
+
 	}
 	public Role getRole() {
 		if(this.role != null)
 			return role;
-		
+
 		return new Role("NO ROLL ASSIGNED");
 	}
 
@@ -289,7 +339,7 @@ public class User {
 		this.roleName = role.getName();
 	}
 
-	public void setDepartments(List<Department> departments) {
+	public void setDepartments(Set<Department> departments) {
 		this.departments = departments;
 	}
 
@@ -301,16 +351,16 @@ public class User {
 		return false;
 	}
 
-	
-	
-	
-//	public List<User> getEvaluatees() {
-//		return evaluatees;
-//	}
-//
-//	public void setEvaluatees(List<User> evaluatees) {
-//		this.evaluatees = evaluatees;
-//	}
+
+
+
+	//	public List<User> getEvaluatees() {
+	//		return evaluatees;
+	//	}
+	//
+	//	public void setEvaluatees(List<User> evaluatees) {
+	//		this.evaluatees = evaluatees;
+	//	}
 
 	public boolean isSuperUser() {
 		return superUser;
@@ -320,11 +370,11 @@ public class User {
 		this.superUser = superUser;
 	}
 
-	public List<Evaluator> getEvaluator() {
+	public Set<Evaluator> getEvaluator() {
 		return evaluator;
 	}
 
-	public void setEvaluator(List<Evaluator> evaluator) {
+	public void setEvaluator(Set<Evaluator> evaluator) {
 		this.evaluator = evaluator;
 	}
 
@@ -373,24 +423,24 @@ public class User {
 
 
 
-	public List<Location> getLocations() {
+	public Set<Location> getLocations() {
 		return locations;
 	}
 
-	public void setLocations(List<Location> locations) {
+	public void setLocations(Set<Location> locations) {
 		this.locations = locations;
 	}
 
 	public void addLocation(Location loc) {
 		this.locations.add(loc);
 	}
-	
+
 	public void addLocations(List<Location> locations) {
 		for(Location loc : locations) {
 			this.locations.add(loc);
 		}
 	}
-	
+
 	public boolean removeLocation(Location loc) {
 		if(this.locations.contains(loc)) {
 			this.locations.remove(loc);
@@ -472,8 +522,20 @@ public class User {
 		this.employeeId = employeeId;
 	}
 	 */
+
+
+
+
 	public String getDateOfHire() {
 		return dateOfHire;
+	}
+
+	public Set<Department> getSubDepartments() {
+		return subDepartments;
+	}
+
+	public void setSubDepartments(Set<Department> subDepartments) {
+		this.subDepartments = subDepartments;
 	}
 
 	public void setDateOfHire(String dateOfHire) {
@@ -532,9 +594,9 @@ public class User {
 		this.company = company;
 	}
 
-	
-	
-	
+
+
+
 
 
 }

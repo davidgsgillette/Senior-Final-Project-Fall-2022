@@ -4,14 +4,17 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import edu.sru.group3.WebBasedEvaluations.controller.HomePage;
+import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.repository.RoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
@@ -152,33 +155,31 @@ public class AdminMethodsService {
 
 			return false;
 
-		} else if (user.getCompanyName() == null
-				|| user.getCompanyName().equals("") /* || hasSpace(user.getEmail()) */) {
+		} else if (user.getCompanyName() == null || user.getCompanyName().equals("")) {
 
 			log.info("Manual User Add- " + "Company Name failed: " + user.getCompanyName());
 
 			return false;
 
-		} else if (user.getDivisionBranch() == null
-				|| user.getDivisionBranch().equals("") /* || hasSpace(user.getEmail()) */) {
+		} else if (user.getDivisionBranch() == null	|| user.getDivisionBranch().equals("")) {
 
 			log.info("Manual User Add- " + "Division Branch failed: " + user.getDivisionBranch());
 
 			return false;
 
-		} else if (user.getJobTitle() == null || user.getJobTitle().equals("") /* || hasSpace(user.getEmail()) */) {
+		} else if (user.getJobTitle() == null || user.getJobTitle().equals("") ) {
 
 			log.info("Manual User Add- " + "Job Title failed: " + user.getJobTitle());
 
 			return false;
 
-		} else if (user.getSupervisor() == null || user.getSupervisor().equals("") /* || hasSpace(user.getEmail()) */) {
+		} else if (user.getSupervisor() == null || user.getSupervisor().equals("")) {
 
 			log.info("Manual User Add- " + "Supervisor failed: " + user.getSupervisor());
 
 			return false;
 
-		} else if (user.getDateOfHire() == null || user.getDateOfHire().equals("") /* || hasSpace(user.getEmail()) */) {
+		} else if (user.getDateOfHire() == null || user.getDateOfHire().equals("")) {
 
 
 			log.info("Manual User Add- " + "Date of Hire failed: " + user.getDateOfHire());
@@ -218,11 +219,16 @@ public class AdminMethodsService {
 	 * @param sortOr   is an Integer value used to determine whether the sort order will be ascending or descending, 1 and 0 respectively.
 	 */
 	public void adminUserPageItems(String ansr, String keyword, String mess, Integer perPage, Model model, String sort,
-			Integer currPage, Integer sortOr) {
-		List<User> listTotal = service.getAllUsers();
-
+			Integer currPage, Integer sortOr, Authentication auth) {
+		//List<User> listTotal = service.getAllUsers();
+		
+		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+		User loggedInUser = userRepository.findByid(userD.getID());		
+		//gets only the users that the currently logged in user has access to. 
+		List<User> listTotal = new ArrayList<User>(loggedInUser.getRole().readableUsers());
+		
 		int startVal = 0;
-		model.addAttribute("users", userRepository.findAll());
+		model.addAttribute("users", listTotal);
 		model.addAttribute("mess", mess);
 		model.addAttribute("perPage", perPage);
 		model.addAttribute("sort", sort);
@@ -659,9 +665,6 @@ public class AdminMethodsService {
 
 		}
 
-		if (user.getRole() == null) {
-			user2.setRole(user.getRole());
-		}
 		log.info("User Post Changes- Id:" + user2.getId() + " | First Name:" + user2.getFirstName() + " | Last Name:"
 				+ user2.getLastName() + " | Suffix Name:" + user2.getSuffixName() + " | Email:" + user2.getEmail()
 				+ " | Role:" + user2.getRole().getName() + " | Company Name:" + user2.getCompanyName() + " | Division Branch:"

@@ -37,17 +37,17 @@ public class Role {
 
 
 
-	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<User> users;	
+	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	private Set<User> users;	
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "roles_privileges", 
 			joinColumns = @JoinColumn(name = "role_id"), 
 			inverseJoinColumns = @JoinColumn(name = "privilege_id"))
-	private List<Privilege> privileges;
+	private Set<Privilege> privileges;
 
-	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	private Set<Company> companies;
 
 	public Role() {
@@ -56,16 +56,17 @@ public class Role {
 
 	public Role(String name) {
 		this.name = name;
-		this.users = new ArrayList<User>();
-		this.privileges = new ArrayList<Privilege>();
+		this.users = new HashSet<User>();
+		this.privileges = new HashSet<Privilege>();
 		this.companies = new HashSet<Company>();
 	}
 
 	public Role(String name, Company co) {
 		this.name = name;
-		this.users = new ArrayList<User>();
-		this.privileges = new ArrayList<Privilege>();
+		this.users = new HashSet<User>();
+		this.privileges = new HashSet<Privilege>();
 		this.companies = new HashSet<Company>();
+		companies.add(co);
 
 	}
 
@@ -73,23 +74,23 @@ public class Role {
 
 	public Role(String name,  Privilege priv) {
 		this.name = name;
-		this.privileges = new ArrayList<Privilege>();
+		this.privileges = new HashSet<Privilege>();
 		this.privileges.add(priv);
-		this.users = new ArrayList<User>();
+		this.users = new HashSet<User>();
 		this.companies = new HashSet<Company>();
 
 	}
 
 	public Role(String name, User user, Privilege priv) {
 		this.name = name;
-		this.privileges = new ArrayList<Privilege>();
+		this.privileges = new HashSet<Privilege>();
 		this.privileges.add(priv);
-		this.users = new ArrayList<User>();
+		this.users = new HashSet<User>();
 		this.users.add(user);
 		this.companies = new HashSet<Company>();
 	}
 
-	public Role(String name, List<User> users, List<Privilege> priv) {
+	public Role(String name, Set<User> users, Set<Privilege> priv) {
 		this.name = name;
 		this.privileges = priv;
 		this.users = users;
@@ -334,6 +335,8 @@ public class Role {
 		return evalableLocGroups;
 	}
 
+	
+	
 
 	/*
 	 * checks to see which roles in a list of roles are subroles to this one. 
@@ -438,6 +441,14 @@ public class Role {
 
 	}
 
+	public Set<Company> getCompanies() {
+		return companies;
+	}
+
+	public void setCompanies(Set<Company> companies) {
+		this.companies = companies;
+	}
+
 	public boolean addUser(User u) {
 		this.users.add(u);
 		return true;
@@ -485,19 +496,19 @@ public class Role {
 		this.name = name;
 	}
 
-	public List<User> getUsers() {
+	public Set<User> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<User> users) {
+	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
 
-	public List<Privilege> getPrivileges() {
+	public Set<Privilege> getPrivileges() {
 		return privileges;
 	}
 
-	public void setPrivileges(List<Privilege> privileges) {
+	public void setPrivileges(Set<Privilege> privileges) {
 		this.privileges = privileges;
 	}
 

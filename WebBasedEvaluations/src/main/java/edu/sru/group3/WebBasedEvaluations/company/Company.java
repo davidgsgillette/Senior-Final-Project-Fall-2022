@@ -59,16 +59,16 @@ public class Company {
 
 	@NonNull
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<Location> locations;
+	private Set<Location> locations;
 
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "company_roles", 
 			joinColumns = @JoinColumn(name = "company_id"), 
-			inverseJoinColumns = @JoinColumn(name = "role_id"))
+			inverseJoinColumns = @JoinColumn(name = "role_id"))			
 	private Set<Role> roles;
-
+	
 
 	public Company() {
 
@@ -79,10 +79,11 @@ public class Company {
 		this.companyName = companyName;
 		this.numEmployees = 0;
 		this.numLocations = 0;
-		this.locations = new ArrayList<Location>();
+		this.locations = new HashSet<Location>();
 		this.users = new HashSet<User>();
 		this.roles = new HashSet<Role>();
 		this.privs = new HashSet<Privilege>();
+		roles.add(new Role("USER"));
 	}
 
 	public boolean addPrivilege(Privilege priv) {
@@ -103,8 +104,18 @@ public class Company {
 		}
 		return false;
 	}
+	public Role getDefaultRole() {
+		return getRoleByName("USER");
+	}
 
-
+	public Role getRoleByName(String roleName) {
+		for(Role role : roles) {
+			if(role.getName().toLowerCase().trim().equals(roleName.toLowerCase().trim())) {
+				return role;
+			}
+		}
+		return null;
+	}
 
 
 	public boolean addRole(Role role) {
@@ -228,11 +239,11 @@ public class Company {
 		return numLocations;
 	}
 
-	public List<Location> getLocations() {
+	public Set<Location> getLocations() {
 		return locations;
 	}
 
-	public void setLocations(List<Location> locations) {
+	public void setLocations(HashSet<Location> locations) {
 		this.locations = locations;
 	}
 

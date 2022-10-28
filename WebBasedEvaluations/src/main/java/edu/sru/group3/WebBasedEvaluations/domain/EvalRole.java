@@ -1,7 +1,9 @@
 package edu.sru.group3.WebBasedEvaluations.domain;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -23,7 +25,7 @@ public class EvalRole {
 	@OneToMany(mappedBy = "level",
 			cascade = CascadeType.ALL,
 			orphanRemoval = true)
-	private List<Evaluator> evaluator= new ArrayList<>();
+	private Set<Evaluator> evaluator= new HashSet<>();
 	public EvalRole() {
 		
 	}
@@ -32,11 +34,9 @@ public class EvalRole {
 	 * @param name is the name of the role 
 	 * @param id the the level this role is at
 	 */
-	public EvalRole(String name, int id) {
-		
+	public EvalRole(String name, int id) {		
 		this.id = id;
-		this.name =name;
-		
+		this.name =name;		
 	}
 	
 	public int getId() {
@@ -51,10 +51,10 @@ public class EvalRole {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public List<Evaluator> getEvaluator() {
+	public Set<Evaluator> getEvaluator() {
 		return evaluator;
 	}
-	public void setEvaluator(List<Evaluator> evaluator) {
+	public void setEvaluator(Set<Evaluator> evaluator) {
 		this.evaluator = evaluator;
 	}
 

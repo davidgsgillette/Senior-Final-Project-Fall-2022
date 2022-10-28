@@ -1,5 +1,6 @@
 package edu.sru.group3.WebBasedEvaluations.controller;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.Evaluator;
 import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
 import edu.sru.group3.WebBasedEvaluations.domain.Role;
@@ -138,22 +140,19 @@ public class UserController {
 		//fornavbar
 		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEvalPerm()) {
 			model.addAttribute("EVAL_ADMIN", true);
-//			role = "EVAL_ADMIN";
 		}
 		else {
-			//testing
-//			model.addAttribute("EVAL_ADMIN", true);
 			model.addAttribute("EVAL_ADMIN", false);
 		}
 		
 		
 		if(evaluatorRepository.findById(currentUser.getId()) != null) {
 			model.addAttribute("EVALUATOR", true);
+			model.addAttribute("EVALUATOR_EVAL", true);
 		}
 		else {
-			//testing
-//			model.addAttribute("EVALUATOR", true);
 			model.addAttribute("EVALUATOR", false);
+			model.addAttribute("EVALUATOR_EVAL", false);
 		}
 		
 		
@@ -161,9 +160,7 @@ public class UserController {
 			model.addAttribute("USER", true);
 		}
 		else {
-			//testing
-//			model.addAttribute("USER", true);
-			model.addAttribute("USER", false);
+			model.addAttribute("USER", true);
 		}
 		
 		
@@ -171,20 +168,32 @@ public class UserController {
 			model.addAttribute("ADMIN", true);
 		}
 		else {
-			//testing
-//			model.addAttribute("ADMIN", true);
 			model.addAttribute("ADMIN", false);
 		}
 		
 		
 		
-		// model.addAttribute("role", user.getRoles());
-		// model.addAttribute("role", user.getRole().getName());
-//		model.addAttribute("role", role);
-		//TODO: fix this. 
 		
+		
+		//companies the currently logged in user can add user to. 
+		Set<Company> companies = currentUser.getRole().writableCompanies();
+		model.addAttribute("companies", companies);
+		
+		
+		//roles the currently logged in user can grant. 
 		Set<Role> roles = currentUser.getCompany().getRoles();
-		model.addAttribute("roles", roles);
+		Set<Role> grantableRoles = new HashSet<Role>();
+		Set<String> roleNames = new HashSet<String>();		
+		roleNames.add(currentUser.getCompany().getDefaultRole().getName());
+		grantableRoles.add(currentUser.getCompany().getDefaultRole());
+		for(Role role : roles) {
+			if(currentUser.getRole().contains(role)) {
+				grantableRoles.add(role);
+				roleNames.add(role.getName());
+			}
+		}
+		
+		model.addAttribute("roles", grantableRoles);
 		model.addAttribute("EVALUATOR_EVAL", false);
 		
 		
@@ -308,7 +317,7 @@ public class UserController {
 		user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
 		model.addAttribute("user", user);
 		model.addAttribute("id", id);
-		adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr);
+		adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr,auth);
 		return "admin_user_update";
 	}
 
@@ -350,7 +359,7 @@ public class UserController {
 
 		User user2 = userRepository.findByid(id);
 
-		adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr);
+		adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
 
 		// Performs comparison between old and new user values for changes
 		User user3 = adminMethodsService.comparingMethod(id, user, user2, model);
@@ -442,7 +451,7 @@ public class UserController {
 				model.addAttribute("mess", mess);
 			}
 
-			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr);
+			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
 
 			return "admin_users";
 			// return "redirect:/admin_users/?keyword=" + keyword + "&perPage=" +

@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.suite.api.Suite;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.controller.AddUserController;
+import edu.sru.group3.WebBasedEvaluations.repository.CompanyRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.DepartmentRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.LocationRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.RoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 
 @Suite
@@ -25,10 +30,18 @@ public class AddUserControllerTest {
 	private static User user = new User();
 	BindingResult result;
 	Model model;
-	UserRepository repo;
+	UserRepository userRepo;
+	@Autowired
+	RoleRepository roleRepo;
+	@Autowired
+	CompanyRepository companyRepo;
+	@Autowired
+	LocationRepository locationRepo;
+	@Autowired
+	DepartmentRepository deptRepo;
 	Authentication auth;
 	MultipartFile file;
-	AddUserController controller = new AddUserController(repo);
+	AddUserController controller = new AddUserController(userRepo,roleRepo,companyRepo,locationRepo,deptRepo);
 	
 	
 	@BeforeAll
@@ -62,7 +75,7 @@ public class AddUserControllerTest {
 			
 		}
 		//We should not be able to add a null user if we try and it crashes it should also fail
-		assertTrue(attempt && repo.count() == 0 );
+		assertTrue(attempt && userRepo.count() == 0 );
 		
 		try {
 			
@@ -75,7 +88,7 @@ public class AddUserControllerTest {
 			
 		}
 		//We should be able to add a user and we know that we did so if the repo has an entry.
-		assertTrue(attempt && repo.count() == 1);
+		assertTrue(attempt && userRepo.count() == 1);
 		
 	}
 	
@@ -96,7 +109,7 @@ public class AddUserControllerTest {
 			
 		}
 		
-		assertTrue(attempt && repo.count() == 0);
+		assertTrue(attempt && userRepo.count() == 0);
 		
 		try {
 			
@@ -110,7 +123,7 @@ public class AddUserControllerTest {
 			
 		}
 		
-		assertTrue(attempt && repo.count() == 1);
+		assertTrue(attempt && userRepo.count() == 1);
 	}
 	
 	
