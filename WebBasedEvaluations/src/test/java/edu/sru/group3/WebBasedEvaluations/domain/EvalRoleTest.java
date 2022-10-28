@@ -1,0 +1,59 @@
+package edu.sru.group3.WebBasedEvaluations.domain;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.platform.suite.api.IncludeClassNamePatterns;
+import org.junit.platform.suite.api.Suite;
+import org.junit.platform.suite.api.SuiteDisplayName;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import org.mockito.Mock;
+
+@Suite
+@SuiteDisplayName("EvalRole Methods")
+@IncludeClassNamePatterns(".*Tests")
+public class EvalRoleTest {
+
+	List<Evaluator> evaluator= new ArrayList<>();
+	@Mock Evaluator testEvaluator;
+	static EvalRole evalRole;
+	@BeforeAll
+	static void setup() {
+		String name = "Jeremy";
+		int id = 8;
+		evalRole = new EvalRole(name, id);
+	}
+	
+	@Test
+	public void getIdTest() {
+		int actual = 1;
+		evalRole.setId(actual);
+		assertEquals(evalRole.getId(), actual);
+	}
+	
+	@Test
+	public void getNameTest() {
+		String actual = "This name is not a name that is a name";
+		evalRole.setName(actual);
+		assertEquals(evalRole.getName(), actual);
+	}
+	
+	@Test
+	public void getEvaluatorTest() {
+		Evaluator actual = testEvaluator;
+		evaluator.add(testEvaluator);
+		assertEquals(evaluator.get(0), actual);
+		
+		
+	}
+	
+	@Test
+	public void Test() {
+		
+	}
+}

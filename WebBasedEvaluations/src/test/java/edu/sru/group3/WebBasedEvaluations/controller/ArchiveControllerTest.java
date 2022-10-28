@@ -1,112 +1,44 @@
 package edu.sru.group3.WebBasedEvaluations.controller;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.suite.api.Suite;
-import org.springframework.security.core.Authentication;
-import org.springframework.ui.Model;
-
-import edu.sru.group3.WebBasedEvaluations.repository.ArchiveRepository;
-import edu.sru.group3.WebBasedEvaluations.repository.EvalRoleRepository;
-import edu.sru.group3.WebBasedEvaluations.repository.EvaluationLogRepository;
-import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
-import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
-import edu.sru.group3.WebBasedEvaluations.repository.GroupRepository;
-import edu.sru.group3.WebBasedEvaluations.repository.RevieweeRepository;
-import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.context.SpringBootTest;
 
 @Suite
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ArchiveControllerTest {
 	
-	Model model;
-	Authentication auth;
+	@Autowired
+	ArchiveController controller;
 	
-	private GroupRepository groupRepository;
+	@LocalServerPort
+	private int port;
 
-	private UserRepository userRepository;
-
-	private EvaluatorRepository evaluatorRepository;
-	private EvaluationLogRepository evaluationLogRepository;
-	private RevieweeRepository revieweeRepository;
-	private EvalRoleRepository roleRepository;
-	private EvaluationRepository evaluationRepository;
-	private EvaluationRepository evalFormRepo;
-	private ArchiveRepository archiveRepository ;
-	
-	ArchiveController controller = new ArchiveController(archiveRepository, groupRepository, userRepository, evaluatorRepository, revieweeRepository, evaluationLogRepository, roleRepository, evaluationRepository, evalFormRepo);
+	@Autowired
+	private TestRestTemplate restTemplate;
 	
 	@Test
-	public void evalGroupTest() {
-		
-		boolean attempt = false;
-		String asorb = "";
-		
-		try {
-			asorb = controller.evalGroups(null, null);
-			attempt = true;
-			
-		}
-		catch (Exception e) {
-			
-			attempt = false;
-			
-		}
-		
-		assertTrue(attempt && asorb.isEmpty());
-		asorb = "";
-		
-		try {
-			
-			asorb = controller.evalGroups(model, auth);
-			attempt = true;
-			
-		}
-		catch (Exception e) {
-			
-			attempt = false;
-			
-		}
-		
-		assertTrue(attempt && !asorb.isEmpty());
-		
+	public void sanityCheckTest() throws Exception {
+		assertThat(controller).isNotNull();
 	}
 	
 	@Test
-	public void ViewViewArchiveTest() {
-		
-		boolean attempt = false;
-		String asorb = "";
-		
-		try {
-			asorb = controller.ViewViewArchive(0, null, null);
-			attempt = true;
-			
-		}
-		catch (Exception e) {
-			
-			attempt = false;
-			
-		}
-		
-		assertTrue(attempt && asorb.isEmpty());
-		asorb = "";
-		
-		try {
-			
-			asorb = controller.ViewViewArchive(0, model, auth);
-			attempt = true;
-			
-		}
-		catch (Exception e) {
-			
-			attempt = false;
-			
-		}
-		
-		assertTrue(attempt && !asorb.isEmpty());
-		
+	public void evalGroupsTest() throws Exception {
+		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/Archivegroups", String.class)).isNotEmpty();
 	}
+	
+	@Test
+	public void ViewViewArchiveTest() throws Exception {
+		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/ViewArchive/1", String.class)).isNotEmpty();
+	}
+		
+		
 		
 
 }

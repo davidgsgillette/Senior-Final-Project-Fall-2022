@@ -64,6 +64,9 @@ public class User {
 	private String roleName;
 
 
+//	@OneToMany(mappedBy = "user")
+//	private List<Evaluator> evaluator = new ArrayList<>();
+
 
 	@NonNull
 	private boolean superUser;

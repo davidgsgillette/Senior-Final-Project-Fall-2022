@@ -94,6 +94,7 @@ public class MyUserDetails implements UserDetails {
 			}
 		}
 	}
+	
 
 	/**
 	 *A method for obtaining authority based of relation from user's role
