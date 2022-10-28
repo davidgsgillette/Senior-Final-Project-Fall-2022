@@ -139,7 +139,7 @@ public class CompanyTest {
 	@Test
 	public void getNumLocationsTest() {
 		
-		assertTrue(co.getNumLocations() == 0);
+		assertTrue(co.getNumLocations() == 1);
 		
 	}
 	

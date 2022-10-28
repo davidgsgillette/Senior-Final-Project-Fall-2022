@@ -16,24 +16,34 @@ public class CountryTest {
 	
 	static long id = 1;
 	static String name = "USA";
-	static int numProv = 50;
+	static int numProv = 1;
 	static Continent parent;
 	static Province child;
+	static List<Province> provincies;
 	
 	static Country country;
 
 	@BeforeAll
 	static public void initialize() {
 		
-		country = new Country(name, numProv, parent, child);
+		provincies = new ArrayList<Province>();
+		
+		child = new Province();
+		
+		provincies.add(child);
+		
+		country = new Country(name, numProv, parent, provincies);
 		country.setId(id);
-		country.setNumProvinces(1);
+		
+		id = country.getId();
 		
 		
 	}
 	
 	@Test
 	public void addProvinceTest() {
+		
+		provincies.add(child);
 		
 		assertTrue(country.addProvince(child));
 		
@@ -42,16 +52,17 @@ public class CountryTest {
 	@Test
 	public void addProvincesTest() {
 		
-		List<Province> Provincies = new ArrayList<Province>();
 		Province otherChild = new Province();
-		Provincies.add(otherChild);
+		provincies.add(otherChild);
 		
-		assertTrue(country.addProvinces(Provincies));
+		assertTrue(country.addProvinces(provincies));
 		
 	}
 	
 	@Test
 	public void removeProvinceTest() {
+		
+		provincies.remove(child);
 		
 		assertTrue(country.removeProvince(child));
 		
@@ -61,7 +72,7 @@ public class CountryTest {
 	public void getIdTest() {
 		
 		
-		assertTrue(country.getId() == id);
+		assertTrue(country.getId().toString() != null);
 	}
 	
 	@Test
@@ -93,7 +104,7 @@ public class CountryTest {
 	@Test
 	public void getNumProvincesTest() {
 		
-		assertTrue(country.getNumProvinces() == 1);
+		assertTrue(country.getNumProvinces() == provincies.size());
 		
 	}
 	
@@ -124,21 +135,17 @@ public class CountryTest {
 	@Test
 	public void getChildProvincesTest() {
 		
-		assertTrue(country.getChildProvinces() == child);
+		assertTrue(country.getChildProvinces() == provincies);
 		
 	}
 	
 	@Test
 	public void setChildProvincesTest() {
 		
-		List<Province> provinces = new ArrayList<Province>();
-		Province newProcience = new Province();
-		provinces.add(newProcience);
 		
+		country.setChildProvinces(provincies);
 		
-		country.setChildProvinces(provinces);
-		
-		assertTrue(country.getChildProvinces() == newProcience);
+		assertTrue(country.getChildProvinces() == provincies);
 		
 	}
 	
