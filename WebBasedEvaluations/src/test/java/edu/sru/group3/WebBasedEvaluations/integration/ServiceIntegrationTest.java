@@ -27,6 +27,7 @@ import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 import edu.sru.group3.WebBasedEvaluations.WebBasedEvaluationsApplication;
 import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
+import edu.sru.group3.WebBasedEvaluations.domain.Role;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest//(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = WebBasedEvaluationsApplication.class)
@@ -57,7 +58,9 @@ public class ServiceIntegrationTest {
 		String supervisor = "test";
 		String divisionBranch = "test";
 		Company co = new Company("test");
-        User user = new User(name, firstName, lastName, email, password, role, employeeId, dateOfHire, jobTitle, supervisor, divisionBranch, co);
+		String deptName = "test";
+		Role role1 = new Role("test");
+        User user = new User(name, firstName, lastName, email, password, employeeId, dateOfHire, jobTitle, supervisor, divisionBranch, deptName, co, role1, false);
         user.setName("intTest");
 
         //when

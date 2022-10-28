@@ -67,6 +67,7 @@ public class HomePage {
 			EvaluationRepository evaluationRepository) {
 		this.userRepository = userRepository;
 		this.evaluationRepository = evaluationRepository;
+		this.evaluatorRepository = evaluatorRepository;
 	}
 
 	/*
@@ -151,11 +152,58 @@ public class HomePage {
 		if (user2.getReset() == true) {
 			return "redirect:/firstReset";
 		} 
-		else {
+		else {		
+			
+			//adds the attributes to the webpage to see what the user has access to on the homepage.
+//			String role = "";
+			if((user2.hasRead() || user2.hasWrite() || user2.hasDelete()) && user2.hasEvalPerm()) {
+				model.addAttribute("EVAL_ADMIN", true);
+//				role = "EVAL_ADMIN";
+			}
+			else {
+				//testing
+				model.addAttribute("EVAL_ADMIN", true);
+//				model.addAttribute("EVAL_ADMIN", false);
+			}
+			
+			
+			if(evaluatorRepository.findById(user2.getId()) != null) {
+				model.addAttribute("EVALUATOR", true);
+			}
+			else {
+				//testing
+				model.addAttribute("EVALUATOR", true);
+//				model.addAttribute("EVALUATOR", false);
+			}
+			
+			
+			if(user2.hasEvaluator()) {
+				model.addAttribute("USER", true);
+			}
+			else {
+				//testing
+				model.addAttribute("USER", true);
+//				model.addAttribute("USER", false);
+			}
+			
+			
+			if((user2.hasRead() || user2.hasWrite() || user2.hasDelete())) {
+				model.addAttribute("ADMIN", true);
+			}
+			else {
+				//testing
+				model.addAttribute("ADMIN", true);
+//				model.addAttribute("ADMIN", false);
+			}
+			
+			
+			
 			// model.addAttribute("role", user.getRoles());
-			model.addAttribute("groupButton", groupButton);
-
-			model.addAttribute("role", user.getRoles());
+			// model.addAttribute("role", user.getRole().getName());
+//			model.addAttribute("role", role);
+			//TODO: fix this. 
+			model.addAttribute("EVALUATOR_EVAL", false);
+			model.addAttribute("groupButton", groupButton);			
 			model.addAttribute("user", user.getUsername());
 			model.addAttribute("id", user.getID());
 			return "home";

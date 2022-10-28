@@ -173,7 +173,7 @@ public class EvaluatorController {
     			rolenum = evaluator.get(x).getLevel().getId();
     		}
     	}
-    	if(userD.getRoles().equals("EVAL_ADMIN") ){
+    	if(userD.getRole().getName().equals("EVAL_ADMIN") ){
     		model.addAttribute("address", "/admineval/"+evaluationLog.getReviewee().getUser().getId());
     	}
     	else if(evaluationLog.getReviewee().getUser().getId() == userD.getID()) {

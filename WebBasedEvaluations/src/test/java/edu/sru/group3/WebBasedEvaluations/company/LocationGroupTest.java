@@ -37,7 +37,7 @@ public class LocationGroupTest {
 		locs = new ArrayList<Location>();
 		locs.add(loc);
 		
-		group = new LocationGroup(locs, privs);
+		group = new LocationGroup(locs, privs,"name");
 		
 		group.setId(id);
 		group.setNumLocations(5);

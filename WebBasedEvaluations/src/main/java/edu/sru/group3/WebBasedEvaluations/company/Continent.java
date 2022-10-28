@@ -38,7 +38,7 @@ public class Continent {
 	private int numCountries;
 
 	@NonNull
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "world_id", nullable = false)
 	private World parentWorld;
 

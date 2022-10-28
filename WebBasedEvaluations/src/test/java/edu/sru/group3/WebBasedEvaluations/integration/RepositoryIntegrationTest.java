@@ -27,6 +27,7 @@ import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 import edu.sru.group3.WebBasedEvaluations.WebBasedEvaluationsApplication;
 import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
+import edu.sru.group3.WebBasedEvaluations.domain.Role;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest//(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = WebBasedEvaluationsApplication.class)
@@ -51,13 +52,17 @@ public class RepositoryIntegrationTest {
     	String email = "test";
     	String password = "test";
     	String role = "test";
+    	String deptName = "test";
 		int employeeId = 1;
 		String dateOfHire = "test";
 		String jobTitle = "test";
 		String supervisor = "test";
 		String divisionBranch = "test";
 		Company co = new Company("test");
-        User user = new User(name, firstName, lastName, email, password, role, employeeId, dateOfHire, jobTitle, supervisor, divisionBranch, co);
+		Role role1 = new Role("Test");
+		String roleName = "Test";
+        User user = new User(name, firstName, lastName, email, password, employeeId, dateOfHire, jobTitle, supervisor, divisionBranch, deptName, co, role1, false);
+        
         user.setName("intTest");
 
         //when

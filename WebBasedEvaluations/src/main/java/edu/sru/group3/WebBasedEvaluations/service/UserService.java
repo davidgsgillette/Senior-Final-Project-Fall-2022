@@ -111,10 +111,10 @@ public class UserService {
 
 		else if (type.equals("role")) {
 			Collections.sort(list, new Comparator<User>() {
+//changed
 				@Override
 				public int compare(final User object1, final User object2) {
-
-					return object1.getRoles().compareTo(object2.getRoles());
+					return object1.getRole().getName().compareTo(object2.getRole().getName());
 				}
 			});
 		}

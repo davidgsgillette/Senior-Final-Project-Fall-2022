@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.SerializationUtils;
@@ -47,6 +48,7 @@ import org.slf4j.LoggerFactory;
 import edu.sru.group3.WebBasedEvaluations.domain.EvalTemplates;
 import edu.sru.group3.WebBasedEvaluations.domain.EvaluationLog;
 import edu.sru.group3.WebBasedEvaluations.domain.Group;
+import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.evalform.Evaluation;
 import edu.sru.group3.WebBasedEvaluations.evalform.GenerateEvalReport;
 import edu.sru.group3.WebBasedEvaluations.evalform.GenerateEvalReportPoi;
@@ -95,7 +97,7 @@ public class EvalFormController {
 	 */
 	@GetMapping("/admin_evaluations")
 	public String adminEvaluations(Model model) {
-
+		System.out.println("HERE NOW adminEvaluations");
 
 		// Create the directories if they do not exist, delete any existing files
 		try {
@@ -138,10 +140,13 @@ public class EvalFormController {
 		}
 
 		model.addAttribute("hasEvals", hasEvals);
-
+		
+		
 		return "eval_templates";
 	}
 
+	
+	
 
 
 	/**
@@ -281,6 +286,7 @@ public class EvalFormController {
 	 */
 	@RequestMapping("/eval_form")
 	public RedirectView saveEvalTemplate(@Validated Evaluation eval, Model model) throws Exception {
+		System.out.println("HERE NOW saveEvalTemplate");
 
 		// Create the directories if they do not exist, delete any existing files
 		try {

@@ -1,6 +1,8 @@
 package edu.sru.group3.WebBasedEvaluations.controller;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.Evaluator;
 import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
+import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
@@ -31,6 +35,7 @@ import edu.sru.group3.WebBasedEvaluations.service.UserService;
  * admin_user webpage.
  * 
  * @author Dalton Stenzel
+ * @author David Gillette
  *
  */
 @Controller
@@ -39,17 +44,19 @@ public class UserController {
 	private UserRepository userRepository;
 	private EvaluatorRepository evaluatorRepository;
 	private EvaluationRepository evaluationRepository;
+	private Authentication auth; 
 
 	private AddUserController addUserController;
 
 	private Logger log = LoggerFactory.getLogger(UserController.class);
 
-	private static final String ADMIN = "ADMIN";
-	private static final String COMPANY_ADMIN = "COMPANY_ADMIN";
-	private static final String EVALUATOR_EVAL = "EVALUATOR_EVAL";
-	private static final String EVAL_ADMIN = "EVAL_ADMIN";
-	private static final String EVALUATOR = "EVALUATOR";
-	private static final String USER = "USER";
+//	private static final String ADMIN = "ADMIN";
+//	private static final String COMPANY_ADMIN = "COMPANY_ADMIN";
+//	private static final String EVALUATOR_EVAL = "EVALUATOR_EVAL";
+//	private static final String EVAL_ADMIN = "EVAL_ADMIN";
+//	private static final String EVALUATOR = "EVALUATOR";
+//	private static final String USER = "USER";
+	
 
 	@Autowired
 	private AdminMethodsService adminMethodsService;
@@ -90,22 +97,24 @@ public class UserController {
 	 * @return the admin_user html page.
 	 */
 	@RequestMapping(path = { "/admin_users/", "/search" })
-	public String home(User user, Model model, String keyword, @RequestParam("perPage") Integer perPage,
+	public String home(Authentication auth, User user, Model model, String keyword, @RequestParam("perPage") Integer perPage,
 			@RequestParam("sort") String sort, @RequestParam("currPage") Integer currPage,
 			@RequestParam("sortOr") Integer sortOr) {
+		
+		
+		
+		
+		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
+		
 		List<User> listTotal = service.getAllUsers();
 		List<User> list;
 		// log.error("Loaded page");
 		// log.info("Loaded page info");
-
 		// No keyword
 		if (keyword == null || keyword.equals("")/* && count !=null */) {
-
 			list = adminMethodsService.sortCheck(sort, listTotal, sortOr, model);
+			
 			list = adminMethodsService.pageCalc(list, currPage, perPage, sort, keyword, model);
-
-
-
 		}
 		// Has keyword
 		else {
@@ -126,6 +135,68 @@ public class UserController {
 			}
 
 		}
+		
+		
+		//fornavbar
+		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEvalPerm()) {
+			model.addAttribute("EVAL_ADMIN", true);
+		}
+		else {
+			model.addAttribute("EVAL_ADMIN", false);
+		}
+		
+		
+		if(evaluatorRepository.findById(currentUser.getId()) != null) {
+			model.addAttribute("EVALUATOR", true);
+			model.addAttribute("EVALUATOR_EVAL", true);
+		}
+		else {
+			model.addAttribute("EVALUATOR", false);
+			model.addAttribute("EVALUATOR_EVAL", false);
+		}
+		
+		
+		if(currentUser.hasEvaluator()) {
+			model.addAttribute("USER", true);
+		}
+		else {
+			model.addAttribute("USER", true);
+		}
+		
+		
+		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete())) {
+			model.addAttribute("ADMIN", true);
+		}
+		else {
+			model.addAttribute("ADMIN", false);
+		}
+		
+		
+		
+		
+		
+		//companies the currently logged in user can add user to. 
+		Set<Company> companies = currentUser.getRole().writableCompanies();
+		model.addAttribute("companies", companies);
+		
+		
+		//roles the currently logged in user can grant. 
+		Set<Role> roles = currentUser.getCompany().getRoles();
+		Set<Role> grantableRoles = new HashSet<Role>();
+		Set<String> roleNames = new HashSet<String>();		
+		roleNames.add(currentUser.getCompany().getDefaultRole().getName());
+		grantableRoles.add(currentUser.getCompany().getDefaultRole());
+		for(Role role : roles) {
+			if(currentUser.getRole().contains(role)) {
+				grantableRoles.add(role);
+				roleNames.add(role.getName());
+			}
+		}
+		
+		model.addAttribute("roles", grantableRoles);
+		model.addAttribute("EVALUATOR_EVAL", false);
+		
+		
 		model.addAttribute("keyword", keyword);
 
 		model.addAttribute("list", list);
@@ -162,8 +233,38 @@ public class UserController {
 		} else {
 			groupButton = true;
 		}
-
-		model.addAttribute("role", user.getRoles());
+//changed
+		if((user.hasRead() || user.hasWrite() || user.hasDelete()) && user.hasEvalPerm()) {
+			model.addAttribute("EVAL_ADMIN", true);
+		}
+		else {
+			model.addAttribute("EVAL_ADMIN", false);
+		}
+		
+		
+		if(evaluatorRepository.findById(user.getId()) != null) {
+			model.addAttribute("EVALUATOR", true);
+		}
+		else {
+			model.addAttribute("EVALUATOR", false);
+		}
+		
+		
+		if(user.hasEvaluator()) {
+			model.addAttribute("USER", true);
+		}
+		else {
+			model.addAttribute("USER", false);
+		}
+		
+		
+		if((user.hasRead() || user.hasWrite() || user.hasDelete())) {
+			model.addAttribute("ADMIN", true);
+		}
+		else {
+			model.addAttribute("ADMIN", false);
+		}
+//		model.addAttribute("roles", user.getRole().getName());
 		model.addAttribute("id", user.getId());
 		model.addAttribute("groupButton", groupButton);
 
@@ -216,7 +317,7 @@ public class UserController {
 		user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
 		model.addAttribute("user", user);
 		model.addAttribute("id", id);
-		adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr);
+		adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr,auth);
 		return "admin_user_update";
 	}
 
@@ -258,7 +359,7 @@ public class UserController {
 
 		User user2 = userRepository.findByid(id);
 
-		adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr);
+		adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
 
 		// Performs comparison between old and new user values for changes
 		User user3 = adminMethodsService.comparingMethod(id, user, user2, model);
@@ -310,7 +411,7 @@ public class UserController {
 	public Object deleteUser(@PathVariable("id") long id, @RequestParam("keyword") String keyword,
 			@RequestParam("perPage") Integer perPage, Model model, @RequestParam("sort") String sort,
 			@RequestParam("currPage") Integer currPage, @RequestParam("sortOr") Integer sortOr, User deletedUser,
-			RedirectAttributes redir) {
+			RedirectAttributes redir, Authentication auth) {
 		String ansr = null;
 		String mess = null;
 
@@ -327,7 +428,8 @@ public class UserController {
 			return redirectView;
 		} else {
 			//if user to be deleted is an admin
-			if (user.getRoles().equals(ADMIN)) {
+			MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+			if(!userD.getUsers().contains(user)){
 				// System.out.println("Detected Admin");
 
 				ansr = "addFail";
@@ -340,7 +442,7 @@ public class UserController {
 			} else {
 
 				log.info("User Deleted- Id:" + user.getId() + " | First Name:" + user.getFirstName() + " | Last Name:"
-						+ user.getLastName() + " | Role:" + user.getRoles());
+						+ user.getLastName() + " | Role:" + user.getRole().getName());
 
 				userRepository.delete(user);
 				ansr = "addPass";
@@ -349,7 +451,7 @@ public class UserController {
 				model.addAttribute("mess", mess);
 			}
 
-			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr);
+			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
 
 			return "admin_users";
 			// return "redirect:/admin_users/?keyword=" + keyword + "&perPage=" +
@@ -370,13 +472,59 @@ public class UserController {
 	 * @return user_settings html webpage.
 	 */
 	@PostMapping("/change/{id}")
-	public String changeUser(@PathVariable("id") long id, @Validated User user,
+	public String changeUser(Authentication auth, @PathVariable("id") long id, @Validated User user,
 			/* BindingResult result, */ Model model) {
 		User user2 = userRepository.findByid(id);
 
 		User user3 = adminMethodsService.comparingMethod(id, user, user2, model);
-
-		model.addAttribute("role", user2.getRoles());
+//changed
+		
+		
+		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getId());
+		
+		//navbar
+		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEvalPerm()) {
+			model.addAttribute("EVAL_ADMIN", true);
+//			role = "EVAL_ADMIN";
+		}
+		else {
+			//testing
+			model.addAttribute("EVAL_ADMIN", true);
+//			model.addAttribute("EVAL_ADMIN", false);
+		}
+		
+		
+		if(evaluatorRepository.findById(currentUser.getId()) != null) {
+			model.addAttribute("EVALUATOR", true);
+		}
+		else {
+			//testing
+			model.addAttribute("EVALUATOR", true);
+//			model.addAttribute("EVALUATOR", false);
+		}
+		
+		
+		if(currentUser.hasEvaluator()) {
+			model.addAttribute("USER", true);
+		}
+		else {
+			//testing
+			model.addAttribute("USER", true);
+//			model.addAttribute("USER", false);
+		}
+		
+		
+		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete())) {
+			model.addAttribute("ADMIN", true);
+		}
+		else {
+			//testing
+			model.addAttribute("ADMIN", true);
+//			model.addAttribute("ADMIN", false);
+		}
+		
+//		model.addAttribute("role", user2.getRole());
+		
 		model.addAttribute("id", user2.getId());
 
 		model.addAttribute("user", user2);

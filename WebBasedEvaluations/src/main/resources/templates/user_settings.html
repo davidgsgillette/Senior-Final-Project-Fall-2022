@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html xmlns:th="https://www.thymeleaf.org">
 <head>
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
@@ -18,29 +18,22 @@
 </head>
 <body>
 
-	<div th:switch="${role}">
-
-		<!-- ADMIN NAVBAR -->
-		<nav th:case="ADMIN" class="navbar navbar-light bg-light justify-content-center">
-			<div class="btn-group" role="group">
-
-				<a th:href="@{/home}" class="btn btn-outline-success " type="button"> Home </a>
-				<a th:href="@{/admin_users/?keyword={keyword}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage=0,keyword='',sort=id,currPage=1,sortOr=1)}"
-					class="btn btn-outline-success" type="button">Manage Users</a> <a style="color:#ffffff; background-color:#4CAF50"
-					th:href="@{/user_settings/}" class="btn btn-outline-success" type="button">My Account</a>
-				<a th:href="@{/download_log_txt}" class="btn btn-outline-success d-flex" type="button">Download Log File</a>
-			</div>
-			<a th:href="@{/logout}" class="btn btn-outline-danger d-flex" type="button"> Logout </a>
-
-		</nav>
-
-
-		<!-- EVAL ADMIN NAVBAR -->
-		<nav th:case="EVAL_ADMIN"
+	<!--  NAVBAR -->
+	<div class="navbar navbar-light bg-light justify-content-center">
+		<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+		
+			<nav th:if="${ADMIN == true}"
 			class="navbar navbar-light bg-light justify-content-center">
-			<div class="btn-group" role="group">
-				<a th:href="@{/home}" class="btn btn-outline-success " type="button">Home</a>
-				
+				<a th:href="@{/admin_users/?keyword={keyword}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage= 0,keyword='',sort='id',currPage=1,sortOr=1)}"
+				class="btn btn-outline-success" type="button">Manage Users</a>
+				<a th:href="@{/home}" class="btn btn-outline-success"  type="button"> Home </a>
+				<a th:href="@{/download_log_txt}" class="btn btn-outline-success d-flex" type="button">Download Log File</a>		
+			</nav>
+			
+			<nav th:if="${EVAL_ADMIN == true}"
+			class="navbar navbar-light bg-light justify-content-center">
+				<a th:href="@{/admin_evaluations}" class="btn btn-outline-success" type="button">Evaluation Forms</a>
+				<a th:href="@{/Archivegroups}" class="btn btn-outline-success" type="button">Archive</a>
 				<th:block th:if="${groupButton == true}">
 					<a th:href="@{/admin_groups}" class="btn btn-outline-success" type="button">Groups</a>
 				</th:block>
@@ -49,65 +42,38 @@
 						<a href="#" class="btn btn-outline-success disabled" type="button">Groups</a>
 					</span>
 				</th:block>
+			</nav>
 				
-				<a th:href="@{/admin_evaluations}" class="btn btn-outline-success"
-					type="button">Evaluation Forms</a> <a th:href="@{/Archivegroups}"
-					class="btn btn-outline-success" type="button">Archive</a>
-				<a th:href="@{/user_settings/}" class="btn" type="button"
-					style="color:#ffffff; background-color:#4CAF50">My Account</a>
-
-			</div>
-			<a th:href="@{/logout}" class="btn btn-outline-danger d-flex" type="button"> Logout </a>
-		</nav>
-
-
-		<!-- EVALUATOR NAVBAR -->
-		<nav th:case="EVALUATOR" class="navbar navbar-light bg-light justify-content-center">
-			<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-				<a th:href="@{/home}" class="btn btn-outline-success"  type="button">Home</a>
-				<a th:href="@{/Evaluationgroups}" class="btn btn-outline-success" type="button">Evaluation Groups</a>
-				<a th:href="@{/user_settings}" class="btn" style="color:#ffffff; background-color:#4CAF50" type="button" >My Account</a>
-
-			</div>
-			<a th:href="@{/logout}" class="btn btn-outline-danger d-flex" type="button"> Logout </a>
-		</nav>
-
-
-		<!-- USER NAVBAR -->
-		<nav th:case="USER"
-			class="navbar navbar-light bg-light  justify-content-center">
-			<div class="btn-group" role="group">
-				<a th:href="@{/home}" class="btn btn-outline-success " type="button">Home</a>
-
-				<a th:href="@{/myeval}" class="btn btn-outline-success"
-					type="button">My Evaluations</a> <a th:href="@{/user_settings/}"
-					class="btn" type="button" style="color:#ffffff; background-color:#4CAF50">My Account</a>
-
-			</div>
-			<a th:href="@{/logout}" class="btn btn-outline-danger d-flex"
-				type="button"> Logout </a>
-
-		</nav>
-		
-		<!-- EVALUATOR_EVAL NAVBAR -->
-		<nav th:case="EVALUATOR_EVAL" class="navbar navbar-light bg-light justify-content-center">
-			<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-				<a th:href="@{/home}" class="btn btn-outline-success" type="button">Home</a>
-				<div class="btn-group" role="group">
-					<button id="btnGroupDrop1" type="button" class="btn btn-outline-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Evaluate</button>
+			<nav th:if="${EVALUATOR == true}" 
+			class="navbar navbar-light bg-light justify-content-center">
+				<a th:href="@{/Evaluationgroups}" class="btn btn-outline-success" type="button">Evaluation Groups</a>		
+			</nav>
+			
+			<nav th:if="${EVALUATOR_EVAL == true}"
+			class="navbar navbar-light bg-light justify-content-center">
+				<button id="btnGroupDrop1" type="button"
+						class="btn btn-outline-success dropdown-toggle"
+						data-bs-toggle="dropdown" aria-expanded="false">Evaluate</button>
 					<ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
 						<li><a class="dropdown-item" th:href="@{/Evaluationgroups}">View Groups</a></li>
-						<li><a class="dropdown-item" th:href="@{/myeval}">My Evaluations</a></li>
 					</ul>
-				</div>
-
-				<a th:href="@{/user_settings/}" class="btn btn-outline-success"
-					type="button" style="color:#ffffff; background-color:#4CAF50">My Account</a>
+			</nav>
+						
+			<nav th:if="${USER == true}"
+			class="navbar navbar-light bg-light  justify-content-center">
+				<a th:href="@{/myeval}" class="btn btn-outline-success"
+					type="button">My Evaluations</a> 
+			</nav>
+			<div class="navbar navbar-light bg-light justify-content-center">
+				<a th:href="@{/user_settings/?keyword={keyword}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage=${perPage},keyword=${keyword},sort=${sort},currPage=${currPage}, sortOr=${sortOr})}"
+						class="btn btn-outline-success" style="color:#ffffff; background-color:#4CAF50" type="button">My Account</a>
+				<a th:href="@{/logout}" class="btn btn-outline-danger d-flex" type="button"> Logout </a>
 			</div>
-			<a th:href="@{/logout}" class="btn btn-outline-danger d-flex"
-				type="button"> Logout </a>
-		</nav>
+		</div>
 	</div>
+
+		
+	
 
 	<div class="container  mt-5">
 		<div th:switch="${ansr}">

@@ -2,6 +2,9 @@ package edu.sru.group3.WebBasedEvaluations;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
@@ -22,8 +25,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import edu.sru.group3.WebBasedEvaluations.controller.AddUserController;
 import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
+import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
-
+import edu.sru.group3.WebBasedEvaluations.repository.CompanyRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.DepartmentRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.LocationRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.RoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 import edu.sru.group3.WebBasedEvaluations.service.UserService;
@@ -39,6 +46,14 @@ public class RepositoryTest {
 	private static User user;
 	@Autowired
 	UserRepository userRepo;
+	@Autowired
+	RoleRepository roleRepo;
+	@Autowired
+	CompanyRepository companyRepo;
+	@Autowired
+	LocationRepository locationRepo;
+	@Autowired
+	DepartmentRepository deptRepo;
 	//@Autowired
 	@MockBean
 	AdminMethodsService adminMethodsService;
@@ -64,14 +79,14 @@ public class RepositoryTest {
 		assertEquals(userD.getUsername(), "jimmy@gmail.com");
 
 
-		AddUserController addCon = new AddUserController(userRepo);
+		AddUserController addCon = new AddUserController(userRepo,roleRepo,companyRepo,locationRepo,deptRepo);
 		User user2 = new User();
 		// user2.setId((long)1);
 
 		user2.setFirstName("test2");
 		user2.setLastName("Stenzel");
 		user2.setEmail("test2@gmail.com");
-		user2.setRoles("USER");
+		user2.setRole(new Role("USER"));
 		user2.setEncryptedPassword("test");
 
 		user2.setCompanyName("Thangiah Inc");

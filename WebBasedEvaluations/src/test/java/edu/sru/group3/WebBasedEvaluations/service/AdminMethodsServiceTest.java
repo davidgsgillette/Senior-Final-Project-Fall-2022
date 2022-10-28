@@ -22,6 +22,7 @@ import org.junit.platform.suite.api.SuiteDisplayName;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.RoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 import edu.sru.group3.WebBasedEvaluations.controller.UserController;
@@ -38,7 +39,10 @@ public class AdminMethodsServiceTest {
 	@Autowired
 	UserRepository userRepo;
 	
-	AdminMethodsService adminMeth = new AdminMethodsService(userRepo);
+	@Autowired
+	RoleRepository roleRepo;
+	
+	AdminMethodsService adminMeth = new AdminMethodsService(userRepo,roleRepo);
 
 	@BeforeAll
 	public static void newUser() {
@@ -48,7 +52,7 @@ public class AdminMethodsServiceTest {
 		user.setLastName("Thangiah");
 		user.setCompanyName("Thangiah Inc");
 		user.setDivisionBranch("Retroville");
-		user.setRoles("USER");
+		user.setRoleName("USER");
 		user.setSupervisor("Jimmy");
 		user.setEmail("sam.thangiah@sru.edu");
 		user.setEncryptedPassword("test");
@@ -57,7 +61,7 @@ public class AdminMethodsServiceTest {
 		user2.setFirstName("Dalton");
 		user2.setLastName("Stenzel");
 		user2.setEmail("daltonrstenzel@gmail.com");
-		user2.setRoles("USER");
+		user2.setRoleName("USER");
 		user2.setEncryptedPassword("test");
 		
 		user2.setCompanyName("Thangiah Inc");
@@ -70,7 +74,7 @@ public class AdminMethodsServiceTest {
 		user3.setFirstName("Dalton");
 		user3.setLastName("Stenzel");
 		user3.setEmail("daltonrstenzel @gmail.com");
-		user3.setRoles("USER");
+		user3.setRoleName("USER");
 		user3.setEncryptedPassword("test");
 		
 		user3.setCompanyName("Thangiah Inc");

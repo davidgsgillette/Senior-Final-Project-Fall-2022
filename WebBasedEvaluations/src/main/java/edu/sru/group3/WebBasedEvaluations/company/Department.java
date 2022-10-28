@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import edu.sru.group3.WebBasedEvaluations.domain.Privilege;
@@ -30,17 +32,21 @@ public class Department {
 	//department name
 	private String name;
 	
-	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "deptHead_user_id")
+	private User deptHead;
 	
 	//locations
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "dept_locations", 
 			joinColumns = @JoinColumn(name = "dept_id"), 
 			inverseJoinColumns = @JoinColumn(name = "location_id"))
 	private List<Location> locations;
+	
+	
 	//users
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "dept_users", 
 			joinColumns = @JoinColumn(name = "dept_id"), 
@@ -59,7 +65,7 @@ public class Department {
 		this.name = "";
 	}
 	
-	public Department(User user, Location loc, String name, Privilege priv) {
+	public Department(User user, Location loc, String name, Privilege priv, User deptHead) {
 		users = new ArrayList<User>();
 		users.add(user);
 		locations = new ArrayList<Location>();
@@ -67,6 +73,7 @@ public class Department {
 		this.privileges.add(priv);
 		locations.add(loc);
 		this.name = name;
+		this.deptHead = deptHead;
 	}
 	
 	public Department(List<User> users, List<Location> locations, String name, List<Privilege> privs) {
@@ -137,6 +144,17 @@ public class Department {
 		return false;
 	}
 	
+	
+	
+	
+	public User getDeptHead() {
+		return deptHead;
+	}
+
+	public void setDeptHead(User deptHead) {
+		this.deptHead = deptHead;
+	}
+
 	public String getName() {
 		return name;
 	}

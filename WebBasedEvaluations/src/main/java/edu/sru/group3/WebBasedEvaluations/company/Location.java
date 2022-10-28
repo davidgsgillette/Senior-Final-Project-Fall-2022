@@ -38,17 +38,17 @@ public class Location {
 	
 	
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "company_id", nullable = false)
 	private Company company;
 
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "location_group_id", nullable = false)
 	private LocationGroup locGroup;
 
 	@NonNull
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "city_id", nullable = false)
 	private City parentCity;
 	
@@ -58,12 +58,12 @@ public class Location {
 	
 	
 	
-	@ManyToMany(mappedBy = "locations", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "locations", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	private List<Department> departments;
 	
 	
 	 
-	@ManyToMany(mappedBy = "locations", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "locations", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	private List<User> users;
 
 	
