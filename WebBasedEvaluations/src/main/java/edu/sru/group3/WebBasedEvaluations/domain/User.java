@@ -105,7 +105,7 @@ public class User {
 
 	//adds user to a no location
 	public User(String name, String firstName, String lastName, String email, String password, String role,
-			int employeeId, String dateOfHire, String jobTitle, String supervisor,
+			long employeeId, String dateOfHire, String jobTitle, String supervisor,
 			String divisionBranch, Company co) {
 		this.firstName = firstName;
 		this.lastName = lastName;

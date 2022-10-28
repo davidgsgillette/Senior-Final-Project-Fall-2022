@@ -3,6 +3,7 @@ package edu.sru.group3.WebBasedEvaluations.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.tomcat.util.http.parser.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +39,7 @@ import edu.sru.group3.WebBasedEvaluations.service.UserService;
  *
  */
 @Controller
+@RequestMapping({ "/adduser/" })
 public class AddUserController {
 	// set up a UserRepositoty variable
 	private UserRepository userRepository;
@@ -53,9 +56,10 @@ public class AddUserController {
 	
 	@PostMapping
 	(value = "/adduser/")
-    public ResponseEntity<User> addUserPost(HttpServletRequest request,
+    public ResponseEntity<User> addUserPost(@Validated @RequestBody User user, HttpServletRequest request,
                                         UriComponentsBuilder uriComponentsBuilder) {
 
+		System.out.println("Entered Post Request Mapping");
         var content = request.getParameter("content");
 
         String name = request.getParameter("name");
@@ -70,9 +74,11 @@ public class AddUserController {
 		String divisionBranch = request.getParameter("divisonBranch");
 		Company co = new Company(null);
         
-        User user = new User(name, firstName, lastName, email, password, role, 1, dateOfHire, jobTitle, supervisor, divisionBranch, co);
-        
-        //this.addUser(user);
+        //user = new User(name, firstName, lastName, email, password, role, 1, dateOfHire, jobTitle, supervisor, divisionBranch, co);
+        user.setId((long) 69420);
+        user.setCompany(co);
+        user.setEmail(email);
+        userRepository.save(user);
 
         UriComponents uriComponents =
                 uriComponentsBuilder.path("/admin_users/{id}").buildAndExpand(user.getId());
@@ -106,7 +112,7 @@ public class AddUserController {
 	 *                 sort will take place: ascending(1) or descending(0).
 	 * @return admin_users html webpage.
 	 */
-	@RequestMapping({ "/adduser/" })
+	@GetMapping({ "/adduser/" })
 	public String addUser(@Validated User user, BindingResult result, Model model, Authentication auth,
 			/* @RequestParam("keyword") */ String keyword, @RequestParam("perPage") Integer perPage,
 			@RequestParam("sort") String sort, @RequestParam("currPage") Integer currPage,
