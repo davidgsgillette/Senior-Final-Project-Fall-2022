@@ -158,8 +158,10 @@ public class AddUserController {
 					check = false;
 				}
 			}
-			else {				
-				user.setRole(co.getDefaultRole());
+			else {			
+				Role newRole = new Role(user.getRoleName());
+				co.addRole(newRole);
+				user.setRole(newRole);
 			}
 			if(dept != null) {
 				if(adminUser.getRole().writableDepartments().contains(dept)) {
@@ -338,9 +340,8 @@ public class AddUserController {
 						String roleName = (ExcelRead_group.checkStringType(sheet.getRow(i).getCell(5)));
 						user2.setDateOfHire(ExcelRead_group.checkStringType(sheet.getRow(i).getCell(7)));
 						user2.setJobTitle(ExcelRead_group.checkStringType(sheet.getRow(i).getCell(8)));
-						String deptName = ExcelRead_group.checkStringType(sheet.getRow(i).getCell(9));	
-						String isDeptManager = ExcelRead_group.checkStringType(sheet.getRow(i).getCell(10));							
-						boolean setAsDeptManager = isDeptManager.trim().toLowerCase().equals("true");
+						String deptName = ExcelRead_group.checkStringType(sheet.getRow(i).getCell(9));							
+						boolean setAsDeptManager = ExcelRead_group.checkBooleanType(sheet.getRow(i).getCell(10));
 						String companyName = ExcelRead_group.checkStringType(sheet.getRow(i).getCell(11));
 						user2.setCompanyName(companyName);
 						String locationName = ExcelRead_group.checkStringType(sheet.getRow(i).getCell(12));
@@ -385,15 +386,11 @@ public class AddUserController {
 								throw new Exception("current user " + currentUser.getName() + " does not have permission to assign role "  +role.getName()+ " to a user.");
 							}
 						}
-						else {
-							Role defaultCompanyRole = co.getRoleByName("USER");
-							if(defaultCompanyRole != null) {
-								user2.setRole(defaultCompanyRole);
-							}
-							else {
-								throw new Exception("No Default role assigned for company " + co.getCompanyName() + ", either assign one or add a different \n "
-										+" role to user " +user2.getName());
-							}
+						else {							
+							Role newRole = new Role(roleName);
+							co.addRole(newRole);
+							user2.setRole(newRole);
+							
 						}
 
 						//sets the department and supervisor based on the dept we are adding the user to. 
