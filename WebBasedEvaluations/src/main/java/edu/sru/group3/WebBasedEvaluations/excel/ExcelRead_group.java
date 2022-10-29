@@ -40,6 +40,21 @@ public class ExcelRead_group {
 		
 	}
 	
+	// checkStringType
+		public static boolean checkBooleanType(XSSFCell testCell)
+		{
+			if (testCell != null) {
+				if(testCell.getCellType() == CellType.BOOLEAN)
+				{
+					return testCell.getBooleanCellValue();
+				}				
+				return false;
+			} else {
+				return false;
+			}
+			
+		}
+		
 	// checkIntType
 	public static int checkIntType(XSSFCell testCell)
 	{

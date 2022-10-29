@@ -81,7 +81,7 @@ class InitUsers{
 		PrivilegeRepository privRepo = configurableApplicationContext.getBean(PrivilegeRepository.class);
 		//making instances to add to the tables. 
 		
-		Company co = new Company("testCO");
+		Company co = new Company("Thangiah Manufacturing LLC");
 		
 		
 		World world = new World();
@@ -197,6 +197,41 @@ class InitUsers{
 		locationRepo.save(loc);
 		roleRepo.save(testRole1);
 		roleRepo.save(testRole2);
+		
+		
+		
+		
+		
+		
+		
+		//adding example companies. 
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		 
 		
 	}
