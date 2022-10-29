@@ -11282,3 +11282,9 @@ Caused by: java.sql.SQLSyntaxErrorException: Table 'web_eval.user_location' does
 2022-10-29 14:00:19.675  INFO 41484 --- [http-nio-8080-exec-7] e.s.g.W.controller.GroupController       : group was added 
 2022-10-29 14:00:20.610  INFO 41484 --- [http-nio-8080-exec-8] e.s.g.W.controller.GroupController       : admin group was open 
 2022-10-29 14:08:48.531  INFO 41484 --- [http-nio-8080-exec-4] e.s.g.W.controller.HomePage              : User logged in- ID:18 | First Name: Bonnie | Last Name: Haney
+2022-10-29 14:08:58.963  INFO 41484 --- [http-nio-8080-exec-1] e.s.g.W.controller.HomePage              : User logged in- ID:18 | First Name: Bonnie | Last Name: Haney
+2022-10-29 14:12:35.418  INFO 41484 --- [RMI TCP Connection(17)-127.0.0.1] inMXBeanRegistrar$SpringApplicationAdmin : Application shutdown requested.
+2022-10-29 14:12:35.494  INFO 41484 --- [RMI TCP Connection(17)-127.0.0.1] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-10-29 14:12:35.495  INFO 41484 --- [RMI TCP Connection(17)-127.0.0.1] .SchemaDropperImpl$DelayedDropActionImpl : HHH000477: Starting delayed evictData of schema as part of SessionFactory shut-down'
+2022-10-29 14:12:36.522  INFO 41484 --- [RMI TCP Connection(17)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-10-29 14:12:36.540  INFO 41484 --- [RMI TCP Connection(17)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
