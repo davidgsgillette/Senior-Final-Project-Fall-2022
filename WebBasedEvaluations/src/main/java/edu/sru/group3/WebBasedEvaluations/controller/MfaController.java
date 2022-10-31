@@ -72,19 +72,19 @@ public class MfaController {
 		return "third-factor";
 	}
 
-	@PostMapping("/third-factor")
-	public void processThirdFactor(@RequestParam("answer") String answer, MfaAuthentication authentication,
-			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		String encodedAnswer = getAnswer(authentication);
-		if (this.encoder.matches(answer, encodedAnswer)) {
-			SecurityContextHolder.getContext().setAuthentication(authentication.getFirst());
-			this.successHandler.onAuthenticationSuccess(request, response, authentication.getFirst());
-		}
-		else {
-			this.failureHandler.onAuthenticationFailure(request, response,
-					new BadCredentialsException("bad credentials"));
-		}
-	}
+//	@PostMapping("/third-factor")
+//	public void processThirdFactor(@RequestParam("answer") String answer, MfaAuthentication authentication,
+//			HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		String encodedAnswer = getAnswer(authentication);
+//		if (this.encoder.matches(answer, encodedAnswer)) {
+//			SecurityContextHolder.getContext().setAuthentication(authentication.getFirst());
+//			this.successHandler.onAuthenticationSuccess(request, response, authentication.getFirst());
+//		}
+//		else {
+//			this.failureHandler.onAuthenticationFailure(request, response,
+//					new BadCredentialsException("bad credentials"));
+//		}
+//	}
 
 	private String getSecret(MfaAuthentication authentication) throws Exception {
 		if (authentication.getPrincipal() instanceof User) {
@@ -96,14 +96,14 @@ public class MfaController {
 		return this.failedAuthenticationSecret;
 	}
 
-	private String getAnswer(MfaAuthentication authentication) {
-		if (authentication.getPrincipal() instanceof User) {
-			User user = (User) authentication.getPrincipal();
-			return user.getAnswer();
-		}
-		// earlier factor failed
-		return this.failedAuthenticationSecurityAnswer;
-	}
+//	private String getAnswer(MfaAuthentication authentication) {
+//		if (authentication.getPrincipal() instanceof User) {
+//			User user = (User) authentication.getPrincipal();
+//			return user.getAnswer();
+//		}
+//		// earlier factor failed
+//		return this.failedAuthenticationSecurityAnswer;
+//	}
 
 	private static String randomValue() {
 		SecureRandom random = new SecureRandom();

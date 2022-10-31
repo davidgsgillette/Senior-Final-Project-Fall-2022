@@ -48,8 +48,8 @@ public class User {
 	private boolean using2FA;
 	
 	private final String secret;
-	
-	private final String answer;
+
+	//private final String answer;
 	
 	@NonNull
 	private String secQuest1;
@@ -76,7 +76,7 @@ public class User {
 
 	public User() {
 		this.secret = "";
-		this.answer = "";
+		//this.answer = "";
 
 	}
 
@@ -103,7 +103,7 @@ public class User {
 		this.companyName = companyName;
 		this.divisionBranch = divisionBranch;
 		this.secret = secret;
-		this.answer = answer;
+		//this.answer = answer;
 
 	}
 
@@ -310,8 +310,8 @@ public class User {
 		return secret;
 	}
 
-	public String getAnswer() {
+	/*public String getAnswer() {
 		return answer;
-	}
+	}*/
 
 }
