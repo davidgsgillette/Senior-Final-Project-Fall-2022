@@ -43,6 +43,9 @@ public class RepositoryIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
     
+    @Autowired
+    private static Company co = new Company("testco");
+    
     @Test
     public void givenUsers_whenGetUsers_thenUserExists() throws Exception {
     	//given
@@ -59,9 +62,9 @@ public class RepositoryIntegrationTest {
 		String supervisor = "test";
 		String divisionBranch = "test";
 		Company co = new Company("test");
-		Role role1 = new Role("Test");
+		Role role1 = new Role("Test",co);
 		String roleName = "Test";
-        User user = new User(name, firstName, lastName, email, password, employeeId, dateOfHire, jobTitle, supervisor, divisionBranch, deptName, co, role1, false);
+        User user = new User(name, firstName, lastName, email, password, employeeId, dateOfHire, jobTitle, supervisor, divisionBranch, deptName, co, role1, false,false);
         
         user.setName("intTest");
 

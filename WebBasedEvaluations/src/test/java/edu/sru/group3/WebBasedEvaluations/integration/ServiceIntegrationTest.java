@@ -43,6 +43,9 @@ public class ServiceIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
     
+    @Autowired
+    private static Company co = new Company("testco");
+    
     @Test
     public void givenUsers_whenGetUsers_thenUserExists() throws Exception {
     	//given
@@ -59,8 +62,8 @@ public class ServiceIntegrationTest {
 		String divisionBranch = "test";
 		Company co = new Company("test");
 		String deptName = "test";
-		Role role1 = new Role("test");
-        User user = new User(name, firstName, lastName, email, password, employeeId, dateOfHire, jobTitle, supervisor, divisionBranch, deptName, co, role1, false);
+		Role role1 = new Role("test",co);
+        User user = new User(name, firstName, lastName, email, password, employeeId, dateOfHire, jobTitle, supervisor, divisionBranch, deptName, co, role1, false,false);
         user.setName("intTest");
 
         //when

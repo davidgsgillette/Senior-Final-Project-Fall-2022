@@ -28,6 +28,7 @@ import edu.sru.group3.WebBasedEvaluations.repository.RoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 import edu.sru.group3.WebBasedEvaluations.controller.UserController;
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.controller.AddUserControllerTest;
 
 //https://junit.org/junit5/docs/current/user-guide/#overview
@@ -38,6 +39,7 @@ public class AdminMethodsServicesTest {
 	private static User user = new User();
 	private static User user2 = new User();
 	private static User user3 = new User();
+	private static Company co = new Company("testco");
 	@Autowired
 	UserRepository userRepo;
 	
@@ -54,7 +56,7 @@ public class AdminMethodsServicesTest {
 		user.setLastName("Thangiah");
 		user.setCompanyName("Thangiah Inc");
 		user.setDivisionBranch("Retroville");
-		user.setRole(new Role("USER"));
+		user.setRole(new Role("USER",co));
 		user.setSupervisor("Jimmy");
 		user.setEmail("sam.thangiah@sru.edu");
 		user.setEncryptedPassword("test");
@@ -63,7 +65,7 @@ public class AdminMethodsServicesTest {
 		user2.setFirstName("Dalton");
 		user2.setLastName("Stenzel");
 		user2.setEmail("daltonrstenzel@gmail.com");
-		user2.setRole(new Role("USER"));
+		user2.setRole(new Role("USER",co));
 		user2.setEncryptedPassword("test");
 		
 		user2.setCompanyName("Thangiah Inc");
@@ -76,7 +78,7 @@ public class AdminMethodsServicesTest {
 		user3.setFirstName("Dalton");
 		user3.setLastName("Stenzel");
 		user3.setEmail("daltonrstenzel @gmail.com");
-		user3.setRole(new Role("USER"));
+		user3.setRole(new Role("USER",co));
 		user3.setEncryptedPassword("test");
 		
 		user3.setCompanyName("Thangiah Inc");

@@ -23,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.controller.AddUserController;
 import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
 import edu.sru.group3.WebBasedEvaluations.domain.Role;
@@ -44,6 +45,8 @@ public class RepositoryTest {
 
 	@Autowired
 	private static User user;
+	@Autowired
+	private static Company co = new Company("testco");
 	@Autowired
 	UserRepository userRepo;
 	@Autowired
@@ -86,7 +89,7 @@ public class RepositoryTest {
 		user2.setFirstName("test2");
 		user2.setLastName("Stenzel");
 		user2.setEmail("test2@gmail.com");
-		user2.setRole(new Role("USER"));
+		user2.setRole(new Role("USER",co));
 		user2.setEncryptedPassword("test");
 
 		user2.setCompanyName("Thangiah Inc");

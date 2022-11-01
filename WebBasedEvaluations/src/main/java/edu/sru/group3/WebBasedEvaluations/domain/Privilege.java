@@ -239,7 +239,7 @@ public class Privilege {
 	}
 
 
-	public boolean getEvaluate() {
+	public boolean getEditEvaluate() {
 		return editEvaluator;
 	}
 

@@ -71,7 +71,7 @@ public class RevieweeController {
 
     	List<EvalRole>roles = (List<EvalRole>) roleRepository.findAll();
     	
-    	if((user2.hasRead() || user2.hasWrite() || user2.hasDelete()) && user2.hasEvalPerm()) {
+    	if((user2.hasRead() || user2.hasWrite() || user2.hasDelete()) && user2.hasEditEvalPerm()) {
 			model.addAttribute("EVAL_ADMIN", true);
 //			role = "EVAL_ADMIN";
 		}

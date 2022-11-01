@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,6 +40,7 @@ public class User {
 	private Long id;
 
 	@NonNull
+	@Column(unique=true) 
 	private String name;
 
 	@NonNull
@@ -68,6 +70,9 @@ public class User {
 //	private List<Evaluator> evaluator = new ArrayList<>();
 
 
+	@NonNull
+	private boolean companySuperUser;
+	
 	@NonNull
 	private boolean superUser;
 
@@ -120,12 +125,14 @@ public class User {
 		this.locations = new HashSet<Location>();
 		this.departments = new HashSet<Department>(); 
 		this.subDepartments = new HashSet<Department>(); 
+		this.companySuperUser = false;
+		this.superUser = false;
 	}
 
 	//adds user to a no location
 	public User(String name, String firstName, String lastName, String email, String password, /*String role,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor,
-			String divisionBranch, String deptName, Company co, Role role, boolean superUser) {
+			String divisionBranch, String deptName, Company co, Role role, boolean companySuperUser, boolean superUser) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
@@ -145,12 +152,13 @@ public class User {
 		this.locations = new HashSet<Location>();
 		this.departments = new HashSet<Department>(); 
 		if(role == null) {
-			this.role = co.getDefaultRole();
+			this.role = new Role (co.getDefaultRoleName(),co);
 		}
 		else {
 			this.role = role;
 		}
 		this.roleName = role.getName();
+		this.companySuperUser = companySuperUser;
 		this.superUser = superUser;
 
 
@@ -159,7 +167,7 @@ public class User {
 	//adds user to a single location
 	public User(String name, String firstName, String lastName, String email, String password, /*String roleStr,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor, 
-			String divisionBranch, Company co, Location location, Department dept, Role role, boolean superUser) {
+			String divisionBranch, Company co, Location location, Department dept, Role role, boolean companySuperUser, boolean superUser) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
@@ -180,12 +188,13 @@ public class User {
 		this.departments = new HashSet<Department>(); 
 		this.departments.add(dept);
 		if(role == null) {
-			this.role = co.getDefaultRole();
+			this.role = new Role (co.getDefaultRoleName(),co);
 		}
 		else {
 			this.role = role;
 		}
 		this.roleName = role.getName();
+		this.companySuperUser = companySuperUser;
 		this.superUser = superUser;
 
 
@@ -194,7 +203,7 @@ public class User {
 	//adds user to multiple locations. 
 	public User(String name, String firstName, String lastName, String email, String password, /*String role,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor,
-			String divisionBranch, Company co, Set<Location> locations, Set<Department> depts, Role role, boolean superUser) {
+			String divisionBranch, Company co, Set<Location> locations, Set<Department> depts, Role role, boolean companySuperUser, boolean superUser) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
@@ -214,12 +223,13 @@ public class User {
 		this.locations = locations;
 		this.departments = depts;
 		if(role == null) {
-			this.role = co.getDefaultRole();
+			this.role = new Role (co.getDefaultRoleName(),co);
 		}
 		else {
 			this.role = role;
 		}
 		this.roleName = role.getName();
+		this.companySuperUser = companySuperUser;
 		this.superUser = superUser;
 
 	}	
@@ -267,21 +277,25 @@ public class User {
 		return false;
 	}
 
-
+	
+	
 	public boolean hasEvaluator() {
 		return this.evaluator.size() > 0;
 	}
 
 	//has permission to deligate evaluator permission. 
-	public boolean hasEvalPerm() {
+	public boolean hasEditEvalPerm() {
 		for(Privilege priv : this.role.getPrivileges()) {
-			if(priv.getEvaluate() == true)
+			if(priv.getEditEvaluate() == true)
 				return true;
 		}
 		return false;
 	}
 
 
+	public boolean isEvaluator() {
+		return this.evaluator.size() >0;
+	}
 	public void addDepartment(Department dept) {
 		this.departments.add(dept);
 	}
@@ -335,7 +349,7 @@ public class User {
 		if(this.role != null)
 			return role;
 
-		return new Role("NO ROLL ASSIGNED");
+		return new Role("NO ROLL ASSIGNED", this.getCompany());
 	}
 
 	public void setRole(Role role) {
@@ -366,6 +380,16 @@ public class User {
 	//		this.evaluatees = evaluatees;
 	//	}
 
+	public boolean isCompanySuperUser() {
+		return companySuperUser;
+	}
+
+	public void setCompanySuperUser(boolean superUser) {
+		this.companySuperUser = superUser;
+	}
+
+	
+	
 	public boolean isSuperUser() {
 		return superUser;
 	}
@@ -466,9 +490,13 @@ public class User {
 		this.evaluator = evaluator;
 	}
 	 */
+	
+	
 	public String getFirstName() {
 		return firstName;
 	}
+
+	
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName/* .replaceAll("\\s", "") */;
@@ -583,13 +611,9 @@ public class User {
 
 
 	public Long getCompanyID() {
-		return id;
+		return this.company.getId();
 	}
-
-	public void setCompanyID(Long companyID) {
-		this.id = companyID;
-	}
-
+	
 	public Company getCompany() {
 		return company;
 	}

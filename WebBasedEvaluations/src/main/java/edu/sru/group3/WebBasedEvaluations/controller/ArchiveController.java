@@ -85,7 +85,7 @@ public class ArchiveController {
 		
 		
 		//navbar controls
-		if((user.hasRead() || user.hasWrite() || user.hasDelete()) && user.hasEvalPerm()) {
+		if((user.hasRead() || user.hasWrite() || user.hasDelete()) && user.hasEditEvalPerm()) {
 			model.addAttribute("EVAL_ADMIN", true);
 //			role = "EVAL_ADMIN";
 		}

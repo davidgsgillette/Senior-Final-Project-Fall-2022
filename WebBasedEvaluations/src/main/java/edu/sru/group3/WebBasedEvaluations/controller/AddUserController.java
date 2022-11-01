@@ -135,6 +135,7 @@ public class AddUserController {
 		boolean check = false;
 		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
 		adminUser = userRepository.findByid(userD.getID());
+		Company currentCompany = adminUser.getCompany();
 
 
 		if (userRepository.findByEmail(user.getEmail()) == null) {
@@ -143,11 +144,12 @@ public class AddUserController {
 
 			//check if admin has permission to add this user to the dept/location/role
 			//departments of the user being added
-			Role role = roleRepo.findByName(user.getRoleName());
+			
 			Department dept = deptRepo.findByName(user.getDepartmentName());
 			Location loc = locationRepo.findByLocationName(user.getDivisionBranch());
 			Company co = companyRepo.findByCompanyName(user.getCompanyName());
 			user.setCompany(co);
+			Role role = roleRepo.findByNameAndCompany(user.getRoleName(),co);
 			
 			if(role != null) {
 				if(adminUser.getRole().contains(role)) {
@@ -159,7 +161,7 @@ public class AddUserController {
 				}
 			}
 			else {			
-				Role newRole = new Role(user.getRoleName());
+				Role newRole = new Role(user.getRoleName(), currentCompany);
 				co.addRole(newRole);
 				user.setRole(newRole);
 			}
@@ -278,6 +280,7 @@ public class AddUserController {
 		String mess;
 		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
 		User currentUser = userRepository.findByid(userD.getID());
+		Company currentCompany = currentUser.getCompany();
 		boolean check = false;
 		XSSFSheet sheet = null;
 		try {
@@ -340,7 +343,8 @@ public class AddUserController {
 						String roleName = (ExcelRead_group.checkStringType(sheet.getRow(i).getCell(5)));
 						user2.setDateOfHire(ExcelRead_group.checkStringType(sheet.getRow(i).getCell(7)));
 						user2.setJobTitle(ExcelRead_group.checkStringType(sheet.getRow(i).getCell(8)));
-						String deptName = ExcelRead_group.checkStringType(sheet.getRow(i).getCell(9));							
+						String deptName = ExcelRead_group.checkStringType(sheet.getRow(i).getCell(9));		
+						user2.setDepartmentName(deptName);
 						boolean setAsDeptManager = ExcelRead_group.checkBooleanType(sheet.getRow(i).getCell(10));
 						String companyName = ExcelRead_group.checkStringType(sheet.getRow(i).getCell(11));
 						user2.setCompanyName(companyName);
@@ -353,7 +357,8 @@ public class AddUserController {
 
 						//check that the company exists and that the logged in user has permission to add a user to it. 
 						if(co != null ){
-							if(currentUser.getRole().writableCompanies().contains(co)){
+							
+							if(co.getId() == currentCompany.getId()){
 								user2.setCompany(co);
 							}
 							else {
@@ -377,7 +382,7 @@ public class AddUserController {
 							user2.addLocation(null);
 						}
 
-						Role role = roleRepo.findByName(roleName);
+						Role role = roleRepo.findByNameAndCompany(roleName,currentCompany);
 						if(role != null) {
 							if(currentUser.getRole().contains(role)) {
 								user2.setRole(role);
@@ -387,8 +392,8 @@ public class AddUserController {
 							}
 						}
 						else {							
-							Role newRole = new Role(roleName);
-							co.addRole(newRole);
+							Role newRole = new Role(roleName,currentCompany);
+//							newRole.addCompany(currentCompany);
 							user2.setRole(newRole);
 							
 						}
@@ -402,7 +407,6 @@ public class AddUserController {
 									dept.setDeptHead(user2);
 								}
 								user2.setSupervisor(dept.getDeptHead().getName());
-
 							}
 							else {
 								throw new Exception("current user " + currentUser.getName() + " does not have permission to add user "  +user2.getName()+ " to a dept " + dept.getName());

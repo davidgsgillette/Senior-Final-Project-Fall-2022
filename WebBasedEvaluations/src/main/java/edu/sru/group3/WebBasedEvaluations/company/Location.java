@@ -43,7 +43,7 @@ public class Location {
 	private Company company;
 
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "location_group_id", nullable = false)
 	private LocationGroup locGroup;
 

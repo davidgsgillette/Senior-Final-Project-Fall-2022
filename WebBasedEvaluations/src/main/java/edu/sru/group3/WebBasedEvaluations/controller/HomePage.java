@@ -156,7 +156,7 @@ public class HomePage {
 			
 			//adds the attributes to the webpage to see what the user has access to on the homepage.
 //			String role = "";
-			if((user2.hasRead() || user2.hasWrite() || user2.hasDelete()) && user2.hasEvalPerm()) {
+			if((user2.hasRead() || user2.hasWrite() || user2.hasDelete()) && user2.hasEditEvalPerm()) {
 				model.addAttribute("EVAL_ADMIN", true);
 //				role = "EVAL_ADMIN";
 			}
