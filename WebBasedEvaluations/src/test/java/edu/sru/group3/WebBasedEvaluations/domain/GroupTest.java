@@ -11,22 +11,25 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
+
 
 public class GroupTest {
-	@Mock static long id;
+	@Mock static int groupNum;
 	@Mock static Boolean selfEval;
 	@Mock static Reviewee rev;
 	@Mock static User user;
+	@Mock static Company co;
 	static Group group;
 	@BeforeAll
 	static void setup() {
-		group = new Group(id, selfEval);
+		group = new Group(selfEval,co,groupNum);
 	}
 
 	@Test
 	public void getIdTest() {
-		long actual = 5;
-		group.setId(actual);
+		int actual = 5;
+		group.setGroupId(actual);
 		assertEquals(group.getId(), actual);
 	}
 

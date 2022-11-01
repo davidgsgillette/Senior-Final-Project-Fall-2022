@@ -138,7 +138,7 @@ public class UserController {
 		
 		
 		//fornavbar
-		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEvalPerm()) {
+		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEditEvalPerm()) {
 			model.addAttribute("EVAL_ADMIN", true);
 		}
 		else {
@@ -184,8 +184,8 @@ public class UserController {
 		Set<Role> roles = currentUser.getCompany().getRoles();
 		Set<Role> grantableRoles = new HashSet<Role>();
 		Set<String> roleNames = new HashSet<String>();		
-		roleNames.add(currentUser.getCompany().getDefaultRole().getName());
-		grantableRoles.add(currentUser.getCompany().getDefaultRole());
+		roleNames.add(currentUser.getCompany().getDefaultRoleName());
+//		grantableRoles.add(new Role currentUser.getCompany().getDefaultRoleName());
 		for(Role role : roles) {
 			if(currentUser.getRole().contains(role)) {
 				grantableRoles.add(role);
@@ -234,7 +234,7 @@ public class UserController {
 			groupButton = true;
 		}
 //changed
-		if((user.hasRead() || user.hasWrite() || user.hasDelete()) && user.hasEvalPerm()) {
+		if((user.hasRead() || user.hasWrite() || user.hasDelete()) && user.hasEditEvalPerm()) {
 			model.addAttribute("EVAL_ADMIN", true);
 		}
 		else {
@@ -483,7 +483,7 @@ public class UserController {
 		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getId());
 		
 		//navbar
-		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEvalPerm()) {
+		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEditEvalPerm()) {
 			model.addAttribute("EVAL_ADMIN", true);
 //			role = "EVAL_ADMIN";
 		}

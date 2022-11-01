@@ -2,6 +2,7 @@ package edu.sru.group3.WebBasedEvaluations.domain;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -35,11 +36,11 @@ public class EvaluationLog {
     private long id;
 	
 	private Date dateEdited;
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn()
 	private Evaluator evaluator;
 	
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn()
 	private Reviewee reviewee;
 	@Lob

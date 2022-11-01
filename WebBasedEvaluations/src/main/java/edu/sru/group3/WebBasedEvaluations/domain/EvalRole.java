@@ -7,9 +7,14 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 
 /**
  * Eval roles is the roles being used in the evaluation 
@@ -18,14 +23,24 @@ import javax.persistence.OneToOne;
 @Entity
 public class EvalRole {
 	
-	@Id
-	private int id;
-	private String  name;
+	@Id 
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
+	
+	private int level;
+	
+	private String name;
 	
 	@OneToMany(mappedBy = "level",
 			cascade = CascadeType.ALL,
 			orphanRemoval = true)
 	private Set<Evaluator> evaluator= new HashSet<>();
+	
+	
+	@ManyToOne
+	private Company company;
+	
+	
 	public EvalRole() {
 		
 	}
@@ -34,16 +49,24 @@ public class EvalRole {
 	 * @param name is the name of the role 
 	 * @param id the the level this role is at
 	 */
-	public EvalRole(String name, int id) {		
-		this.id = id;
-		this.name =name;		
+	public EvalRole(String name, int level, Company co) {		
+		this.level = level;
+		this.name =name;	
+		this.company = co;
 	}
 	
-	public int getId() {
-		return id;
+	
+	
+	public Company getCompany() {
+		return company;
 	}
-	public void setId(int id) {
-		this.id = id;
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public Long getId() {
+		return id;
 	}
 	public String getName() {
 		return name;
@@ -56,6 +79,14 @@ public class EvalRole {
 	}
 	public void setEvaluator(Set<Evaluator> evaluator) {
 		this.evaluator = evaluator;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
 

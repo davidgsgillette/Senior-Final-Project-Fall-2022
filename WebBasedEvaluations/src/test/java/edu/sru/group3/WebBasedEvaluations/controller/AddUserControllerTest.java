@@ -23,6 +23,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.controller.AddUserController;
 import edu.sru.group3.WebBasedEvaluations.repository.CompanyRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.DepartmentRepository;
@@ -47,6 +48,8 @@ public class AddUserControllerTest {
 	LocationRepository locationRepo;
 	@Autowired
 	DepartmentRepository deptRepo;
+	@Autowired
+	private static Company co = new Company("testco");
 	Authentication auth;
 	MultipartFile file;
 //	AddUserController controller = new AddUserController(userRepo,roleRepo,companyRepo,locationRepo,deptRepo);
@@ -63,7 +66,7 @@ public class AddUserControllerTest {
 		user.setLastName("Thangiah");
 		user.setCompanyName("Thangiah Inc");
 		user.setDivisionBranch("Retroville");
-		user.setRole(new Role("USER"));
+		user.setRole(new Role("USER",co));
 		user.setSupervisor("Jimmy");
 		user.setEmail("sam.thangiah@sru.edu");
 		user.setEncryptedPassword("test");

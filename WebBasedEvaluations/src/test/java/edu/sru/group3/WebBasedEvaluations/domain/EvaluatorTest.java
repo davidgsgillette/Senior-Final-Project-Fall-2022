@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
+
 public class EvaluatorTest {
 	
 	static Evaluator eval;
@@ -20,9 +22,10 @@ public class EvaluatorTest {
 	@Mock static User user;
 	@Mock static Group group;
 	@Mock static EvalRole level;
+	@Mock static Company co;
 	@BeforeAll
 	static void setup() {
-		eval = new Evaluator(user, group, level);
+		eval = new Evaluator(user, group, level,co);
 	}
 
 

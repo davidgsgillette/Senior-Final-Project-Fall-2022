@@ -32,12 +32,11 @@ public class Role {
 
 
 	@NonNull
-	@Column(unique=true)
 	private String name;
 
 
 
-	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	@OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<User> users;	
 
 	@ManyToMany(cascade = CascadeType.ALL)
@@ -47,54 +46,59 @@ public class Role {
 			inverseJoinColumns = @JoinColumn(name = "privilege_id"))
 	private Set<Privilege> privileges;
 
-	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-	private Set<Company> companies;
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "company_id", nullable = false)	
+	private Company company;
 
 	public Role() {
 
 	}
 
-	public Role(String name) {
-		this.name = name;
-		this.users = new HashSet<User>();
-		this.privileges = new HashSet<Privilege>();
-		this.companies = new HashSet<Company>();
-	}
+//	public Role(String name) {
+//		this.name = name;
+//		this.users = new HashSet<User>();
+//		this.privileges = new HashSet<Privilege>();
+////		this.companies = new HashSet<Company>();
+//	}
 
 	public Role(String name, Company co) {
 		this.name = name;
 		this.users = new HashSet<User>();
 		this.privileges = new HashSet<Privilege>();
-		this.companies = new HashSet<Company>();
-		companies.add(co);
+//		this.companies = new HashSet<Company>();
+//		companies.add(co);
+		this.company = co;
 
 	}
 
 
 
-	public Role(String name,  Privilege priv) {
+	public Role(String name,  Privilege priv, Company co) {
 		this.name = name;
 		this.privileges = new HashSet<Privilege>();
 		this.privileges.add(priv);
 		this.users = new HashSet<User>();
-		this.companies = new HashSet<Company>();
+//		this.companies = new HashSet<Company>();
+		this.company = co;
 
 	}
 
-	public Role(String name, User user, Privilege priv) {
+	public Role(String name, User user, Privilege priv, Company co) {
 		this.name = name;
 		this.privileges = new HashSet<Privilege>();
 		this.privileges.add(priv);
 		this.users = new HashSet<User>();
 		this.users.add(user);
-		this.companies = new HashSet<Company>();
+//		this.companies = new HashSet<Company>();
+		this.company = co;
 	}
 
-	public Role(String name, Set<User> users, Set<Privilege> priv) {
+	public Role(String name, Set<User> users, Set<Privilege> priv, Company co) {
 		this.name = name;
 		this.privileges = priv;
 		this.users = users;
-		this.companies = new HashSet<Company>();
+//		this.companies = new HashSet<Company>();
+		this.company = co;
 	} 
 
 
@@ -135,7 +139,7 @@ public class Role {
 		HashSet<Company> evalableCos = new HashSet<Company>();
 
 		for(Privilege priv : this.privileges) {
-			if(priv.getEvaluate()) {
+			if(priv.getEditEvaluate()) {
 				evalableCos.addAll(priv.getCompanies());
 			}
 		}
@@ -185,7 +189,7 @@ public class Role {
 		HashSet<User> evalableUsers = new HashSet<User>();
 
 		for(Privilege priv : this.privileges) {
-			if(priv.getEvaluate()) {
+			if(priv.getEditEvaluate()) {
 				for(Department dept : priv.getDepts()) {
 					evalableUsers.addAll(dept.getUsers());
 				}
@@ -231,7 +235,7 @@ public class Role {
 		HashSet<Department> evalableDepts = new HashSet<Department>();
 
 		for(Privilege priv : this.privileges) {
-			if(priv.getEvaluate()) {
+			if(priv.getEditEvaluate()) {
 				evalableDepts.addAll(priv.getDepts());
 			}
 		}
@@ -282,7 +286,7 @@ public class Role {
 		HashSet<Location> evalableLocations = new HashSet<Location>();
 
 		for(Privilege priv : this.privileges) {
-			if(priv.getEvaluate()) {
+			if(priv.getEditEvaluate()) {
 				for(LocationGroup locGroup : priv.getLocationGroups()) {
 					evalableLocations.addAll(locGroup.getLocations());
 				}
@@ -328,7 +332,7 @@ public class Role {
 		HashSet<LocationGroup> evalableLocGroups = new HashSet<LocationGroup>();
 
 		for(Privilege priv : this.privileges) {
-			if(priv.getEvaluate()) {
+			if(priv.getEditEvaluate()) {
 				evalableLocGroups.addAll(priv.getLocationGroups());
 			}
 		}
@@ -441,12 +445,12 @@ public class Role {
 
 	}
 
-	public Set<Company> getCompanies() {
-		return companies;
+	public Company getCompany() {
+		return company;
 	}
 
-	public void setCompanies(Set<Company> companies) {
-		this.companies = companies;
+	public void setCompany(Company companies) {
+		this.company = companies;
 	}
 
 	public boolean addUser(User u) {
@@ -464,19 +468,19 @@ public class Role {
 	}
 
 
-	public boolean addCompany(Company co) {
-		this.companies.add(co);
-		return true;
-	}
-
-	public boolean removeCompany(Company co) {
-		if(this.companies.contains(co)) {
-			this.companies.remove(co);
-			return true;
-		}
-		return false;
-
-	}
+//	public boolean addCompany(Company co) {
+//		this.companies.add(co);
+//		return true;
+//	}
+//
+//	public boolean removeCompany(Company co) {
+//		if(this.companies.contains(co)) {
+//			this.companies.remove(co);
+//			return true;
+//		}
+//		return false;
+//
+//	}
 	//getters and setters. 
 
 

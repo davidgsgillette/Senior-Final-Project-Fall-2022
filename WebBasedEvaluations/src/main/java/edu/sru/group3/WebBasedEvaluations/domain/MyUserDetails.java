@@ -47,7 +47,7 @@ public class MyUserDetails implements UserDetails {
 		
 		ArrayList<String> roleNames = new ArrayList<String>();
 		roleNames.add("USER");
-		if((user.hasRead() || user.hasWrite() || user.hasDelete()) && user.hasEvalPerm()) {
+		if((user.hasRead() || user.hasWrite() || user.hasDelete()) && user.hasEditEvalPerm()) {
 			roleNames.add("EVAL_ADMIN");
 		}		
 		if(user.hasEvaluator()) {

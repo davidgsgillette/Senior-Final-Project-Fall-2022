@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 
 import org.mockito.Mock;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
+
 @Suite
 @SuiteDisplayName("EvalRole Methods")
 @IncludeClassNamePatterns(".*Tests")
@@ -25,14 +27,14 @@ public class EvalRoleTest {
 	@BeforeAll
 	static void setup() {
 		String name = "Jeremy";
-		int id = 8;
-		evalRole = new EvalRole(name, id);
+		int level = 8;
+		evalRole = new EvalRole(name, level, null);
 	}
 	
 	@Test
 	public void getIdTest() {
 		int actual = 1;
-		evalRole.setId(actual);
+		evalRole.setLevel(actual);
 		assertEquals(evalRole.getId(), actual);
 	}
 	

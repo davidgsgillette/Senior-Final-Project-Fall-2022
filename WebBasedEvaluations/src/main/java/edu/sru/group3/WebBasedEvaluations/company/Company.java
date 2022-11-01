@@ -22,7 +22,10 @@ import javax.persistence.Table;
 import org.springframework.lang.NonNull;
 
 import edu.sru.group3.WebBasedEvaluations.company.Company;
+import edu.sru.group3.WebBasedEvaluations.domain.EvalRole;
+import edu.sru.group3.WebBasedEvaluations.domain.Group;
 import edu.sru.group3.WebBasedEvaluations.domain.Privilege;
+import edu.sru.group3.WebBasedEvaluations.domain.Reviewee;
 import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 
@@ -60,14 +63,27 @@ public class Company {
 	@NonNull
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Location> locations;
+	
+	
+	
+	@OneToMany(mappedBy = "company", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<EvalRole> evalRoles;
+	
+	
+	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Reviewee> reviewees;
 
 
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(
-			name = "company_roles", 
-			joinColumns = @JoinColumn(name = "company_id"), 
-			inverseJoinColumns = @JoinColumn(name = "role_id"))			
+	
+	@OneToMany(mappedBy = "company", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<Group> evalGroups;
+
+	
+	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Role> roles;
+	
+	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Group> groups = new HashSet<>();
 	
 
 	public Company() {
@@ -83,7 +99,9 @@ public class Company {
 		this.users = new HashSet<User>();
 		this.roles = new HashSet<Role>();
 		this.privs = new HashSet<Privilege>();
-		roles.add(new Role("USER"));
+//		String roleName = companyName + " USER";
+//		String roleName = "USER";
+//		roles.add(new Role(roleName,this));
 	}
 
 	public boolean addPrivilege(Privilege priv) {
@@ -104,8 +122,56 @@ public class Company {
 		}
 		return false;
 	}
-	public Role getDefaultRole() {
-		return getRoleByName("USER");
+	
+	
+	public boolean addReviewee(Reviewee reviewee) {
+		this.reviewees.add(reviewee);
+		return true;
+	}
+
+	public boolean addReviewees(Collection<Reviewee> reviewees) {
+		this.reviewees.addAll(reviewees);
+		return true;
+	}
+
+	public boolean removeReviewee(Reviewee reviewee) {
+
+		if(this.reviewees.contains(reviewee)) {
+			this.reviewees.remove(reviewee);			
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	public boolean addGroup(Group group) {
+		this.groups.add(group);
+		return true;
+	}
+
+	public boolean addGroups(Collection<Group> groups) {
+		this.groups.addAll(groups);
+		return true;
+	}
+
+	public boolean removeGroup(Group group) {
+
+		if(this.groups.contains(group)) {
+			this.groups.remove(group);			
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+//	public Role getDefaultRole() {
+//		String roleName = companyName + " USER";
+//		return getRoleByName(roleName);
+//	}
+	public String getDefaultRoleName() {
+		return companyName + " USER";
 	}
 
 	public Role getRoleByName(String roleName) {
@@ -139,14 +205,65 @@ public class Company {
 		return false;
 	}
 
+	
+	public boolean addEvalRole(EvalRole role) {		
+		this.evalRoles.add(role);			
+		return true;
+	}
+
+	public boolean removeEvalRole(EvalRole role) {
+
+		if(this.evalRoles.contains(role)) {
+			this.evalRoles.remove(role);			
+			return true;
+		}
+		return false;
+	}
+	
+	
+	public Set<Privilege> getPrivs() {
+		return privs;
+	}
 
 
+	public void setPrivs(Set<Privilege> privs) {
+		this.privs = privs;
+	}
 
 
+	public Set<EvalRole> getEvalRoles() {
+		return evalRoles;
+	}
 
 
+	public Set<Group> getEvalGroups() {
+		return evalGroups;
+	}
 
 
+	public void setEvalGroups(Set<Group> evalGroups) {
+		this.evalGroups = evalGroups;
+	}
+
+
+	public Set<Group> getGroups() {
+		return groups;
+	}
+
+
+	public void setGroups(Set<Group> groups) {
+		this.groups = groups;
+	}
+
+
+	public void setEvalRoles(Set<EvalRole> evalRoles) {
+		this.evalRoles = evalRoles;
+	}
+
+
+	public void setLocations(Set<Location> locations) {
+		this.locations = locations;
+	}
 
 
 	public boolean addLocation(Location loc) {
@@ -199,6 +316,16 @@ public class Company {
 
 
 	//getters and setters
+
+
+	public Set<Reviewee> getReviewees() {
+		return reviewees;
+	}
+
+
+	public void setReviewees(Set<Reviewee> reviewees) {
+		this.reviewees = reviewees;
+	}
 
 
 	public Long getId() {

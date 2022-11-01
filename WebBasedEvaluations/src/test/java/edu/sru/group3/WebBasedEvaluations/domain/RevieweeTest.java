@@ -8,9 +8,11 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
+
 public class RevieweeTest {
 	static Reviewee revTest;
-
+	static Company co;
 	@BeforeAll
 	static void setup() {
 		revTest = new Reviewee();
@@ -25,7 +27,7 @@ public class RevieweeTest {
 
 	@Test
 	void getGroupTest() {
-		Group actual = new Group();
+		Group actual = new Group(co);
 		revTest.setGroup(actual);
 		assertEquals(revTest.getGroup(), actual);
 	}

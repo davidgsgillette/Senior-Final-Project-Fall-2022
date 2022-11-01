@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.EvalRole;
 import edu.sru.group3.WebBasedEvaluations.domain.Evaluator;
 import edu.sru.group3.WebBasedEvaluations.domain.Group;
@@ -23,7 +24,8 @@ public interface EvaluatorRepository extends CrudRepository<Evaluator, Long> {
 //query to get evaluator by name
 	List<Evaluator> findByUserIdAndGroupId(Long userid, long groupid);
 
-	List<Evaluator> findByLevelIdAndGroupId(int id, long groupid);
+	List<Evaluator> findByLevelLevelAndGroupId(int id, long groupid);
+	List<Evaluator> findByLevelLevelAndGroupNumberAndCompany(int id, int number, Company company);
 
 	void deleteByGroupId(long id);
 

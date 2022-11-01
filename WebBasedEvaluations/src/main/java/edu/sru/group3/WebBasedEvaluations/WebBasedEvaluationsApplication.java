@@ -82,7 +82,7 @@ class InitUsers{
 		//making instances to add to the tables. 
 		
 		Company co = new Company("Thangiah Manufacturing LLC");
-		
+		Company co2 = new Company("Test Company 2");
 		
 		World world = new World();
 //		worldRepo.save(world);
@@ -114,36 +114,42 @@ class InitUsers{
 		
 		
 		LocationGroup locGroup = new LocationGroup();
-		
+		LocationGroup locGroup2 = new LocationGroup();
 		
 		Location loc = new Location("testLocation", city, co, locGroup);
+		Location loc2 = new Location("testLocation", city, co2, locGroup2);
 //		locationRepo.save(loc);
 			
 			
-		Role adminRole = new Role("ADMIN");
-		Role testRole1 = new Role("TEST_ROLE_1");
-		Role testRole2 = new Role("TEST_ROLE_2");
+		Role adminRole = new Role("ADMIN",co);
+		Role adminRole2 = new Role("ADMIN2",co2);
+		Role testRole1 = new Role("TEST_ROLE_1",co);
+		Role testRole2 = new Role("TEST_ROLE_2",co2);
 //		
 	
 		
 		co.addRole(adminRole);
 		co.addRole(testRole1);
 		co.addRole(testRole2);
+		co2.addRole(adminRole2);
+		co2.addRole(testRole1);
+		co2.addRole(testRole2);
 //		companyRepo.save(co);
 //		adminRole.addCompany(co);
-		testRole1.addCompany(co);
-		testRole2.addCompany(co);
 		
 		
 		
 		
-		User use1 = new User("jimmy neutron","fname","lname","admin@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ", 999991, "N/A", "N/A", "N/A", "N/A","admin dept", co, adminRole,true);
+		User use1 = new User("jimmy neutron","fname","lname","admin@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ", 999991, "N/A", "N/A", "N/A", "N/A","admin dept", co, adminRole,true,true);
+		User use2 = new User("jimmy2 neutron2","fname2","lname2","admin2@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ", 999991, "N/A", "N/A", "N/A", "N/A","admin dept", co2, adminRole2,true,false);
 //		adminRole.addUser(use1);
 //		roleRepo.save(adminRole);
 		
 		
 		use1.setEncryptedPassword("test");
 		use1.setReset(false);
+		use2.setEncryptedPassword("test");
+		use2.setReset(false);
 //		userRepo.save(use1);
 		
 		
@@ -151,10 +157,12 @@ class InitUsers{
 		
 		
 		Department dept = new Department(use1, loc, "testing dept", null,null);
-		
+		Department dept2 = new Department(use2, loc2, "testing dept2", null,null);
 		
 		use1.addDepartment(dept);
 		loc.addDept(dept);
+		use2.addDepartment(dept2);
+		loc2.addDept(dept2);
 //		userRepo.save(use1);
 //		locationRepo.save(loc);
 		
@@ -162,14 +170,17 @@ class InitUsers{
 		
 		
 		locGroup.addLocation(loc);
+		locGroup2.addLocation(loc2);
 //		locGroupRepo.save(locGroup);
 		
 		city.addLocation(loc);
+		city.addLocation(loc2);
 //		
 	
 		
 		
 		co.addLocation(loc);
+		co2.addLocation(loc2);
 //		companyRepo.save(co);
 		
 		
@@ -177,15 +188,22 @@ class InitUsers{
 //		roleRepo.save(adminRole);
 		
 		Privilege priv = new Privilege("ADMIN",adminRole, locGroup, dept, co, true,true,true,false);
+
+		Privilege priv2 = new Privilege("ADMIN2", adminRole2, locGroup2, dept2, co2, true,true,true,false);
 //		privRepo.save(priv);
 		
 		adminRole.addPrivilege(priv);
+		adminRole2.addPrivilege(priv2);
 		priv.addRole(adminRole);
+		priv2.addRole(adminRole2);
 		
 //		roleRepo.save(adminRole);
 		
 		co.addUser(use1);
 		use1.addLocation(loc);
+		
+		co2.addUser(use2);
+		use2.addLocation(loc2);
 //		companyRepo.save(co);
 //		userRepo.save(use1);
 		
@@ -198,6 +216,13 @@ class InitUsers{
 		roleRepo.save(testRole1);
 		roleRepo.save(testRole2);
 		
+		
+		locGroupRepo.save(locGroup2);
+		deptRepo.save(dept2);
+		privRepo.save(priv2);
+		userRepo.save(use2);
+		locationRepo.save(loc2);
+		//companyRepo.save(co2);
 		
 		
 		
