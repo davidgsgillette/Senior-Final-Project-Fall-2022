@@ -105,8 +105,9 @@ public class UserController {
 		
 		
 		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
-		
-		List<User> listTotal = service.getAllUsers();
+		Company currentCompany = currentUser.getCompany();
+//		List<User> listTotal = service.getAllUsers();
+		List<User> listTotal = userRepository.findByCompany(currentUser.getCompany());
 		List<User> list;
 		// log.error("Loaded page");
 		// log.info("Loaded page info");
@@ -118,17 +119,16 @@ public class UserController {
 		}
 		// Has keyword
 		else {
-			List<User> listKeyword = service.getByKeyword(keyword);
-
+			
 			// If showing all users
 			if (perPage <= 0) {
-				list = adminMethodsService.sortCheck(sort, listKeyword, sortOr, model);
+				list = adminMethodsService.sortCheck(sort, service.getByKeyword(keyword,currentCompany), sortOr, model);
 				list = adminMethodsService.pageCalc(list, currPage, perPage, sort, keyword, model);
 
 				// If not showing all users
 			} else {
 				// sort list with parameters
-				list = adminMethodsService.sortCheck(sort, service.getByKeyword(keyword), sortOr, model);
+				list = adminMethodsService.sortCheck(sort, service.getByKeyword(keyword, currentCompany), sortOr, model);
 				// display current page + other page buttons
 				list = adminMethodsService.pageCalc(list, currPage, perPage, sort, keyword, model);
 

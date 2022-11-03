@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.controller.HomePage;
 import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
@@ -223,7 +224,8 @@ public class AdminMethodsService {
 		//List<User> listTotal = service.getAllUsers();
 		
 		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
-		User loggedInUser = userRepository.findByid(userD.getID());		
+		User loggedInUser = userRepository.findByid(userD.getID());	
+		Company currentCompany = loggedInUser.getCompany();
 		//gets only the users that the currently logged in user has access to. 
 		List<User> listTotal = new ArrayList<User>(loggedInUser.getRole().readableUsers());
 		
@@ -252,7 +254,7 @@ public class AdminMethodsService {
 		}
 
 		else {
-			List<User> list = sortCheck(sort, service.getByKeyword(keyword), sortOr, model);
+			List<User> list = sortCheck(sort, service.getByKeyword(keyword,currentCompany), sortOr, model);
 			model.addAttribute("list", list);
 		}
 

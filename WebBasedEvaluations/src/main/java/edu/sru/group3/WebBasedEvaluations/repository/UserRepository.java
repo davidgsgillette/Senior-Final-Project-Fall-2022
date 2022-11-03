@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 /**
  * @author Tanuj Rane, Dalton Stenzel
@@ -25,10 +26,12 @@ public interface UserRepository extends CrudRepository<User,Long>{
 
 
 	public User findByid(long l);
-	@Query(value= "select * from user u where u.first_name like %:keyword% or u.email like %:keyword% or u.last_name like %:keyword%", nativeQuery = true)
-	List<User> findByKeyword(@Param("keyword") String keyword);
+	@Query(value= "select * from user u where ?2 = u.company_id AND (u.first_name like %?1% or u.email like %?1% or u.last_name like %?1%)", nativeQuery = true)
+	List<User> findByKeywordAndCompany(String keyword, Long companyID);
+	
 	//public User findById(long id);
 	public Object findAll(Sort by);
+	List<User> findByCompany(Company company);
 //	public List<User>findByRoleName(String name, String name2,Sort by);
 
 /*

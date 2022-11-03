@@ -1,5 +1,6 @@
 package edu.sru.group3.WebBasedEvaluations.service;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 
 import java.util.ArrayList;
@@ -39,8 +40,8 @@ public class UserService {
 	 * @param keyword is a set characters provided by a user.
 	 * @return list of users that contains the keyword provided by a user.
 	 */
-	public List<User> getByKeyword(String keyword) {
-		List<User> list = userRepository.findByKeyword(keyword);
+	public List<User> getByKeyword(String keyword,Company company) {
+		List<User> list = userRepository.findByKeywordAndCompany(keyword,company.getId());
 		return list;
 	}
 
