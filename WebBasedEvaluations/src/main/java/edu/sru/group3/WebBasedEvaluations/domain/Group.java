@@ -2,7 +2,9 @@ package edu.sru.group3.WebBasedEvaluations.domain;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -36,7 +38,7 @@ public class Group {
 	private Boolean evalstart;
 	private Boolean selfeval;
 	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true,  fetch = FetchType.LAZY)
-	private List<Reviewee> reviewee = new ArrayList<>();
+	private List<Reviewee> reviewees = new ArrayList<>();
 
 	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true,  fetch = FetchType.LAZY)
 	private List<Evaluator> evaluator = new ArrayList<>();
@@ -72,10 +74,19 @@ public class Group {
 	}
 // Delete this? Is the exact same as setReviewee
 	public void setGroup(List<Reviewee> reviewee) {
-		this.reviewee = reviewee;
+		this.reviewees = reviewee;
 
 	}
 
+	public Set<User> getUsers(){
+		HashSet<User> users = new HashSet<User>();
+		
+		for(Reviewee rev : reviewees) {
+			users.add(rev.getUser());
+		}
+		
+		return users;
+	}
 	
 	
 	public int getGroupNumber() {
@@ -96,11 +107,11 @@ public class Group {
 	}
 
 	public List<Reviewee> getReviewee() {
-		return reviewee;
+		return reviewees;
 	}
 
 	public void setReviewee(List<Reviewee> reviewee) {
-		this.reviewee = reviewee;
+		this.reviewees = reviewee;
 	}
 
 	public List<Evaluator> getEvaluator() {
@@ -113,7 +124,7 @@ public class Group {
 	 * @param rev is the the new reviewee
 	 */
 	public void appendReviewee(Reviewee rev) {
-		this.reviewee.add(rev);
+		this.reviewees.add(rev);
 
 	}
 

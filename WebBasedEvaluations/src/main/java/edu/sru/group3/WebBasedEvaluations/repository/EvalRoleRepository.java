@@ -13,7 +13,7 @@ import edu.sru.group3.WebBasedEvaluations.domain.EvalRole;
 public interface EvalRoleRepository extends CrudRepository<EvalRole,Integer>{
 
 	EvalRole findByNameAndCompany(String name,Company co);
-	
+	List<EvalRole> findByCompany(Company company);
 
 
 }

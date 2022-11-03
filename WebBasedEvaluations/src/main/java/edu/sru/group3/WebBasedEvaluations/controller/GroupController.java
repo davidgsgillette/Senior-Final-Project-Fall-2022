@@ -71,7 +71,7 @@ import edu.sru.group3.WebBasedEvaluations.excel.ExcelRead_group;
  */
 @Controller
 public class GroupController {
-	
+
 	private Logger log = LoggerFactory.getLogger(GroupController.class);
 	private GroupRepository groupRepository;
 
@@ -85,14 +85,15 @@ public class GroupController {
 	private EvaluationRepository evalFormRepo;
 	private ArchiveRepository archiveRepository ;
 	private CompanyRepository companyRepo;
-	
+	private UserRepository	userRepo;
+
 	private final String TEMP_FILES_PATH = "src\\main\\resources\\temp\\";
-	
+
 	public GroupController(GroupRepository groupRepository, UserRepository userRepository,
 			EvaluatorRepository evaluatorRepository, RevieweeRepository revieweeRepository,
 			EvaluationLogRepository evaluationLogRepository, EvalRoleRepository roleRepository,
 			EvaluationRepository evaluationRepository, EvaluationRepository evalFormRepo,
-			ArchiveRepository archiveRepository, CompanyRepository companyRepo
+			ArchiveRepository archiveRepository, CompanyRepository companyRepo, UserRepository	userRepo
 			) {
 		this.evaluatorRepository = evaluatorRepository;
 		this.groupRepository = groupRepository;
@@ -104,9 +105,10 @@ public class GroupController {
 		this.evalFormRepo = evalFormRepo;
 		this.archiveRepository=archiveRepository;
 		this.companyRepo = companyRepo;
+		this.userRepo = userRepo;
 	}
 
-	
+
 	@RequestMapping(value = "/addgroup", method = RequestMethod.POST)
 	public String addSave(@ModelAttribute("group") Group group,
 			@RequestParam(value = "rev", required = false) long[] rev,
@@ -124,7 +126,7 @@ public class GroupController {
 				group.appendReviewee(reviewee);
 			}
 			for (int i = 0; i < group.getReviewee().size(); i++) {
-				
+
 			}
 			long id = group.getId();
 			groupRepository.save(group);
@@ -154,10 +156,10 @@ public class GroupController {
 
 	}
 
-	
-	
-	
-	
+
+
+
+
 	/**editgroup
 	 * takes user to the eidt goup page where use can make changes to evaluator, reviewee and group attributes.
 	 * @param redir
@@ -167,7 +169,7 @@ public class GroupController {
 	 */
 	@GetMapping("/editgroup/{id}")
 	public Object editgroup(RedirectAttributes redir ,@PathVariable("id") long id, Model model) {
-		
+
 		Group group = groupRepository.findById(id);
 		if(group.getEvalstart()) {
 			RedirectView redirectView = new RedirectView("/admin_groups", true);
@@ -178,7 +180,7 @@ public class GroupController {
 		List<Boolean> synclist = new ArrayList<Boolean>();
 		List<Boolean> prevlist = new ArrayList<Boolean>();
 		List<Evaluator> evallist = evaluatorRepository.findByGroupId(id);
-		
+
 		List<EvalRole> roles = (List<EvalRole>) evalRoleRepository.findAll();
 		List<Reviewee> rev = revieweeRepository.findBygroup_Id(id);
 		List<Long> revid = new ArrayList<Long>();
@@ -188,14 +190,14 @@ public class GroupController {
 		Map<EvalRole, List<Long>> evals = new LinkedHashMap<EvalRole, List<Long>>();
 
 		for (int x = 0; x < roles.size(); x++) {
-			
+
 			evals.put(roles.get(x), null);
 			List<Long> temp = new ArrayList<Long>();
 			for (int y = 0; y < evallist.size(); y++) {
 
 				if (roles.get(x).getId() == evallist.get(y).getLevel().getId()) {
 					temp.add((long) evallist.get(y).getUser().getId());
-					
+
 				}
 
 			}
@@ -208,7 +210,7 @@ public class GroupController {
 				if (roles.get(x).getId() == evallist.get(y).getLevel().getId()) {
 
 					synclist.add(evallist.get(y).isSync());
-			
+
 					break;
 				}
 			}
@@ -224,7 +226,7 @@ public class GroupController {
 				if (roles.get(x).getId() == evallist.get(y).getLevel().getId()) {
 
 					prevlist.add(evallist.get(y).isPreview());
-					
+
 					break;
 				}
 			}
@@ -242,9 +244,9 @@ public class GroupController {
 		model.addAttribute("sync", synclist);
 		model.addAttribute("prev", prevlist);
 		model.addAttribute("revedit", revid);
-//need to add new role in here. 
-//		model.addAttribute("users", userRepository.findByRoleName("USER","EVALUATOR_EVAL",Sort.by(Sort.Direction.ASC, "lastName")));
-//		model.addAttribute("usersEval", userRepository.findByRoleName("EVALUATOR","EVALUATOR_EVAL",Sort.by(Sort.Direction.ASC, "lastName")));
+		//need to add new role in here. 
+		//		model.addAttribute("users", userRepository.findByRoleName("USER","EVALUATOR_EVAL",Sort.by(Sort.Direction.ASC, "lastName")));
+		//		model.addAttribute("usersEval", userRepository.findByRoleName("EVALUATOR","EVALUATOR_EVAL",Sort.by(Sort.Direction.ASC, "lastName")));
 		model.addAttribute("rolles", roles);
 		model.addAttribute("forms", evalFormRepo.findAll());
 		log.info("group_edit open");
@@ -273,8 +275,8 @@ public class GroupController {
 			@RequestParam(value = "issync", required = false) boolean[] issync,
 			@RequestParam(value = "isprev", required = false) boolean[] isprev,
 			@RequestParam(value = "form", required = false) EvalTemplates form,
-			@RequestParam(value = "selfeval", required = false) boolean self, Model model) {
-		
+			@RequestParam(value = "selfeval", required = false) boolean self, Model model, Authentication auth) {
+
 		//System.out.println("start");
 		//for (int x = 0; x < isprev.length; x++) {
 		//	System.out.println(isprev[x]);
@@ -282,7 +284,7 @@ public class GroupController {
 		//System.out.println("end");
 		//System.out.println(isprev.length);
 		//System.out.println(roles.length);
-
+		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
 		//  edits group 
 		Group group = groupRepository.findById(id);
 		Company currentCompany = group.getCompany();
@@ -304,12 +306,12 @@ public class GroupController {
 		groupRepository.save(group);
 		group = groupRepository.findById(id);
 
-		
-		List<Reviewee> revieweelist = revieweeRepository.findBygroup_Id(id);
-		
 
-		
-	
+		List<Reviewee> revieweelist = revieweeRepository.findBygroup_Id(id);
+
+
+
+
 
 		for (int i = 0; i < roles.length; i++) {
 			Evaluator temp = new Evaluator(userRepository.findByid(eval[i]), group,
@@ -345,13 +347,13 @@ public class GroupController {
 
 				}
 
-			
+
 
 			}
 			evaluatorRepository.save(temp);
 		}
 
-		
+
 		return "redirect:/editgroup/" + id;
 
 	}
@@ -364,7 +366,7 @@ public class GroupController {
 	 */
 	@RequestMapping(value = "/uploadgroup", method = RequestMethod.POST)
 	public Object uploadgroup(@RequestParam("file") MultipartFile reapExcelDataFile, RedirectAttributes redir, Authentication auth) {
-		
+
 		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
 		Company currentCompany = currentUser.getCompany();
 		//checks if user can assign evaluator. 
@@ -375,7 +377,7 @@ public class GroupController {
 			return redirectView;
 		}
 		//if(currentUser.isCompanySuperUser() || currentUser.getRole().evalableUsers().contains(something))
-		
+
 		XSSFSheet sheet = null;
 		XSSFSheet sheet2 = null;
 		XSSFSheet sheet3 = null;
@@ -421,16 +423,20 @@ public class GroupController {
 				return redirectView;
 			}
 			EvalRole evalRole = evalRoleRepository.findByNameAndCompany(evalRoleName,currentUser.getCompany());
-			
+
 			if(evalRole != null && evalRole.getCompany().getCompanyName().equals(currentUser.getCompanyName())) {
-				RedirectView redirectView = new RedirectView("/admin_groups", true);
-				redir.addFlashAttribute("error", "Eval Role with Name " + evalRoleName + " already exists");
-				log.error("Eval Role with Name " + evalRoleName + " already exists");
-				return redirectView;
+//				RedirectView redirectView = new RedirectView("/admin_groups", true);
+//				redir.addFlashAttribute("error", "Eval Role with Name " + evalRoleName + " already exists");
+//				log.error("Eval Role with Name " + evalRoleName + " already exists");
+//				return redirectView;
+				rolelist.add(evalRole);
 			}
-			//took this out role,
-			rolelist.add(new EvalRole(evalRoleName,level, currentCompany));
-			//System.out.println(roll + " " + roll_name);
+			else {
+				//took this out role,
+				rolelist.add(new EvalRole(evalRoleName,level, currentCompany));
+				//System.out.println(roll + " " + roll_name);
+			}
+			
 
 		}
 		int totalrole = rolelist.size();
@@ -453,7 +459,7 @@ public class GroupController {
 
 				else if (x == 1) {
 					String evaltemplateid = ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i));
-					EvalTemplates evaltemp = evaluationRepository.findById(evaltemplateid).orElse(null);
+					EvalTemplates evaltemp = evaluationRepository.findByNameAndCompany(evaltemplateid,currentCompany);
 					if (evaltemp == null) {
 						RedirectView redirectView = new RedirectView("/admin_groups", true);
 						redir.addFlashAttribute("error", "template " + evaltemplateid + "does not exist");
@@ -485,7 +491,7 @@ public class GroupController {
 					String sync = ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i)).replaceAll("\\s", "");
 					//System.out.print(sync);
 					if(sync.equals("Sync")||sync.equals("Async")) {
-						
+
 						synclist.add(sync);
 					}else
 					{
@@ -494,13 +500,13 @@ public class GroupController {
 						log.error("error in group " + group.getId()+ " Sync layout");
 						return redirectView;
 					}
-					
+
 				}
 				else if (x < (2 + totalrole+totalrole)) {
 					String preview = ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i)).replaceAll("\\s", "");
 					//System.out.print(preview);
 					if(preview.equals("preview")||preview.equals("nopreview")) {
-					
+
 						previewlist.add(preview);
 					}else {
 						RedirectView redirectView = new RedirectView("/admin_groups", true);
@@ -508,21 +514,21 @@ public class GroupController {
 						log.error("error in group  " + group.getId()+ " preview layout");
 						return redirectView;
 					}
-					
+
 				}
 
 
 				else {
 					if (ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i)) != null) {
 						User user = userRepository.findByEmail(ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i)));
-						
-//						System.out.println((currentUser.isCompanySuperUser() && currentUser.getCompanyID() == user.getCompanyID()));
-//						System.out.println(currentUser.isCompanySuperUser() );
-//						System.out.println(user.getCompanyID());
-//						System.out.println(currentUser.getCompanyID());
-//						System.out.println(currentUser.getRole().writableUsers().contains(user));
+
+						//						System.out.println((currentUser.isCompanySuperUser() && currentUser.getCompanyID() == user.getCompanyID()));
+						//						System.out.println(currentUser.isCompanySuperUser() );
+						//						System.out.println(user.getCompanyID());
+						//						System.out.println(currentUser.getCompanyID());
+						//						System.out.println(currentUser.getRole().writableUsers().contains(user));
 						if (user == null) {
-							
+
 							redir.addFlashAttribute("error", "user "
 									+ ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i)) + " does not exist");
 
@@ -531,7 +537,7 @@ public class GroupController {
 							//		+ ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i)));
 							log.error("user" + ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i)) + "does not not exist");
 							return redirectView;
-							
+
 						} else if((currentUser.isCompanySuperUser() && currentUser.getCompanyID() == user.getCompanyID()) || currentUser.getRole().writableUsers().contains(user)) {
 							Reviewee reviewee = new Reviewee(group, user.getName(), user);
 							group.appendReviewee(reviewee);
@@ -567,13 +573,13 @@ public class GroupController {
 		for (int i = 0; sheet2.getRow(i) != null; i += 2) {
 			User user = userRepository.findByEmail(ExcelRead_group.checkStringType(sheet2.getRow(i).getCell(0)));
 			if (user != null) {			
-				
+
 				if(!(currentUser.isCompanySuperUser() || currentUser.getRole().evalableUsers().contains(user))) { 
 					RedirectView redirectView = new RedirectView("/admin_groups", true);
 					redir.addFlashAttribute("error", "User " + currentUser.getName() + " cannot give user " + user.getName() + " Evaluator permissions");
 					log.error("User " + currentUser.getName() + " cannot give user " + user.getName() + " Evaluator permissions");
 					return redirectView;
-					
+
 				} 
 				for (int x = 1; sheet2.getRow(i).getCell(x) != null; x++) {
 					String groupids = ExcelRead_group.checkStringType(sheet2.getRow(i).getCell(x));
@@ -598,7 +604,7 @@ public class GroupController {
 							} else if (num == size) {
 								eval.setSync(true);
 							}
-							
+
 							if ((previewmap.get(groupNum).get(num - 1).equals("preview"))) {
 								eval.setPreview(true);
 
@@ -611,7 +617,7 @@ public class GroupController {
 							List<Evaluator> eval3 = (evaluatorRepository.findByLevelLevelAndGroupNumberAndCompany(num + 1, groupNum, currentCompany));
 							for (int a = 0; a < rev.size(); a++) {
 								EvaluationLog etemp = new EvaluationLog(eval, rev.get(a));
-							
+
 
 								for (int k = 0; k < eval2.size(); k++) {
 									EvaluationLog log1 = evaluationLogRepository
@@ -656,10 +662,10 @@ public class GroupController {
 				return redirectView;
 			}
 
-			
+
 		}
-		
-		
+
+
 		redir.addFlashAttribute("completed", true);
 		RedirectView redirectView = new RedirectView("/admin_groups", true);
 		log.info("group was added ");
@@ -681,37 +687,37 @@ public class GroupController {
 		grouplist = new ArrayList<Group>(new LinkedHashSet<Group>(grouplist));
 
 		model.addAttribute("groups", grouplist);
-		
+
 		List<EvalRole> roles = (List<EvalRole>) evalRoleRepository.findAll();
-		
-		
-		
+
+
+
 		//navbar
 		if((user.hasRead() || user.hasWrite() || user.hasDelete()) && user.hasEditEvalPerm()) {
 			model.addAttribute("EVAL_ADMIN", true);
-//			role = "EVAL_ADMIN";
+			//			role = "EVAL_ADMIN";
 		}
 		else {
 			model.addAttribute("EVAL_ADMIN", false);
 		}
-		
-		
+
+
 		if(evaluatorRepository.findById(user.getId()) != null) {
 			model.addAttribute("EVALUATOR", true);
 		}
 		else {
 			model.addAttribute("EVALUATOR", false);
 		}
-		
-		
+
+
 		if(user.hasEvaluator()) {
 			model.addAttribute("USER", true);
 		}
 		else {
 			model.addAttribute("USER", false);
 		}
-		
-		
+
+
 		if((user.hasRead() || user.hasWrite() || user.hasDelete())) {
 			model.addAttribute("ADMIN", true);
 		}
@@ -725,23 +731,27 @@ public class GroupController {
 		return "EvaluationView";
 	}
 
-	
+
 	/**
 	 * takes  an load information for the admin group age 
 	 * @param model
 	 * @return admin group page 
 	 */
 	@GetMapping("/admin_groups")
-	public String Groups(Model model) {
+	public String Groups(Model model, Authentication auth) {
 		
-		List<Group> grouplist = (List<Group>) groupRepository.findAll();
-		List<EvalRole> roles = (List<EvalRole>) evalRoleRepository.findAll();
-		List<EvaluationLog> evalLog = (List<EvaluationLog>) evaluationLogRepository.findAll();
+		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+		User currentUser = userRepo.findByid(userD.getID());
 		
-		
+		Company currentCompany = (currentUser.getCompany());
+		List<Group> grouplist = (List<Group>) groupRepository.findByCompany(currentCompany);
+		List<EvalRole> roles = (List<EvalRole>) evalRoleRepository.findByCompany(currentCompany);
+		List<EvaluationLog> evalLog = (List<EvaluationLog>) evaluationLogRepository.findByEvaluatorCompany(currentCompany);
+
+
 		model.addAttribute("evaluation", evalLog);
 		model.addAttribute("roles", roles);
-	
+
 		List<String>warnings =new ArrayList<String>();
 		for(int x=0; x<roles.size();x++) {
 			for(int y=0; y<grouplist.size();y++) {
@@ -751,7 +761,7 @@ public class GroupController {
 				}
 			}
 		}
-		
+
 		for(int y=0; y<grouplist.size();y++) {
 			if(grouplist.get(y).getReviewee().isEmpty()) {
 				warnings.add("Group:"+" "+ grouplist.get(y).getId()+" has no reviewee");
@@ -766,10 +776,10 @@ public class GroupController {
 		return "admin_groups";
 	}
 
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * this method will delete a group and store it competed evaluation in the archive 
 	 * @param id of the group being deleted
@@ -778,7 +788,7 @@ public class GroupController {
 	 */
 	@GetMapping("/delete/{id}")
 	public String deleteUser(@PathVariable("id") long id, Model model) {
-		
+
 		Group group = groupRepository.findById(id);
 		List<Archive> Archivelist = new ArrayList<Archive>();
 		for(int x =0; x< group.getEvaluator().size();x++) {
@@ -788,7 +798,7 @@ public class GroupController {
 					Archive temp2 = new Archive(temp.get(y));
 					Archivelist.add(temp2);
 				}
-				
+
 			}
 		}
 		for(int x =0; x< group.getReviewee().size();x++) {
@@ -799,16 +809,16 @@ public class GroupController {
 					Archivelist.add(temp2);
 				}
 			}
-			
+
 		}
 		groupRepository.delete(group);
 		archiveRepository.saveAll(Archivelist);
 		log.info("group"+id +" was deleted ");
 		return "redirect:/admin_groups";
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Processes the request for the download of the Evaluation Results excel file for a given group.
 	 * 
@@ -818,13 +828,13 @@ public class GroupController {
 	 */
 	@GetMapping("/download_eval_group_results/{groupId}")
 	public ResponseEntity<Resource> downloadEvalGroupResults(@PathVariable("groupId") long groupId) throws Exception {
-		
+
 		Group group = groupRepository.findById(groupId);
 		String evalId = group.getEvalTemplates().getName();
-		
+
 		// Name of download file
 		final String FILE_NAME = "Group " + groupId + " Evaluation Summary - " + evalId + ".xlsx";
-		
+
 		log.info("File '" + FILE_NAME + "' requested for download.");
 
 		// Create the temp directory if it does not exist
@@ -833,38 +843,38 @@ public class GroupController {
 		//Get Evaluation template
 		List<EvalTemplates> evalTemps = (List<EvalTemplates>) evalFormRepo.findAll();
 		byte[] evalTempByte = null;
-		
+
 		for (int i = 0; i<evalTemps.size();i++) {
 			String name = evalTemps.get(i).getName();
-			
+
 			if (name.equals(evalId)) {
 				evalTempByte = evalTemps.get(i).getEval();
 			}
 		}
-		
+
 		Evaluation evalTemp = (Evaluation) SerializationUtils.deserialize(evalTempByte);
-		
+
 		//Get Completed evaluations
 		List<EvaluationLog> evalLogs = (List<EvaluationLog>) evaluationLogRepository.findAll();
 		List<Evaluation> completedEvals = new ArrayList<Evaluation>();
-		
+
 		byte[] evalLogByte = null;
-		
+
 		for (int i = 0; i < evalLogs.size();i++) {
 			if (evalLogs.get(i).getCompleted()) {
 				evalLogByte = evalLogs.get(i).getPath();
 				Evaluation completeEval = (Evaluation) SerializationUtils.deserialize(evalLogByte);
-				
+
 				if(completeEval.getEvalID().equals(evalId)) {
-					
+
 					String evalGroupNum = "";
-					
+
 					for (int j = 0; j < completeEval.getSection(0).getQuestionCount(); j++) {
 						if (completeEval.getSection(0).getQuestion(j).getQText().equals("GROUP NO.")) {
 							evalGroupNum = completeEval.getSection(0).getQuestion(j).getQResponse();
 						}
 					}
-					
+
 					if (evalGroupNum.matches(".*[0-9].*")) {
 						evalGroupNum = evalGroupNum.replaceAll("\\D+","");
 						if (Long.parseLong(evalGroupNum) == groupId) {
@@ -874,10 +884,10 @@ public class GroupController {
 				}
 			}
 		}
-		
+
 		//System.out.println("FOUND " + completedEvals.size() + " COMPLETED EVALS FOR GROUP: " + groupId);
 		log.info("Found " + completedEvals.size() + " completed evals for group " + groupId);
-				
+
 		// Create the excel report file
 		//GenerateEvalReport.generateReport(evalTemp, completedEvals, TEMP_FILES_PATH, FILE_NAME);
 		GenerateEvalReportPoi.generateReport(evalTemp, completedEvals, TEMP_FILES_PATH, FILE_NAME);
@@ -893,8 +903,8 @@ public class GroupController {
 				.filename(resource.getFilename())
 				.build();
 		headers.setContentDisposition(disposition);
-		
+
 		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
-		
+
 	}
 }

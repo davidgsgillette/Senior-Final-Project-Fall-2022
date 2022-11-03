@@ -17,6 +17,7 @@ public interface GroupRepository extends CrudRepository<Group,Long > {
 	List<Group> findByevaluatorUserId(long ID);
 	Group findById(long ID);
 	Group findByNumberAndCompany(int number, Company company);
+	List<Group> findByCompany(Company company);
 	//EvaluatorRepository evaluatorRepository = ;
 	//List<Group>findByEvaluator(Evaluator evaluator);
 	//void removeAll(List<Group> grouplist);

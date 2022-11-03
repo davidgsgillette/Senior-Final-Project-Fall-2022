@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import edu.sru.group3.WebBasedEvaluations.evalform.Evaluation;
 import edu.sru.group3.WebBasedEvaluations.evalform.Question;
 import edu.sru.group3.WebBasedEvaluations.evalform.Section;
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.evalform.ComputeRange;
 
 public class EvalFormTests {
@@ -23,7 +24,7 @@ public class EvalFormTests {
 	public void initialize() {
 		this.questions = 0;
 		
-		this.eval = new Evaluation();
+		this.eval = new Evaluation("test");
 		this.eval.setTitle("Title");
 		this.eval.setEvalID("EVAL-001");
 		this.eval.addComputeRange(new ComputeRange(1.00,1.99,"Rank A"));

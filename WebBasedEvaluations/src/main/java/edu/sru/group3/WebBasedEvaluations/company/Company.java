@@ -22,12 +22,7 @@ import javax.persistence.Table;
 import org.springframework.lang.NonNull;
 
 import edu.sru.group3.WebBasedEvaluations.company.Company;
-import edu.sru.group3.WebBasedEvaluations.domain.EvalRole;
-import edu.sru.group3.WebBasedEvaluations.domain.Group;
-import edu.sru.group3.WebBasedEvaluations.domain.Privilege;
-import edu.sru.group3.WebBasedEvaluations.domain.Reviewee;
-import edu.sru.group3.WebBasedEvaluations.domain.Role;
-import edu.sru.group3.WebBasedEvaluations.domain.User;
+import edu.sru.group3.WebBasedEvaluations.domain.*;
 
 /*
  * Class for methods of the company object. hold info such as number of employees and head of tree of locations. 
@@ -83,7 +78,11 @@ public class Company {
 	private Set<Role> roles;
 	
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Group> groups = new HashSet<>();
+	private Set<Group> groups = new HashSet<Group>();
+	
+	
+	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<EvalTemplates> evalTemplates = new HashSet<EvalTemplates>();
 	
 
 	public Company() {
