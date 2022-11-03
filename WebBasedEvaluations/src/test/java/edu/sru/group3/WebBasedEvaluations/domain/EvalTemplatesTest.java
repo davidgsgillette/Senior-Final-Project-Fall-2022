@@ -4,13 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
+
 public class EvalTemplatesTest {
 
 	static EvalTemplates evalTemplate;
+	static Company company;
 	
 	@BeforeAll
 	static void setup() {
-		evalTemplate = new EvalTemplates();
+		evalTemplate = new EvalTemplates(company);
 	}
 	
 	@Test

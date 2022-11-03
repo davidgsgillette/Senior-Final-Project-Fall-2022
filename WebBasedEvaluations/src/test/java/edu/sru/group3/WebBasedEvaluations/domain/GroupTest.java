@@ -60,7 +60,7 @@ public class GroupTest {
 
 	@Test
 	public void getEvalTemplatesTest() {
-		EvalTemplates actual = new EvalTemplates();
+		EvalTemplates actual = new EvalTemplates(co);
 		group.setEvalTemplates(actual);
 		assertEquals(group.getEvalTemplates(), actual);
 	}

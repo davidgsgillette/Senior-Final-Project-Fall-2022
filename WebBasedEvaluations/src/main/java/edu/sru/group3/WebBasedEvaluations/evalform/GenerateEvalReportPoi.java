@@ -473,7 +473,7 @@ public class GenerateEvalReportPoi {
 				revieweeEmailList.add(email);
 				
 				// Create a new evaluation to hold the averages
-				Evaluation averagedRecord = new Evaluation();
+				Evaluation averagedRecord = new Evaluation(completedEval.getCompanyName());
 				
 				// Copy the same preload section and compute information
 				averagedRecord.addSection(preload);

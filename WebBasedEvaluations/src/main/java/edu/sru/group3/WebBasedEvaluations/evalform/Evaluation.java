@@ -20,6 +20,7 @@ public class Evaluation implements Serializable{
 	private String evalID;
 	private String title;
 	private String description;
+	private String companyName;
 
 	private List <Section> sectionList;
 	private List <String> warnings;
@@ -31,7 +32,7 @@ public class Evaluation implements Serializable{
 	private boolean computeTotals;
 
 	//Constructor ===============================================================
-	public Evaluation() {
+	public Evaluation(String companyName) {
 		evalID = "";
 		title = "";
 		description = "";
@@ -44,11 +45,21 @@ public class Evaluation implements Serializable{
 
 		completed = false;
 		computeTotals = false;
+		this.companyName = companyName;
 	}
 
 	// Setters and Getters ====================================================
+	
 	public String getEvalID() {
 		return this.evalID;
+	}
+
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 
 	public void setEvalID(String id) {

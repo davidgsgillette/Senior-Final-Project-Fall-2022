@@ -45,9 +45,11 @@ import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.EvalTemplates;
 import edu.sru.group3.WebBasedEvaluations.domain.EvaluationLog;
 import edu.sru.group3.WebBasedEvaluations.domain.Group;
+import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.evalform.Evaluation;
 import edu.sru.group3.WebBasedEvaluations.evalform.GenerateEvalReport;
@@ -56,6 +58,7 @@ import edu.sru.group3.WebBasedEvaluations.evalform.ParseEvaluation;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluationLogRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.GroupRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 
 /**
  * Controller for functionality of the 'eval_templates.html' web page for 'ADMIN_EVAL' users.
@@ -69,6 +72,8 @@ public class EvalFormController {
 	private EvaluationRepository evalFormRepo;
 	private EvaluationLogRepository evalLogRepo;
 	private GroupRepository groupRepo;
+	private UserRepository userRepo;
+	
 
 	private Evaluation eval;
 	private XSSFWorkbook apacheWorkbook;
@@ -77,10 +82,11 @@ public class EvalFormController {
 	private Logger log = LoggerFactory.getLogger(EvalFormController.class);
 
 	// Constructor
-	EvalFormController(EvaluationRepository evalFormRepo, EvaluationLogRepository evalLogRepo, GroupRepository groupRepo) {
+	EvalFormController(EvaluationRepository evalFormRepo, EvaluationLogRepository evalLogRepo, GroupRepository groupRepo,UserRepository userRepo) {
 		this.evalFormRepo = evalFormRepo;
 		this.evalLogRepo = evalLogRepo;
 		this.groupRepo = groupRepo;
+		this.userRepo = userRepo;
 
 		this.eval= null;
 		this.apacheWorkbook = null;
@@ -96,9 +102,11 @@ public class EvalFormController {
 	 * @return eval_templates.html
 	 */
 	@GetMapping("/admin_evaluations")
-	public String adminEvaluations(Model model) {
-		System.out.println("HERE NOW adminEvaluations");
-
+	public String adminEvaluations(Model model, Authentication auth) {
+		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+		User currentUser = userRepo.findByid(userD.getID());
+		
+		Company currentCompany = (currentUser.getCompany());
 		// Create the directories if they do not exist, delete any existing files
 		try {
 			Files.createDirectories(Paths.get(TEMP_FILES_PATH));
@@ -112,7 +120,7 @@ public class EvalFormController {
 		if (evalFormRepo.count() > 0) {
 			hasEvals = "yes";
 
-			List <EvalTemplates> evalTempList = (List<EvalTemplates>) evalFormRepo.findAll();
+			List <EvalTemplates> evalTempList = (List<EvalTemplates>) evalFormRepo.findByCompany(currentCompany);
 			List <Evaluation> evalList = new ArrayList<Evaluation>();
 
 			for (int i = 0; i < evalTempList.size(); i++) {
@@ -133,6 +141,7 @@ public class EvalFormController {
 						eval.addGroup("Group #" + groupList.get(j).getId());
 					}
 				}
+				
 				evalList.add(eval);
 			}
 
@@ -160,10 +169,14 @@ public class EvalFormController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/upload_eval", method = RequestMethod.POST)
-	public Object uploadEvalTemplate(@RequestParam("file") MultipartFile file, RedirectAttributes redir) throws Exception {
+	public Object uploadEvalTemplate(@RequestParam("file") MultipartFile file, RedirectAttributes redir, Authentication auth) throws Exception {
 
 		boolean showLog = false;
-
+		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+		User currentUser = userRepo.findByid(userD.getID());
+		
+		Company currentCompany = (currentUser.getCompany());
+		
 		if (!file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
 			redir.addFlashAttribute("error", "Wrong file type or no file selected");
 		} else {
@@ -188,11 +201,12 @@ public class EvalFormController {
 			this.apacheWorkbook = workbook;
 
 			// Parse data from XML file into Evaluation object
-			this.eval = new Evaluation();
+			this.eval = new Evaluation(currentCompany.getCompanyName());
 			this.eval = ParseEvaluation.parseEvaluation(this.eval, TEMP_FILES_PATH + XML_FILE_NAME);
 
 			// Check file ID and check for duplicates
 			String id = this.eval.getEvalID();
+			String companyName = this.eval.getCompanyName();
 			boolean duplicate = false;
 
 			if (evalFormRepo.count() > 0) {
@@ -204,7 +218,7 @@ public class EvalFormController {
 					byte[] data = evalTempList.get(i).getEval();
 					Evaluation eval;
 					eval = (Evaluation) SerializationUtils.deserialize(data);
-					if (eval.getEvalID().equals(id)) {
+					if (eval.getEvalID().equals(id) && eval.getCompanyName().equals(companyName)) {
 						duplicate = true;
 					}
 				}
@@ -285,9 +299,12 @@ public class EvalFormController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/eval_form")
-	public RedirectView saveEvalTemplate(@Validated Evaluation eval, Model model) throws Exception {
-		System.out.println("HERE NOW saveEvalTemplate");
-
+	public RedirectView saveEvalTemplate(@Validated Evaluation eval, Model model, Authentication auth) throws Exception {
+		
+		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+		User currentUser = userRepo.findByid(userD.getID());		
+		Company currentCompany = (currentUser.getCompany());
+		
 		// Create the directories if they do not exist, delete any existing files
 		try {
 			Files.createDirectories(Paths.get(TEMP_FILES_PATH));
@@ -322,7 +339,7 @@ public class EvalFormController {
 		}
 
 		// Save to database
-		EvalTemplates evalTemp = new EvalTemplates(this.eval.getEvalID(), evalByte, excelByte);
+		EvalTemplates evalTemp = new EvalTemplates(this.eval.getEvalID(), evalByte, excelByte, currentCompany);
 		evalFormRepo.save(evalTemp);
 		log.info("Evaluation template '" + this.eval.getEvalID() + "' saved.");
 
