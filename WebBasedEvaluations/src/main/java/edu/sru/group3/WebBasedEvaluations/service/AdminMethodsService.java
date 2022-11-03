@@ -227,7 +227,16 @@ public class AdminMethodsService {
 		User loggedInUser = userRepository.findByid(userD.getID());	
 		Company currentCompany = loggedInUser.getCompany();
 		//gets only the users that the currently logged in user has access to. 
-		List<User> listTotal = new ArrayList<User>(loggedInUser.getRole().readableUsers());
+		List<User> listTotal = new ArrayList<User>();
+		if(loggedInUser.isCompanySuperUser() || loggedInUser.isSuperUser()) {
+			listTotal = userRepository.findByCompany(currentCompany);
+		}
+		else {
+			
+			listTotal.addAll(loggedInUser.getRole().readableUsers());
+		}
+		
+//				new ArrayList<User>(loggedInUser.getRole().readableUsers());
 		
 		int startVal = 0;
 		model.addAttribute("users", listTotal);
