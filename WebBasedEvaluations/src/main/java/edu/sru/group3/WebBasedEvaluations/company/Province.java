@@ -46,10 +46,17 @@ public class Province {
 	private List<City> childCities;
 
 
+	/**
+	 *  default constructor
+	 */
 	public Province() {
 		
 	}
 	
+	/**
+	 * @param provinceName name of province
+	 * @param parentCountry country province is located in. 
+	 */
 	public Province(String provinceName, Country parentCountry) {
 		this.provinceName = provinceName;
 		this.numCities = 0;
@@ -58,6 +65,12 @@ public class Province {
 	}
 	
 	
+	/**
+	 * @param provinceName name of province
+	 * @param numCities number of cities in the province
+	 * @param parentCountry country province is in
+	 * @param cities cities in the province
+	 */
 	public Province(String provinceName, int numCities, Country parentCountry, List<City> cities) {
 		this.provinceName = provinceName;
 		this.numCities = numCities;
@@ -65,6 +78,12 @@ public class Province {
 		this.childCities = cities;
 	}
 
+	/**
+	 * @param provinceName namer of province
+	 * @param numCities number of cities
+	 * @param parentCountry country province is in
+	 * @param city province has
+	 */
 	public Province(String provinceName, int numCities, Country parentCountry, City city) {
 		this.provinceName = provinceName;
 		this.numCities = numCities;
@@ -74,8 +93,10 @@ public class Province {
 	}
 
 
-	/*
-	 * adds a location
+	
+	/**
+	 * @param city to add
+	 * @return true if added. 
 	 */
 	public boolean addCity(City city) {
 		this.childCities.add(city);
@@ -84,8 +105,10 @@ public class Province {
 	}
 
 
-	/*
-	 * adds a list of locations
+	
+	/**
+	 * @param cities to add
+	 * @return true 
 	 */
 	public boolean addCities(List<City> cities) {
 		
@@ -96,6 +119,10 @@ public class Province {
 	
 	/*
 	 * removes a city, should not be needed though. 
+	 */
+	/**
+	 * @param id of city to remove
+	 * @return true if removed. 
 	 */
 	public boolean removeCity(long id) {
 		

@@ -524,7 +524,6 @@ public class AdminMethodsService {
 			}
 
 		}
-//CHANGED
 		if (true) {
 
 			if (user.getRole() == null || this.roleRepo.findById(user2.getRole().getId()) == null) { //user.getRoles() == ADMIN) {
