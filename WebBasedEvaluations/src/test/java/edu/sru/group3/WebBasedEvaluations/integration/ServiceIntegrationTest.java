@@ -63,7 +63,7 @@ public class ServiceIntegrationTest {
 		Company co = new Company("test");
 		String deptName = "test";
 		Role role1 = new Role("test",co);
-        User user = new User(name, firstName, lastName, email, password, employeeId, dateOfHire, jobTitle, supervisor, divisionBranch, deptName, co, role1, false,false);
+        User user = new User(name, firstName, lastName, email, password, employeeId, dateOfHire, jobTitle, null, divisionBranch, deptName, co, role1, false,false);
         user.setName("intTest");
 
         //when

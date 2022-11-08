@@ -53,7 +53,7 @@ public class AdminMethodsServiceTest {
 		user.setCompanyName("Thangiah Inc");
 		user.setDivisionBranch("Retroville");
 		user.setRoleName("USER");
-		user.setSupervisor("Jimmy");
+		user.setSupervisor(null);
 		user.setEmail("sam.thangiah@sru.edu");
 		user.setEncryptedPassword("test");
 		
@@ -66,7 +66,7 @@ public class AdminMethodsServiceTest {
 		
 		user2.setCompanyName("Thangiah Inc");
 		user2.setDivisionBranch("Retroville");
-		user2.setSupervisor("Jimmy");
+		user2.setSupervisor(null);
 		user2.setDateOfHire("10/15/2022");
 		user2.setJobTitle("Assistant");
 		
@@ -79,7 +79,7 @@ public class AdminMethodsServiceTest {
 		
 		user3.setCompanyName("Thangiah Inc");
 		user3.setDivisionBranch("Retroville");
-		user3.setSupervisor("Jimmy");
+		user3.setSupervisor(null);
 		user3.setDateOfHire("10/15/2022");
 		user3.setJobTitle("Assistant");
 

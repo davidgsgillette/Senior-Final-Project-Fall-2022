@@ -140,8 +140,8 @@ class InitUsers{
 		
 		
 		
-		User use1 = new User("jimmy neutron","fname","lname","admin@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ", 999991, "N/A", "N/A", "N/A", "N/A","admin dept", co, adminRole,true,true);
-		User use2 = new User("jimmy2 neutron2","fname2","lname2","admin2@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ", 999991, "N/A", "N/A", "N/A", "N/A","admin dept", co2, adminRole2,true,false);
+		User use1 = new User("jimmy neutron","fname","lname","admin@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ", 999991, "N/A", "N/A", null, "N/A","admin dept", co, adminRole,true,true);
+		User use2 = new User("jimmy2 neutron2","fname2","lname2","admin2@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ", 999991, "N/A", "N/A", null, "N/A","admin dept", co2, adminRole2,true,false);
 //		adminRole.addUser(use1);
 //		roleRepo.save(adminRole);
 		
@@ -156,8 +156,8 @@ class InitUsers{
 		
 		
 		
-		Department dept = new Department(use1, loc, "testing dept", null,null);
-		Department dept2 = new Department(use2, loc2, "testing dept2", null,null);
+		Department dept = new Department(use1, loc, "testing dept", null,null,co);
+		Department dept2 = new Department(use2, loc2, "testing dept2", null,null,co2);
 		
 		use1.addDepartment(dept);
 		loc.addDept(dept);

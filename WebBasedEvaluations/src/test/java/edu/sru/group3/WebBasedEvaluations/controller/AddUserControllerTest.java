@@ -67,7 +67,7 @@ public class AddUserControllerTest {
 		user.setCompanyName("Thangiah Inc");
 		user.setDivisionBranch("Retroville");
 		user.setRole(new Role("USER",co));
-		user.setSupervisor("Jimmy");
+		user.setSupervisor(null);
 		user.setEmail("sam.thangiah@sru.edu");
 		user.setEncryptedPassword("test");
 		

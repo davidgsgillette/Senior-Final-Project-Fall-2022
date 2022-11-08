@@ -94,7 +94,7 @@ public class RepositoryTest {
 
 		user2.setCompanyName("Thangiah Inc");
 		user2.setDivisionBranch("Retroville");
-		user2.setSupervisor("Jimmy");
+		user2.setSupervisor(null);
 		user2.setDateOfHire("10/15/2022");
 		user2.setJobTitle("Assistant");
 		addCon.addUser(user2, result, model, auth, keyword, perPage, sort, currPage, sortOr);

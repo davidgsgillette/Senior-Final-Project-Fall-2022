@@ -44,12 +44,12 @@ public class Location {
 
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "location_group_id", nullable = false)
+	@JoinColumn(name = "location_group_id")
 	private LocationGroup locGroup;
 
-	@NonNull
+	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "city_id", nullable = false)
+	@JoinColumn(name = "city_id")
 	private City parentCity;
 	
 	

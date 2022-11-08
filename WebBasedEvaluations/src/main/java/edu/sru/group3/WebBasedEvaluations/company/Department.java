@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import edu.sru.group3.WebBasedEvaluations.domain.EvalTemplates;
 import edu.sru.group3.WebBasedEvaluations.domain.Privilege;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 
@@ -33,6 +34,11 @@ public class Department {
 	private String name;
 	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "company_id", nullable = false)
+	private Company company;
+
+	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "deptHead_user_id")
 	private User deptHead;
 	
@@ -44,6 +50,8 @@ public class Department {
 			inverseJoinColumns = @JoinColumn(name = "location_id"))
 	private List<Location> locations;
 	
+	@ManyToMany(mappedBy = "depts", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	private List<EvalTemplates> evalTemplates;
 	
 	//users
 	@ManyToMany(cascade = CascadeType.ALL)
@@ -58,14 +66,20 @@ public class Department {
     private List<Privilege> privileges;
 	
 	
-	
 	public Department() {
 		users = new ArrayList<User>();
 		locations = new ArrayList<Location>();
 		this.name = "";
 	}
 	
-	public Department(User user, Location loc, String name, Privilege priv, User deptHead) {
+	public Department(Company co) {
+		users = new ArrayList<User>();
+		locations = new ArrayList<Location>();
+		this.name = "";
+		this.company = co;
+	}
+	
+	public Department(User user, Location loc, String name, Privilege priv, User deptHead, Company company) {
 		users = new ArrayList<User>();
 		users.add(user);
 		locations = new ArrayList<Location>();
@@ -74,18 +88,36 @@ public class Department {
 		locations.add(loc);
 		this.name = name;
 		this.deptHead = deptHead;
+		this.company = company;
 	}
 	
-	public Department(List<User> users, List<Location> locations, String name, List<Privilege> privs) {
+	public Department(List<User> users, List<Location> locations, String name, List<Privilege> privs, Company company) {
 		this.users = users;
 		this.locations = locations;
 		this.name = name;
 		this.privileges = privs;
+		this.company = company;
 	}
 	
 	
 	
 	
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public List<EvalTemplates> getEvalTemplates() {
+		return evalTemplates;
+	}
+
+	public void setEvalTemplates(List<EvalTemplates> evalTemplates) {
+		this.evalTemplates = evalTemplates;
+	}
+
 	public void addPrivilege(Privilege priv) {
 		this.privileges.add(priv);
 	}
@@ -125,6 +157,33 @@ public class Department {
 		return false;
 	}	
 	
+	
+	public boolean addTemplate(EvalTemplates evalTemplate) {
+		this.evalTemplates.add(evalTemplate);
+		return true;
+	}
+	
+	
+	/*
+	 * adds a list of users to the location
+	 */
+	public boolean addTemplate(List<EvalTemplates> evalTemplates) {
+		
+		this.evalTemplates.addAll(evalTemplates);
+			
+		return true;
+	}
+	
+	/*
+	 * removes a user from a location
+	 */
+	public boolean removeTemplate(EvalTemplates evalTemplate) {
+		if(this.evalTemplates.contains(evalTemplate)) {
+			this.evalTemplates.remove(evalTemplate);
+			return true;
+		}
+		return false;
+	}
 	
 	public void addLocation(Location loc) {
 		this.locations.add(loc);

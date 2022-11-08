@@ -2,8 +2,11 @@ package edu.sru.group3.WebBasedEvaluations.evalform;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import edu.sru.group3.WebBasedEvaluations.company.Department;
 import edu.sru.group3.WebBasedEvaluations.domain.Group;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 
@@ -30,8 +33,10 @@ public class Evaluation implements Serializable{
 
 	private boolean completed;
 	private boolean computeTotals;
+	
+//	private Set<Department> depts = new HashSet<Department>();
 
-	//Constructor ===============================================================
+	//Constructor ==============================================================	
 	public Evaluation(String companyName) {
 		evalID = "";
 		title = "";
@@ -69,6 +74,23 @@ public class Evaluation implements Serializable{
 	public String getTitle() {
 		return title;
 	}
+	
+//	public Set<Department> getDepts() {
+//		return depts;
+//	}
+//	public void addDept(Department dept) {
+//		this.depts.add(dept);
+//	}
+//	public void addAllDepts(Set<Department> depts) {
+//		this.depts.addAll(depts);
+//	}
+//
+//	public void removeDept(Department dept) {
+//		this.depts.remove(dept);
+//	}
+//	public void setDepts(Set<Department> depts) {
+//		this.depts = depts;
+//	}
 
 	public void setTitle(String title) {
 		this.title = title;

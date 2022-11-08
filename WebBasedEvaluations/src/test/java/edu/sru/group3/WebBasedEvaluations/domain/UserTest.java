@@ -106,7 +106,7 @@ public class UserTest {
 
 	@Test
 	void getSupervisorTest() {
-		String actual = "Test";
+		String actual = "test";
 		user.setSupervisor(actual);
 		assertEquals(user.getSupervisor(), actual);
 	}
