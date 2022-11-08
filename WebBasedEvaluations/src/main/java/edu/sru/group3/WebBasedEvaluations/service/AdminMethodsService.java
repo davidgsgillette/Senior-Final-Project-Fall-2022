@@ -561,7 +561,7 @@ public class AdminMethodsService {
 		}
 
 		if (true) {
-			if (user.getSupervisor() == "" || user.getSupervisor() == null) {
+			if (user.getSupervisor() == null || user.getSupervisor() == "") {
 
 				user.setSupervisor(user2.getSupervisor());
 

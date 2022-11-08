@@ -29,7 +29,7 @@ public class GroupTest {
 	@Test
 	public void getIdTest() {
 		int actual = 5;
-		group.setGroupId(actual);
+		group.setGroupNum(actual);
 		assertEquals(group.getId(), actual);
 	}
 

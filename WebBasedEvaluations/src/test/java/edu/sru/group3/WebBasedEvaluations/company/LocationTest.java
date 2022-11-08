@@ -25,12 +25,13 @@ public class LocationTest {
 	static Company co = new Company();
 	static LocationGroup locGroup = new LocationGroup();
 	
+	
 	static List<User> users;
 	static User user = new User();
 	
 	
 	static List<Department> departments;
-	static Department newDepartment = new Department();
+	static Department newDepartment = new Department(co);
 	
 	static Location loc;
 	

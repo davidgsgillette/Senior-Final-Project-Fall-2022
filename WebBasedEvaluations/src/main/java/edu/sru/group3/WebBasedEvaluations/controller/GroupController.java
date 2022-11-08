@@ -47,6 +47,7 @@ import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
 import edu.sru.group3.WebBasedEvaluations.domain.Reviewee;
 import edu.sru.group3.WebBasedEvaluations.domain.SelfEvaluation;
 import edu.sru.group3.WebBasedEvaluations.company.Company;
+import edu.sru.group3.WebBasedEvaluations.company.Department;
 import edu.sru.group3.WebBasedEvaluations.domain.Archive;
 import edu.sru.group3.WebBasedEvaluations.domain.EvalRole;
 import edu.sru.group3.WebBasedEvaluations.domain.EvalTemplates;
@@ -404,7 +405,7 @@ public class GroupController {
 			return redirectView;
 		}
 
-		// rolls
+		// roles
 		for (int i = 1; sheet3.getRow(i) != null; i++) {
 			int level = ExcelRead_group.checkIntType(sheet3.getRow(i).getCell(1));
 			String evalRoleName = ExcelRead_group.checkStringType(sheet3.getRow(i).getCell(0));	
@@ -445,6 +446,7 @@ public class GroupController {
 		for (int i = 0; sheet.getRow(0).getCell(i) != null; i++) {
 			List<String> synclist = new ArrayList<String>();
 			List<String> previewlist = new ArrayList<String>();
+			
 			Group group = new Group(currentUser.getCompany());
 
 			// long id = (Long) null;
@@ -454,7 +456,15 @@ public class GroupController {
 				if (x == 0) {
 					String groupstringid = ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i))
 							.replaceAll("\\s", "").replace("Group", "");
-					group.setGroupId(Integer.parseInt(groupstringid));
+					group.setGroupNum(Integer.parseInt(groupstringid));
+					Group tempGroup = this.groupRepository.findByNumberAndCompany(Integer.parseInt(groupstringid), currentCompany);
+					if(tempGroup != null) {
+						RedirectView redirectView = new RedirectView("/admin_groups", true);
+						redir.addFlashAttribute("error", "group " +  Integer.parseInt(groupstringid) + " already exists.");
+						//System.out.println("user doesn't not exist1 " + evaltemplateid);
+						log.error("group " +  Integer.parseInt(groupstringid) + " already exists.");
+						return redirectView;
+					}
 				}
 
 				else if (x == 1) {
@@ -468,9 +478,34 @@ public class GroupController {
 						return redirectView;
 					}
 
+					boolean found = true;
+					for(User user : group.getUsers()) {
+						for(Department dept : evaltemp.getDepts()) {
+							if(!user.getDepartments().contains(dept)) {
+								found = false;
+							}
+							else {
+								found = true;
+								break;
+							}							
+						}
+						if(!found) {
+							break;
+						}
+					}
+					if(found) {
+						group.setEvalTemplates(evaltemp);
+					}
+					else {
+						RedirectView redirectView = new RedirectView("/admin_groups", true);
+						redir.addFlashAttribute("error", "user not found in any of the listed departments, could not user template on group");
+						//System.out.println("user doesn't not exist1 " + evaltemplateid);
+						log.error("user not found in any of the listed departments, could not user template on group");
+						return redirectView;
+					}
 
 
-					group.setEvalTemplates(evaltemp);
+					
 
 				}
 				// is self eval needed
@@ -757,14 +792,14 @@ public class GroupController {
 			for(int y=0; y<grouplist.size();y++) {
 				Boolean temp = evaluatorRepository.existsBylevelAndGroup(roles.get(x),grouplist.get(y));
 				if(temp ==false) {
-					warnings.add("Group:"+" "+ grouplist.get(y).getId()+" is missing "+ roles.get(x).getName()+" Evaluator");
+					warnings.add("Group:"+" "+ grouplist.get(y).getNumber()+" is missing "+ roles.get(x).getName()+" Evaluator");
 				}
 			}
 		}
 
 		for(int y=0; y<grouplist.size();y++) {
 			if(grouplist.get(y).getReviewee().isEmpty()) {
-				warnings.add("Group:"+" "+ grouplist.get(y).getId()+" has no reviewee");
+				warnings.add("Group:"+" "+ grouplist.get(y).getNumber()+" has no reviewee");
 			}
 		}
 		model.addAttribute("warnings",warnings);

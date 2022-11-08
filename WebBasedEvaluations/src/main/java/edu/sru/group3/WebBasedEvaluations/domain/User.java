@@ -117,9 +117,11 @@ public class User {
 	//private long employeeId;
 	private String dateOfHire;
 	private String jobTitle;
-	private String supervisor;
+	
 	private String divisionBranch;
 	private String departmentName;
+	
+	private String supervisor;
 
 	public User() {
 		this.locations = new HashSet<Location>();

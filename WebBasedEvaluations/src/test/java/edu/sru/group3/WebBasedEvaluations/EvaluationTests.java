@@ -57,7 +57,7 @@ public class EvaluationTests {
 			user.setCompanyName("Thangiah Inc");
 			user.setDivisionBranch("Retroville");
 			user.setRole(new Role("USER",co));
-			user.setSupervisor("Jimmy");
+			user.setSupervisor(null);
 			user.setEmail("sam.thangiah@sru.edu");
 			user.setEncryptedPassword("test");
 			
@@ -70,7 +70,7 @@ public class EvaluationTests {
 			
 			user2.setCompanyName("Thangiah Inc");
 			user2.setDivisionBranch("Retroville");
-			user2.setSupervisor("Jimmy");
+			user2.setSupervisor(null);
 			user2.setDateOfHire("10/15/2022");
 			user2.setJobTitle("Assistant");
 			
@@ -83,7 +83,7 @@ public class EvaluationTests {
 			
 			user3.setCompanyName("Thangiah Inc");
 			user3.setDivisionBranch("Retroville");
-			user3.setSupervisor("Jimmy");
+			user3.setSupervisor(null);
 			user3.setDateOfHire("10/15/2022");
 			user3.setJobTitle("Assistant");
 			
@@ -99,7 +99,7 @@ public class EvaluationTests {
 	public void creating_group()  {
 		
 		Group group =new Group(co);
-		group.setGroupId((int) 1);
+		group.setGroupNum((int) 1);
 		
 		group.appendReviewee(new Reviewee(group, "sam", userRepository.findByFirstName("Sam")));
 		ArrayList<Evaluator> eval= new ArrayList<Evaluator>();
@@ -120,7 +120,7 @@ public class EvaluationTests {
 	public void creating_findeval()  {
 		
 		Group group =new Group(co);
-		group.setGroupId((int) 1);
+		group.setGroupNum((int) 1);
 		
 		group.appendReviewee(new Reviewee(group, "sam", userRepository.findByFirstName("Sam")));
 		ArrayList<Evaluator> eval= new ArrayList<Evaluator>();

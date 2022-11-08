@@ -89,6 +89,14 @@ public class Group {
 	}
 	
 	
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
 	public int getGroupNumber() {
 		return number;
 	}
@@ -102,7 +110,7 @@ public class Group {
 		return id;
 	}
 
-	public void setGroupId(int groupNum) {
+	public void setGroupNum(int groupNum) {
 		this.number = groupNum;
 	}
 

@@ -28,7 +28,7 @@ public class DepartmentTest {
 	static List<Location> locations;
 	static Location newloc = new Location();
 	static List<Privilege> Privilegies;
-	
+	static Company co;
 	static Department dep;
 	
 	
@@ -45,7 +45,7 @@ public class DepartmentTest {
 		users = new ArrayList<User>();
 		users.add(user);
 		
-		dep = new Department(users, locations, name, Privilegies);
+		dep = new Department(users, locations, name, Privilegies,co);
 		dep.setId(id);
 		
 	}

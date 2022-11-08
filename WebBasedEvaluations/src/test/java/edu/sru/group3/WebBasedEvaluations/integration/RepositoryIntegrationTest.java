@@ -59,12 +59,12 @@ public class RepositoryIntegrationTest {
 		int employeeId = 1;
 		String dateOfHire = "test";
 		String jobTitle = "test";
-		String supervisor = "test";
+//		String supervisor = null;
 		String divisionBranch = "test";
 		Company co = new Company("test");
 		Role role1 = new Role("Test",co);
 		String roleName = "Test";
-        User user = new User(name, firstName, lastName, email, password, employeeId, dateOfHire, jobTitle, supervisor, divisionBranch, deptName, co, role1, false,false);
+        User user = new User(name, firstName, lastName, email, password, employeeId, dateOfHire, jobTitle, null, divisionBranch, deptName, co, role1, false,false);
         
         user.setName("intTest");
 
