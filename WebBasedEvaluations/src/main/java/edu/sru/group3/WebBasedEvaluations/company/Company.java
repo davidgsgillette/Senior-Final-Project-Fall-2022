@@ -45,6 +45,9 @@ public class Company {
 	@NonNull
 	private int numLocations;
 
+	
+	//all objects associated to the company. 
+	
 	//maps company id to user. 
 	@NonNull
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -57,9 +60,7 @@ public class Company {
 
 	@NonNull
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Location> locations;
-	
-	
+	private Set<Location> locations;	
 	
 	@OneToMany(mappedBy = "company", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<EvalRole> evalRoles;
@@ -67,8 +68,7 @@ public class Company {
 	
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Reviewee> reviewees;
-
-
+	
 	
 	@OneToMany(mappedBy = "company", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Group> evalGroups;
@@ -76,6 +76,7 @@ public class Company {
 	
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Role> roles;
+	
 	
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Group> groups = new HashSet<Group>();
@@ -90,6 +91,9 @@ public class Company {
 	}
 
 
+	/**
+	 * @param companyName name of company
+	 */
 	public Company(String companyName) {
 		this.companyName = companyName;
 		this.numEmployees = 0;
@@ -103,16 +107,28 @@ public class Company {
 //		roles.add(new Role(roleName,this));
 	}
 
+	/**
+	 * @param priv privilege to add
+	 * @return true if privilege is added. 
+	 */
 	public boolean addPrivilege(Privilege priv) {
 		this.privs.add(priv);
 		return true;
 	}
 
+	/**
+	 * @param privs list of privileges to add
+	 * @return true if all privs are added. 
+	 */
 	public boolean addPrivss(Collection<Privilege> privs) {
 		this.privs.addAll(privs);
 		return true;
 	}
 
+	/**
+	 * @param priv Privilege to remove
+	 * @return true if privilege is removed
+	 */
 	public boolean removePriv(Privilege priv) {
 
 		if(this.privs.contains(priv)) {
@@ -123,16 +139,28 @@ public class Company {
 	}
 	
 	
+	/**
+	 * @param reviewee reviewee to add
+	 * @return true if reviewee is added. 
+	 */
 	public boolean addReviewee(Reviewee reviewee) {
 		this.reviewees.add(reviewee);
 		return true;
 	}
 
+	/**
+	 * @param reviewees reviewees to add
+	 * @return true if reviewees are added. 
+	 */
 	public boolean addReviewees(Collection<Reviewee> reviewees) {
 		this.reviewees.addAll(reviewees);
 		return true;
 	}
 
+	/**
+	 * @param reviewee to remove
+	 * @return true if removed
+	 */
 	public boolean removeReviewee(Reviewee reviewee) {
 
 		if(this.reviewees.contains(reviewee)) {
@@ -144,16 +172,28 @@ public class Company {
 	
 	
 	
+	/**
+	 * @param group to add
+	 * @return true if added. 
+	 */
 	public boolean addGroup(Group group) {
 		this.groups.add(group);
 		return true;
 	}
 
+	/**
+	 * @param groups to add
+	 * @return true if added
+	 */
 	public boolean addGroups(Collection<Group> groups) {
 		this.groups.addAll(groups);
 		return true;
 	}
 
+	/**
+	 * @param group to remove
+	 * @return true if removed
+	 */
 	public boolean removeGroup(Group group) {
 
 		if(this.groups.contains(group)) {
@@ -165,14 +205,19 @@ public class Company {
 	
 	
 	
-//	public Role getDefaultRole() {
-//		String roleName = companyName + " USER";
-//		return getRoleByName(roleName);
-//	}
+
+	
+	/**
+	 * @return a string of the company name plus user.  
+	 */
 	public String getDefaultRoleName() {
 		return companyName + " USER";
 	}
 
+	/**
+	 * @param roleName the name of the role to be added
+	 * @return the role in the company that matches the name. 
+	 */
 	public Role getRoleByName(String roleName) {
 		for(Role role : roles) {
 			if(role.getName().toLowerCase().trim().equals(roleName.toLowerCase().trim())) {
@@ -183,11 +228,20 @@ public class Company {
 	}
 
 
+	
+	/**
+	 * @param role to add
+	 * @return true if added
+	 */
 	public boolean addRole(Role role) {
 		this.roles.add(role);
 		return true;
 	}
 
+	/**
+	 * @param roles list of roles to add
+	 * @return true if added
+	 */
 	public boolean addRoles(List<Role> roles) {
 		for(Role role : roles) {
 			this.roles.add(role);
@@ -195,6 +249,10 @@ public class Company {
 		return true;
 	}
 
+	/**
+	 * @param role to remove
+	 * @return true if removed
+	 */
 	public boolean removeRole(Role role) {
 
 		if(this.roles.contains(role)) {
@@ -205,11 +263,19 @@ public class Company {
 	}
 
 	
+	/**
+	 * @param role EvalRole to add
+	 * @return true if added
+	 */
 	public boolean addEvalRole(EvalRole role) {		
 		this.evalRoles.add(role);			
 		return true;
 	}
 
+	/**
+	 * @param role evalRole to remove
+	 * @return true if removed. 
+	 */
 	public boolean removeEvalRole(EvalRole role) {
 
 		if(this.evalRoles.contains(role)) {
@@ -220,6 +286,82 @@ public class Company {
 	}
 	
 	
+	/**
+	 * @param loc location to add
+	 * @return true if added
+	 */
+	public boolean addLocation(Location loc) {
+		this.locations.add(loc);
+		this.numLocations++;
+		return true;
+	}
+
+	/**
+	 * @param locs list of locations to add
+	 * @return true if removed
+	 */
+	public boolean addLocations(List<Location> locs) {
+		for(Location loc : locs) {
+			this.locations.add(loc);
+			this.numLocations++;
+		}		
+		return true;
+	}
+
+	/**
+	 * @param loc location to remove
+	 * @return true if removed
+	 */
+	public boolean removeLocation(Location loc) {
+
+		if(this.locations.contains(loc)) {
+			this.locations.remove(loc);
+			this.numLocations--;
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @param user to add
+	 * @return true if added
+	 */
+	public boolean addUser(User user) {
+		this.users.add(user);
+		this.numEmployees++;
+		return true;
+	}
+
+	/**
+	 * @param userList list of user to add
+	 * @return  true if all are removed
+	 */
+	public boolean addUsers(List<User> userList) {
+		for(User user : userList) {
+			this.users.add(user);
+			this.numEmployees++;
+		}		
+		return true;
+	}
+
+	/**
+	 * @param user to remove
+	 * @return true if user is removed
+	 */
+	public boolean removeUser(User user) {
+
+		if(this.users.contains(user)) {
+			this.users.remove(user);
+			this.numEmployees--;
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	
+	//getters and setters. 	
 	public Set<Privilege> getPrivs() {
 		return privs;
 	}
@@ -263,59 +405,6 @@ public class Company {
 	public void setLocations(Set<Location> locations) {
 		this.locations = locations;
 	}
-
-
-	public boolean addLocation(Location loc) {
-		this.locations.add(loc);
-		this.numLocations++;
-		return true;
-	}
-
-	public boolean addLocations(List<Location> locs) {
-		for(Location loc : locs) {
-			this.locations.add(loc);
-			this.numLocations++;
-		}		
-		return true;
-	}
-
-	public boolean removeLocation(Location loc) {
-
-		if(this.locations.contains(loc)) {
-			this.locations.remove(loc);
-			this.numLocations--;
-			return true;
-		}
-		return false;
-	}
-
-	public boolean addUser(User user) {
-		this.users.add(user);
-		this.numEmployees++;
-		return true;
-	}
-
-	public boolean addUsers(List<User> userList) {
-		for(User user : userList) {
-			this.users.add(user);
-			this.numEmployees++;
-		}		
-		return true;
-	}
-
-	public boolean removeUser(User user) {
-
-		if(this.users.contains(user)) {
-			this.users.remove(user);
-			this.numEmployees--;
-			return true;
-		}
-		return false;
-	}
-
-
-	//getters and setters
-
 
 	public Set<Reviewee> getReviewees() {
 		return reviewees;

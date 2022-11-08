@@ -25,6 +25,10 @@ import org.springframework.lang.NonNull;
  * @author David Gillette
  *
  */
+/**
+ * @author david
+ *
+ */
 @Entity
 @Table(name = "city")
 public class City {
@@ -44,15 +48,23 @@ public class City {
 	@JoinColumn(name = "province_id", nullable = false)
 	private Province parentProvince;
 
+	
 	@NonNull
 	@OneToMany(mappedBy = "parentCity", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Location> childLocations;
 
-
+	
+	/**
+	 * default constructor
+	 */
 	public City() {
 		
 	}
 	
+	/**
+	 * @param cityName name of the city
+	 * @param parentProvince the province object that this city is located in. 
+	 */
 	public City(String cityName, Province parentProvince) {
 		this.cityName = cityName;
 		this.numLocations = 0;
@@ -61,6 +73,12 @@ public class City {
 	}
 	
 	
+	/**
+	 * @param cityName name of the city
+	 * @param numLocations number of locations in this city
+	 * @param parentProvince the province object that this city is located in. 
+	 * @param locations list of locations to add. 
+	 */
 	public City(String cityName, int numLocations, Province parentProvince, List<Location> locations) {
 		this.cityName = cityName;
 		this.numLocations = numLocations;
@@ -68,6 +86,12 @@ public class City {
 		this.childLocations = locations;
 	}
 
+	/**
+	 * @param cityName name of the city
+	 * @param numLocations number of locations in this city
+	 * @param parentProvince the province object that this city is located in. 
+	 * @param location location to add to the server. 
+	 */
 	public City(String cityName, int numLocations, Province parentProvince, Location location) {
 		this.cityName = cityName;
 		this.numLocations = numLocations;
@@ -76,9 +100,10 @@ public class City {
 		this.childLocations.add(location);
 	}
 
-
-	/*
+	/**
 	 * adds a location
+	 * @param loc location to add. 
+	 * @return if location was successfully added. 
 	 */
 	public boolean addLocation(Location loc) {
 		this.childLocations.add(loc);
@@ -88,7 +113,12 @@ public class City {
 
 
 	/*
+	 * 
+	 */
+	/**
 	 * adds a list of locations
+	 * @param locs list of locations to add. 
+	 * @return true if locations are added.
 	 */
 	public boolean addLocations(List<Location> locs) {
 		for(Location loc : locs) { 
@@ -98,8 +128,11 @@ public class City {
 		return true;
 	}
 	
-	/*
-	 * removes a location
+	
+	/**
+	 *  removes a location
+	 * @param loc location to remove
+	 * @return true if location is removed. 
 	 */
 	public boolean removeLocation(Location loc) {
 		if(this.childLocations.contains(loc)) {
@@ -112,9 +145,6 @@ public class City {
 
 	
 	//getters and setters
-	
-	
-	
 	public Long getId() {
 		return id;
 	}

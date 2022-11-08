@@ -40,24 +40,37 @@ public class World {
 	
 	
 	
+	/**
+	 * default constructor
+	 */
 	public World() {
 		this.numContinents = 0;
 		this.childContinents = new ArrayList<Continent>();
 	}
 	
+	/**
+	 * @param numContinents number of continents in the world
+	 * @param childContinents continents in this world 
+	 */
 	public World(int numContinents, List<Continent> childContinents) {
 		this.numContinents = numContinents;
 		this.childContinents = childContinents;
 	}
 
-	public World(int numContinents, Continent childCountry) {
+	/**
+	 * @param numContinents number of continents in the world
+	 * @param childContinents continents in the world.
+	 */
+	public World(int numContinents, Continent childContinents) {
 		this.numContinents = numContinents;
 		this.childContinents = new ArrayList<Continent>();
-		this.childContinents.add(childCountry);
+		this.childContinents.add(childContinents);
 	}
 
-	/*
-	 * adds a location
+	
+	/**
+	 * @param childContinent to add
+	 * @return true if added. 
 	 */
 	public boolean addContinent(Continent childContinent) {
 		this.childContinents.add(childContinent);
@@ -66,8 +79,10 @@ public class World {
 	}
 
 
-	/*
-	 * adds a list of locations
+	
+	/**
+	 * @param childContinents to add
+	 * @return true if added
 	 */
 	public boolean addContinent(List<Continent> childContinents) {
 		
@@ -78,6 +93,10 @@ public class World {
 	
 	/*
 	 * removes a continent, should not be needed though. 
+	 */
+	/**
+	 * @param id of continent to remove
+	 * @return true if added. 
 	 */
 	public boolean removeContinent(long id) {
 		

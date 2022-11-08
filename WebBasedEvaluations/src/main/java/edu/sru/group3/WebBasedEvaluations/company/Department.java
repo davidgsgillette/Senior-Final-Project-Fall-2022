@@ -21,6 +21,11 @@ import edu.sru.group3.WebBasedEvaluations.domain.Privilege;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 
 
+/**
+ * this class represents a department in a company. It contains a list of users, locations and the associated objects. 
+ * @author David Gillette
+ *
+ */
 @Entity
 @Table(name = "department")
 public class Department {
@@ -66,12 +71,18 @@ public class Department {
     private List<Privilege> privileges;
 	
 	
+	/**
+	 * default constructor
+	 */
 	public Department() {
 		users = new ArrayList<User>();
 		locations = new ArrayList<Location>();
 		this.name = "";
 	}
 	
+	/**
+	 * @param co company object to associate with this dept
+	 */
 	public Department(Company co) {
 		users = new ArrayList<User>();
 		locations = new ArrayList<Location>();
@@ -79,6 +90,9 @@ public class Department {
 		this.company = co;
 	}
 	
+	/**
+	
+	 */
 	public Department(User user, Location loc, String name, Privilege priv, User deptHead, Company company) {
 		users = new ArrayList<User>();
 		users.add(user);
@@ -91,6 +105,13 @@ public class Department {
 		this.company = company;
 	}
 	
+	/**
+	 * @param users users to add
+	 * @param locs locations to add
+	 * @param name name of dept
+	 * @param privs privileges associated with this dept
+	 * @param company that this dept is in. 
+	 */
 	public Department(List<User> users, List<Location> locations, String name, List<Privilege> privs, Company company) {
 		this.users = users;
 		this.locations = locations;
@@ -102,6 +123,131 @@ public class Department {
 	
 	
 	
+	
+	
+	
+	/**
+	 * @param priv privilege to add. 
+	 */
+	public void addPrivilege(Privilege priv) {
+		this.privileges.add(priv);
+	}
+	
+	/**
+	 * @param priv to remove
+	 * @return true if it is removed. 
+	 */
+	public boolean removePrivilege(Privilege priv) {
+		if(this.privileges.contains(priv)) {
+			this.privileges.remove(priv);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @param user to add
+	 * @return true if added. 
+	 */
+	public boolean addUser(User user) {
+		this.users.add(user);
+		return true;
+	}
+	
+	
+	
+	/**
+	 * @param users to add
+	 * @return true if all users are added. 
+	 */
+	public boolean addUsers(List<User> users) {
+		
+		this.users.addAll(users);
+			
+		return true;
+	}
+	
+	
+	/**
+	 * @param user to remove
+	 * @return true if removed. 
+	 */
+	public boolean removeUser(User user) {
+		if(this.users.contains(user)) {
+			this.users.remove(user);
+			return true;
+		}
+		return false;
+	}	
+	
+	
+	/**
+	 * @param evalTemplate to add
+	 * @return true if added
+	 */
+	public boolean addTemplate(EvalTemplates evalTemplate) {
+		this.evalTemplates.add(evalTemplate);
+		return true;
+	}
+	
+	
+	
+	/**
+	 * @param evalTemplates to add
+	 * @return true if all are added. 
+	 */
+	public boolean addTemplate(List<EvalTemplates> evalTemplates) {
+		
+		this.evalTemplates.addAll(evalTemplates);
+			
+		return true;
+	}
+	
+	/*
+	 * removes a user from a location
+	 */
+	/**
+	 * @param evalTemplate to remove
+	 * @return true if removed. 
+	 */
+	public boolean removeTemplate(EvalTemplates evalTemplate) {
+		if(this.evalTemplates.contains(evalTemplate)) {
+			this.evalTemplates.remove(evalTemplate);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @param loc location to add
+	 */
+	public void addLocation(Location loc) {
+		this.locations.add(loc);
+	}
+	
+	/**
+	 * @param locations to add. 
+	 */
+	public void addLocations(List<Location> locations) {
+		
+		this.locations.addAll(locations);
+		
+	}
+	
+	/**
+	 * @param loc location to remove
+	 * @return true if removed
+	 */
+	public boolean removeLocation(Location loc) {
+		if(this.locations.contains(loc)) {
+			this.locations.remove(loc);
+			return true;
+		}
+		return false;
+	}
+	
+	
+	//getters and setters
 	public Company getCompany() {
 		return company;
 	}
@@ -117,94 +263,6 @@ public class Department {
 	public void setEvalTemplates(List<EvalTemplates> evalTemplates) {
 		this.evalTemplates = evalTemplates;
 	}
-
-	public void addPrivilege(Privilege priv) {
-		this.privileges.add(priv);
-	}
-	
-	public boolean removePrivilege(Privilege priv) {
-		if(this.privileges.contains(priv)) {
-			this.privileges.remove(priv);
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean addUser(User user) {
-		this.users.add(user);
-		return true;
-	}
-	
-	
-	/*
-	 * adds a list of users to the location
-	 */
-	public boolean addUsers(List<User> users) {
-		
-		this.users.addAll(users);
-			
-		return true;
-	}
-	
-	/*
-	 * removes a user from a location
-	 */
-	public boolean removeUser(User user) {
-		if(this.users.contains(user)) {
-			this.users.remove(user);
-			return true;
-		}
-		return false;
-	}	
-	
-	
-	public boolean addTemplate(EvalTemplates evalTemplate) {
-		this.evalTemplates.add(evalTemplate);
-		return true;
-	}
-	
-	
-	/*
-	 * adds a list of users to the location
-	 */
-	public boolean addTemplate(List<EvalTemplates> evalTemplates) {
-		
-		this.evalTemplates.addAll(evalTemplates);
-			
-		return true;
-	}
-	
-	/*
-	 * removes a user from a location
-	 */
-	public boolean removeTemplate(EvalTemplates evalTemplate) {
-		if(this.evalTemplates.contains(evalTemplate)) {
-			this.evalTemplates.remove(evalTemplate);
-			return true;
-		}
-		return false;
-	}
-	
-	public void addLocation(Location loc) {
-		this.locations.add(loc);
-	}
-	
-	public void addLocations(List<Location> locations) {
-		
-		this.locations.addAll(locations);
-		
-	}
-	
-	public boolean removeLocation(Location loc) {
-		if(this.locations.contains(loc)) {
-			this.locations.remove(loc);
-			return true;
-		}
-		return false;
-	}
-	
-	
-	
 	
 	public User getDeptHead() {
 		return deptHead;
@@ -217,6 +275,7 @@ public class Department {
 	public String getName() {
 		return name;
 	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -224,7 +283,7 @@ public class Department {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	
 	public List<Privilege> getPrivileges() {
 		return privileges;
 	}
@@ -236,9 +295,11 @@ public class Department {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 	public List<Location> getLocations() {
 		return locations;
 	}
+	
 	public void setLocations(List<Location> locations) {
 		this.locations = locations;
 	}

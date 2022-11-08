@@ -50,17 +50,17 @@ public class Role {
 	@JoinColumn(name = "company_id", nullable = false)	
 	private Company company;
 
+	/**
+	 * default constructor
+	 */
 	public Role() {
 
 	}
 
-//	public Role(String name) {
-//		this.name = name;
-//		this.users = new HashSet<User>();
-//		this.privileges = new HashSet<Privilege>();
-////		this.companies = new HashSet<Company>();
-//	}
-
+	/**
+	 * @param name name of role
+	 * @param co company the role is associated with  
+	 */
 	public Role(String name, Company co) {
 		this.name = name;
 		this.users = new HashSet<User>();
@@ -73,6 +73,11 @@ public class Role {
 
 
 
+	/**
+	 * @param name of role
+	 * @param priv privilege in role
+	 * @param co company role is associated with 
+	 */
 	public Role(String name,  Privilege priv, Company co) {
 		this.name = name;
 		this.privileges = new HashSet<Privilege>();
@@ -83,6 +88,12 @@ public class Role {
 
 	}
 
+	/**
+	 * @param name of role	
+	 * @param user user role is assigned to
+	 * @param priv privilege of user
+	 * @param co company role is assigned
+	 */
 	public Role(String name, User user, Privilege priv, Company co) {
 		this.name = name;
 		this.privileges = new HashSet<Privilege>();
@@ -93,15 +104,24 @@ public class Role {
 		this.company = co;
 	}
 
-	public Role(String name, Set<User> users, Set<Privilege> priv, Company co) {
+	/**
+	 * @param name of role	
+	 * @param users users role is assigned to
+	 * @param privs privileges of user
+	 * @param co company role is assigned
+	 */
+	public Role(String name, Set<User> users, Set<Privilege> privs, Company co) {
 		this.name = name;
-		this.privileges = priv;
+		this.privileges = privs;
 		this.users = users;
 //		this.companies = new HashSet<Company>();
 		this.company = co;
 	} 
 
 
+	/**
+	 * @return the set of companies the user has read access to. 
+	 */
 	public Set<Company> readableCompanies(){
 		HashSet<Company> readableCos = new HashSet<Company>();
 
@@ -113,6 +133,9 @@ public class Role {
 		return readableCos;
 	}
 	
+	/**
+	 * @return set of companies the user has write access to. 
+	 */
 	public Set<Company> writableCompanies(){
 		HashSet<Company> writeableCos = new HashSet<Company>();
 
@@ -124,6 +147,9 @@ public class Role {
 		return writeableCos;
 	}
 
+	/**
+	 * @return set of companies the user has delete access to. 
+	 */
 	public Set<Company> deletableCompanies(){
 		HashSet<Company> deletableCos = new HashSet<Company>();
 
@@ -135,6 +161,9 @@ public class Role {
 		return deletableCos;
 	}
 	
+	/**
+	 * @return set of companies the user has eval access to. 
+	 */
 	public Set<Company> evalableCompanies(){
 		HashSet<Company> evalableCos = new HashSet<Company>();
 
@@ -146,6 +175,9 @@ public class Role {
 		return evalableCos;
 	}
 	
+	/**
+	 * @return set of users the user has read access to. 
+	 */
 	public Set<User> readableUsers(){
 		HashSet<User> readableUsers = new HashSet<User>();
 
@@ -159,6 +191,9 @@ public class Role {
 		return readableUsers;
 	}
 
+	/**
+	 * @return set of users the user has write access to. 
+	 */
 	public Set<User> writableUsers(){
 		HashSet<User> writableUsers = new HashSet<User>();
 
@@ -172,6 +207,9 @@ public class Role {
 		return writableUsers;
 	}
 
+	/**
+	 * @return set of users the user has delete access to. 
+	 */
 	public Set<User> deletableUsers(){
 		HashSet<User> deletableUsers = new HashSet<User>();
 
@@ -185,6 +223,9 @@ public class Role {
 		return deletableUsers;
 	}
 
+	/**
+	 * @return set of users the user has eval access to. 
+	 */
 	public Set<User> evalableUsers(){
 		HashSet<User> evalableUsers = new HashSet<User>();
 
@@ -198,6 +239,9 @@ public class Role {
 		return evalableUsers;
 	}    
 
+	/**
+	 * @return set of depts the user has read access to. 
+	 */
 	public Set<Department> readableDepartments(){
 		HashSet<Department> readableDepts = new HashSet<Department>();
 
@@ -209,6 +253,9 @@ public class Role {
 		return readableDepts;
 	}
 
+	/**
+	 * @return set of depts the user has write access to. 
+	 */
 	public Set<Department> writableDepartments(){
 		HashSet<Department> writableDepts = new HashSet<Department>();
 
@@ -220,6 +267,9 @@ public class Role {
 		return writableDepts;
 	}
 
+	/**
+	 * @return set of depts the user has delete access to. 
+	 */
 	public Set<Department> deletableDepartments(){
 		HashSet<Department> deletableDepts = new HashSet<Department>();
 
@@ -231,6 +281,9 @@ public class Role {
 		return deletableDepts;
 	}
 
+	/**
+	 * @return set of depts the user has eval access to. 
+	 */
 	public Set<Department> evalableDepartments(){
 		HashSet<Department> evalableDepts = new HashSet<Department>();
 
@@ -243,6 +296,9 @@ public class Role {
 	}
 
 
+	/**
+	 * @return set of locs the user has read access to. 
+	 */
 	public Set<Location> readableLocations(){
 		HashSet<Location> readableLocations = new HashSet<Location>();
 
@@ -256,6 +312,9 @@ public class Role {
 		return readableLocations;
 	}
 
+	/**
+	 * @return set of locs the user has write access to. 
+	 */
 	public Set<Location> writableLocations(){
 		HashSet<Location> writableLocations = new HashSet<Location>();
 
@@ -269,6 +328,9 @@ public class Role {
 		return writableLocations;
 	}
 
+	/**
+	 * @return set of locs the user has delete access to. 
+	 */
 	public Set<Location> deletableLocations(){
 		HashSet<Location> deletableLocations = new HashSet<Location>();
 
@@ -282,6 +344,9 @@ public class Role {
 		return deletableLocations;
 	}
 
+	/**
+	 * @return set of locs the user has eval access to. 
+	 */
 	public Set<Location> evalableLocations(){
 		HashSet<Location> evalableLocations = new HashSet<Location>();
 
@@ -295,6 +360,9 @@ public class Role {
 		return evalableLocations;
 	}
 
+	/**
+	 * @return set of locGroups the user has read access to. 
+	 */
 	public Set<LocationGroup> readableLocationGroups(){
 		HashSet<LocationGroup> readableLocGroups = new HashSet<LocationGroup>();
 
@@ -306,6 +374,9 @@ public class Role {
 		return readableLocGroups;
 	}
 
+	/**
+	 * @return set of locGroups the user has write access to. 
+	 */
 	public Set<LocationGroup> writableLocationGroups(){
 		HashSet<LocationGroup> writableLocGroups = new HashSet<LocationGroup>();
 
@@ -317,6 +388,9 @@ public class Role {
 		return writableLocGroups;
 	}
 
+	/**
+	 * @return set of locGroups the user has Delete access to. 
+	 */
 	public Set<LocationGroup> deletableLocationGroups(){
 		HashSet<LocationGroup> deletableLocGroups = new HashSet<LocationGroup>();
 
@@ -328,6 +402,9 @@ public class Role {
 		return deletableLocGroups;
 	}
 
+	/**
+	 * @return set of locGroups the user has eval access to. 
+	 */
 	public Set<LocationGroup> evalableLocationGroups(){
 		HashSet<LocationGroup> evalableLocGroups = new HashSet<LocationGroup>();
 
@@ -342,8 +419,10 @@ public class Role {
 	
 	
 
-	/*
-	 * checks to see which roles in a list of roles are subroles to this one. 
+	
+	/**
+	 * @param roles set of roles to be tested
+	 * @return the set of roles in the passed in roles that have privilege below this role. 
 	 */
 	public Set<Role> containsRoles(Collection<Role> roles){
 		HashSet<Role> containsRoles = new HashSet<Role>();
@@ -355,12 +434,13 @@ public class Role {
 		return containsRoles;
 	}
 
-	/*
+	
+	/**
 	 * this method checks to see if the role being passed in is contained in the current role. 
 	 * Essentially checking if this role has higher privilege than the role being passed in.
 	 * 
-	 * 	 @param Role role  	The role that is being checked for privilege level (is it lower than this role)
-	 * 	
+	 * @param role The role that is being checked for privilege level (is it lower than this role)
+	 * @return whether the role passed in is a subrole of this.
 	 */
 	public boolean contains(Role role) {
 
@@ -430,12 +510,21 @@ public class Role {
 		return true;
 	}
 
-	//    add or remove users/privileges. 
+	
+	
+	/**
+	 * @param p privilege to be added
+	 * @return true if added. 
+	 */
 	public boolean addPrivilege(Privilege p) {
 		this.privileges.add(p);
 		return true;
 	}
 
+	/**
+	 * @param p privilege to be removed
+	 * @return true if removed
+	 */
 	public boolean removePrivilege(Privilege p) {
 		if(this.privileges.contains(p)) {
 			this.privileges.remove(p);
@@ -445,19 +534,21 @@ public class Role {
 
 	}
 
-	public Company getCompany() {
-		return company;
-	}
+	
 
-	public void setCompany(Company companies) {
-		this.company = companies;
-	}
-
+	/**
+	 * @param u user to be added
+	 * @return true if added
+	 */
 	public boolean addUser(User u) {
 		this.users.add(u);
 		return true;
 	}
 
+	/**
+	 * @param u user to be removed
+	 * @return true if removed.
+	 */
 	public boolean removeUser(User u) {
 		if(this.users.contains(u)) {
 			this.users.remove(u);
@@ -484,6 +575,14 @@ public class Role {
 	//getters and setters. 
 
 
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company companies) {
+		this.company = companies;
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -517,6 +616,10 @@ public class Role {
 	}
 
 
+	/**
+	 * @param role to be compared
+	 * @return if the role passed in is the same as this.
+	 */
 	public boolean compareTo(Role role) {
 		return (this.id ==role.id && this.name == role.name && this.privileges.equals(role.privileges) && this.users.equals(role.users));
 	}

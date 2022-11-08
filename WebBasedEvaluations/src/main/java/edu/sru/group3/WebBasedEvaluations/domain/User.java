@@ -123,6 +123,9 @@ public class User {
 	
 	private String supervisor;
 
+	/**
+	 * default constructor
+	 */
 	public User() {
 		this.locations = new HashSet<Location>();
 		this.departments = new HashSet<Department>(); 
@@ -132,6 +135,17 @@ public class User {
 	}
 
 	//adds user to a no location
+	/**
+	 * @param name of user
+	 * @param firstName 
+	 * @param lastName
+	 * @param email
+	 * @param password
+	 * @param employeeId
+	 * @param dateOfHire
+	 * @param jobTitle
+	 
+	 */
 	public User(String name, String firstName, String lastName, String email, String password, /*String role,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor,
 			String divisionBranch, String deptName, Company co, Role role, boolean companySuperUser, boolean superUser) {
@@ -167,6 +181,24 @@ public class User {
 	}
 
 	//adds user to a single location
+	/**
+	 * @param name
+	 * @param firstName
+	 * @param lastName
+	 * @param email
+	 * @param password
+	 * @param employeeId
+	 * @param dateOfHire
+	 * @param jobTitle
+	 * @param supervisor
+	 * @param divisionBranch name of locatoin
+	 * @param co company the user is in
+	 * @param location location the use ris in
+	 * @param dept dept the user is in
+	 * @param role the user has
+	 * @param companySuperUser if user is companySU
+	 * @param superUser if user is SSU
+	 */
 	public User(String name, String firstName, String lastName, String email, String password, /*String roleStr,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor, 
 			String divisionBranch, Company co, Location location, Department dept, Role role, boolean companySuperUser, boolean superUser) {
@@ -203,6 +235,24 @@ public class User {
 	}
 
 	//adds user to multiple locations. 
+	/**
+	 * @param name
+	 * @param firstName
+	 * @param lastName
+	 * @param email
+	 * @param password
+	 * @param employeeId
+	 * @param dateOfHire
+	 * @param jobTitle
+	 * @param supervisor name of supervisors
+	 * @param divisionBranch name of location
+	 * @param co company the user is in
+	 * @param locations the user is in
+	 * @param depts the user is a part of
+	 * @param role the user has
+	 * @param companySuperUser if user is companySU
+	 * @param superUser if user is SSU
+	 */
 	public User(String name, String firstName, String lastName, String email, String password, /*String role,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor,
 			String divisionBranch, Company co, Set<Location> locations, Set<Department> depts, Role role, boolean companySuperUser, boolean superUser) {
@@ -236,16 +286,26 @@ public class User {
 
 	}	
 
+	/**
+	 * @param dept to be added
+	 */
 	public void addSubDept(Department dept) {
 		this.subDepartments.add(dept);
 	}
 
+	/**
+	 * @param depts to be added
+	 */
 	public void addSubDepts(Set<Department> depts) {
 		for(Department dept : depts) {
 			this.subDepartments.add(dept);
 		}
 	}
 
+	/**
+	 * @param dept to be removed
+	 * @return true if found/removed
+	 */
 	public boolean removesubDept(Department dept) {
 		if(this.subDepartments.contains(dept)) {
 			this.subDepartments.remove(dept);
@@ -255,6 +315,9 @@ public class User {
 	}
 
 
+	/**
+	 * @return true if the user has a privilege with read access
+	 */
 	public boolean hasRead() {
 		for(Privilege priv : this.role.getPrivileges()) {
 			if(priv.getRead() == true)
@@ -263,6 +326,9 @@ public class User {
 		return false;
 	}
 
+	/**
+	 * @return true if the user has a privilege with write access
+	 */
 	public boolean hasWrite() {
 		for(Privilege priv : this.role.getPrivileges()) {
 			if(priv.getWrite() == true)
@@ -271,6 +337,9 @@ public class User {
 		return false;
 	}
 
+	/**
+	 * @return true if the user has a privilege with delete access
+	 */
 	public boolean hasDelete() {
 		for(Privilege priv : this.role.getPrivileges()) {
 			if(priv.getDelete() == true)
@@ -281,11 +350,17 @@ public class User {
 
 	
 	
+	/**
+	 * @return true if the user has an evaluator
+	 */
 	public boolean hasEvaluator() {
 		return this.evaluator.size() > 0;
 	}
 
-	//has permission to deligate evaluator permission. 
+	
+	/**
+	 * @return has permission to give evaluator permission. 
+	 */
 	public boolean hasEditEvalPerm() {
 		for(Privilege priv : this.role.getPrivileges()) {
 			if(priv.getEditEvaluate() == true)
@@ -295,48 +370,41 @@ public class User {
 	}
 
 
-	public boolean isEvaluator() {
-		return this.evaluator.size() >0;
-	}
-	public void addDepartment(Department dept) {
-		this.departments.add(dept);
-	}
-	public Set<Department> getDepartments() {
-		return departments;
+	
+
+	/**
+	 * @param loc to add
+	 */
+	public void addLocation(Location loc) {
+		this.locations.add(loc);
 	}
 
-	public String getDepartmentName() {
-		return departmentName;
+	/**
+	 * @param locations to add
+	 */
+	public void addLocations(List<Location> locations) {
+		for(Location loc : locations) {
+			this.locations.add(loc);
+		}
 	}
 
-	public void setDepartmentName(String departmentName) {
-		this.departmentName = departmentName;
+	/**
+	 * @param loc to remove
+	 * 
+	 * @return true if removed
+	 */
+	public boolean removeLocation(Location loc) {
+		if(this.locations.contains(loc)) {
+			this.locations.remove(loc);
+			return true;
+		}
+		return false;
 	}
-
-	//	public void setRoles(List<Role> roles) {
-	//		this.roles = roles;
-	//	}
-	//
-	//	public List<Role> getRoles() {
-	//		if(this.roles == null) {
-	//			roles.add(new Role("USER"));
-	//			return roles;
-	//		}
-	//		return roles;
-	//	}
-	//	
-	//	public boolean addRole(Role role) {
-	//		this.roles.add(role);
-	//		return true;
-	//	}
-	//	
-	//	public boolean removeRole(Role role) {
-	//		if(this.roles.contains(role)) {
-	//			this.roles.remove(role);
-	//			return true;
-	//		}
-	//		return false;
-	//	}
+	
+	
+	/**
+	 * @return names of the privileges
+	 */
 	public String getPrivilegeNames(){
 		String list = "";
 		for(Privilege priv : role.getPrivileges()) {
@@ -347,6 +415,31 @@ public class User {
 		return list;
 
 	}
+	
+
+	/**
+	 * @param dept to be removed
+	 * @return true if removed
+	 */
+	public boolean removeDepartment(Department dept) {
+		if(this.departments.contains(dept)) {
+			this.departments.remove(dept);
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @param dept to add
+	 */
+	public void addDepartment(Department dept) {
+		this.departments.add(dept);
+	}
+
+
+
+	//getters and setters. 
+	
 	public Role getRole() {
 		if(this.role != null)
 			return role;
@@ -362,35 +455,14 @@ public class User {
 	public void setDepartments(Set<Department> departments) {
 		this.departments = departments;
 	}
-
-	public boolean removeDepartment(Department dept) {
-		if(this.departments.contains(dept)) {
-			this.departments.remove(dept);
-			return true;
-		}
-		return false;
-	}
-
-
-
-
-	//	public List<User> getEvaluatees() {
-	//		return evaluatees;
-	//	}
-	//
-	//	public void setEvaluatees(List<User> evaluatees) {
-	//		this.evaluatees = evaluatees;
-	//	}
-
+	
 	public boolean isCompanySuperUser() {
 		return companySuperUser;
 	}
 
 	public void setCompanySuperUser(boolean superUser) {
 		this.companySuperUser = superUser;
-	}
-
-	
+	}	
 	
 	public boolean isSuperUser() {
 		return superUser;
@@ -450,7 +522,21 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email/*.replaceAll("\\s", "")*/;
 	}
+	public boolean isEvaluator() {
+		return this.evaluator.size() >0;
+	}
+	
+	public Set<Department> getDepartments() {
+		return departments;
+	}
 
+	public String getDepartmentName() {
+		return departmentName;
+	}
+
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
 
 
 	public Set<Location> getLocations() {
@@ -461,23 +547,7 @@ public class User {
 		this.locations = locations;
 	}
 
-	public void addLocation(Location loc) {
-		this.locations.add(loc);
-	}
-
-	public void addLocations(List<Location> locations) {
-		for(Location loc : locations) {
-			this.locations.add(loc);
-		}
-	}
-
-	public boolean removeLocation(Location loc) {
-		if(this.locations.contains(loc)) {
-			this.locations.remove(loc);
-			return true;
-		}
-		return false;
-	}
+	
 
 	public String getRoleName() {
 		return roleName;
