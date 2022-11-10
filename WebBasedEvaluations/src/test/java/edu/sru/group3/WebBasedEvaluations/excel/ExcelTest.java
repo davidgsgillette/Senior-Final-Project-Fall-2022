@@ -35,6 +35,11 @@ import edu.sru.group3.WebBasedEvaluations.excel.ExcelRead_group;
  * @author J Abbigail Rowe
  */
 
+/*
+ * This test is kind of obsolete. A new version of this test will be when i get implementation
+ * tests working and it will actually test this method
+ */
+
 //https://spring.io/guides/gs/testing-web/
 
 @Suite
