@@ -36,7 +36,7 @@ public class Country {
 	private int numProvinces;
 
 	@NonNull
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "continent_id", nullable = false)
 	private Continent parentContinent;
 
@@ -45,10 +45,17 @@ public class Country {
 	private List<Province> childProvinces;
 	
 	
+	/**
+	 * default constructor
+	 */
 	public Country() {
 		
 	}
 	
+	/**
+	 * @param countryName name of country 
+	 * @param parentContinent 
+	 */
 	public Country(String countryName, Continent parentContinent) {
 		this.countryName = countryName;
 		this.numProvinces = 0;
@@ -56,6 +63,10 @@ public class Country {
 		this.childProvinces = new ArrayList<Province>();
 	}
 	
+	/**
+	 * @param countryName name of country
+	
+	 */
 	public Country(String countryName, int numProvinces, Continent parentContinent, List<Province> childProvinces) {
 		this.countryName = countryName;
 		this.numProvinces = numProvinces;
@@ -63,6 +74,13 @@ public class Country {
 		this.childProvinces = childProvinces;
 	}
 
+	
+	/**
+	 * @param countryName name of country
+	 * @param numProvinces number of provinces in this country
+	 * @param parentContinent parent continent
+	 * @param childProvince province 
+	 */
 	public Country(String countryName, int numProvinces, Continent parentContinent, Province childProvince) {
 		this.countryName = countryName;
 		this.numProvinces = numProvinces;
@@ -73,8 +91,10 @@ public class Country {
 	
 	
 	
-	/*
+	/**
 	 * adds a location
+	 * @param province to add
+	 * @return true if added
 	 */
 	public boolean addProvince(Province province) {
 		this.childProvinces.add(province);
@@ -83,19 +103,22 @@ public class Country {
 	}
 
 
-	/*
-	 * adds a list of locations
+	/**
+	 * @param provinces to add
+	 * @return true if added. 
 	 */
 	public boolean addProvinces(List<Province> provinces) {
-		for(Province province : provinces) { 
-			this.childProvinces.add(province);
-			this.numProvinces++;
-		}
+		
+		this.childProvinces.addAll(provinces);
+		setNumProvinces(provinces.size());
+		
 		return true;
 	}
 	
-	/*
-	 * removes a province, should not be needed though. 
+	
+	/**
+	 * @param province to remove
+	 * @return true if removed 
 	 */
 	public boolean removeProvince(Province province) {
 		if(this.childProvinces.contains(province)) {

@@ -12,12 +12,20 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import edu.sru.group3.WebBasedEvaluations.domain.EvalTemplates;
 import edu.sru.group3.WebBasedEvaluations.domain.Privilege;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 
 
+/**
+ * this class represents a department in a company. It contains a list of users, locations and the associated objects. 
+ * @author David Gillette
+ *
+ */
 @Entity
 @Table(name = "department")
 public class Department {
@@ -30,17 +38,28 @@ public class Department {
 	//department name
 	private String name;
 	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "company_id", nullable = false)
+	private Company company;
+
 	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "deptHead_user_id")
+	private User deptHead;
 	
 	//locations
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "dept_locations", 
 			joinColumns = @JoinColumn(name = "dept_id"), 
 			inverseJoinColumns = @JoinColumn(name = "location_id"))
 	private List<Location> locations;
+	
+	@ManyToMany(mappedBy = "depts", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+	private List<EvalTemplates> evalTemplates;
+	
 	//users
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "dept_users", 
 			joinColumns = @JoinColumn(name = "dept_id"), 
@@ -52,14 +71,29 @@ public class Department {
     private List<Privilege> privileges;
 	
 	
-	
+	/**
+	 * default constructor
+	 */
 	public Department() {
 		users = new ArrayList<User>();
 		locations = new ArrayList<Location>();
 		this.name = "";
 	}
 	
-	public Department(User user, Location loc, String name, Privilege priv) {
+	/**
+	 * @param co company object to associate with this dept
+	 */
+	public Department(Company co) {
+		users = new ArrayList<User>();
+		locations = new ArrayList<Location>();
+		this.name = "";
+		this.company = co;
+	}
+	
+	/**
+	
+	 */
+	public Department(User user, Location loc, String name, Privilege priv, User deptHead, Company company) {
 		users = new ArrayList<User>();
 		users.add(user);
 		locations = new ArrayList<Location>();
@@ -67,22 +101,42 @@ public class Department {
 		this.privileges.add(priv);
 		locations.add(loc);
 		this.name = name;
+		this.deptHead = deptHead;
+		this.company = company;
 	}
 	
-	public Department(List<User> users, List<Location> locations, String name, List<Privilege> privs) {
+	/**
+	 * @param users users to add
+	 * @param locs locations to add
+	 * @param name name of dept
+	 * @param privs privileges associated with this dept
+	 * @param company that this dept is in. 
+	 */
+	public Department(List<User> users, List<Location> locations, String name, List<Privilege> privs, Company company) {
 		this.users = users;
 		this.locations = locations;
 		this.name = name;
 		this.privileges = privs;
+		this.company = company;
 	}
 	
 	
 	
 	
+	
+	
+	
+	/**
+	 * @param priv privilege to add. 
+	 */
 	public void addPrivilege(Privilege priv) {
 		this.privileges.add(priv);
 	}
 	
+	/**
+	 * @param priv to remove
+	 * @return true if it is removed. 
+	 */
 	public boolean removePrivilege(Privilege priv) {
 		if(this.privileges.contains(priv)) {
 			this.privileges.remove(priv);
@@ -91,25 +145,32 @@ public class Department {
 		return false;
 	}
 	
+	/**
+	 * @param user to add
+	 * @return true if added. 
+	 */
 	public boolean addUser(User user) {
 		this.users.add(user);
 		return true;
 	}
 	
 	
-	/*
-	 * adds a list of users to the location
+	
+	/**
+	 * @param users to add
+	 * @return true if all users are added. 
 	 */
 	public boolean addUsers(List<User> users) {
 		
-		for(User user : users) {
-			this.users.add(user);
-		}	
+		this.users.addAll(users);
+			
 		return true;
 	}
 	
-	/*
-	 * removes a user from a location
+	
+	/**
+	 * @param user to remove
+	 * @return true if removed. 
 	 */
 	public boolean removeUser(User user) {
 		if(this.users.contains(user)) {
@@ -120,16 +181,63 @@ public class Department {
 	}	
 	
 	
+	/**
+	 * @param evalTemplate to add
+	 * @return true if added
+	 */
+	public boolean addTemplate(EvalTemplates evalTemplate) {
+		this.evalTemplates.add(evalTemplate);
+		return true;
+	}
+	
+	
+	
+	/**
+	 * @param evalTemplates to add
+	 * @return true if all are added. 
+	 */
+	public boolean addTemplate(List<EvalTemplates> evalTemplates) {
+		
+		this.evalTemplates.addAll(evalTemplates);
+			
+		return true;
+	}
+	
+	/*
+	 * removes a user from a location
+	 */
+	/**
+	 * @param evalTemplate to remove
+	 * @return true if removed. 
+	 */
+	public boolean removeTemplate(EvalTemplates evalTemplate) {
+		if(this.evalTemplates.contains(evalTemplate)) {
+			this.evalTemplates.remove(evalTemplate);
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @param loc location to add
+	 */
 	public void addLocation(Location loc) {
 		this.locations.add(loc);
 	}
 	
+	/**
+	 * @param locations to add. 
+	 */
 	public void addLocations(List<Location> locations) {
-		for(Location loc : locations) {
-			this.locations.add(loc);
-		}
+		
+		this.locations.addAll(locations);
+		
 	}
 	
+	/**
+	 * @param loc location to remove
+	 * @return true if removed
+	 */
 	public boolean removeLocation(Location loc) {
 		if(this.locations.contains(loc)) {
 			this.locations.remove(loc);
@@ -138,9 +246,36 @@ public class Department {
 		return false;
 	}
 	
+	
+	//getters and setters
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public List<EvalTemplates> getEvalTemplates() {
+		return evalTemplates;
+	}
+
+	public void setEvalTemplates(List<EvalTemplates> evalTemplates) {
+		this.evalTemplates = evalTemplates;
+	}
+	
+	public User getDeptHead() {
+		return deptHead;
+	}
+
+	public void setDeptHead(User deptHead) {
+		this.deptHead = deptHead;
+	}
+
 	public String getName() {
 		return name;
 	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -148,7 +283,7 @@ public class Department {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	
 	public List<Privilege> getPrivileges() {
 		return privileges;
 	}
@@ -160,9 +295,11 @@ public class Department {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 	public List<Location> getLocations() {
 		return locations;
 	}
+	
 	public void setLocations(List<Location> locations) {
 		this.locations = locations;
 	}

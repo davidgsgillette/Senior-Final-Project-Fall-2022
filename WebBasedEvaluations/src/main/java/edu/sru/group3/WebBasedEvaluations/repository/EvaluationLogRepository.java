@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.EvaluationLog;
 import edu.sru.group3.WebBasedEvaluations.domain.Evaluator;
 import edu.sru.group3.WebBasedEvaluations.domain.EvaluatorId;
@@ -29,6 +30,8 @@ public interface EvaluationLogRepository extends CrudRepository<EvaluationLog,Lo
 
 	
 	EvaluationLog findByEvaluatorId(EvaluatorId evaluator);
+	
+	List<EvaluationLog>  findByEvaluatorCompany(Company company);
 
 	EvaluationLog findByEvaluatorIdAndRevieweeId(long evalid, long revid);
 

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.*;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.Evaluator;
 import edu.sru.group3.WebBasedEvaluations.domain.Group;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
@@ -15,6 +16,8 @@ public interface GroupRepository extends CrudRepository<Group,Long > {
 
 	List<Group> findByevaluatorUserId(long ID);
 	Group findById(long ID);
+	Group findByNumberAndCompany(int number, Company company);
+	List<Group> findByCompany(Company company);
 	//EvaluatorRepository evaluatorRepository = ;
 	//List<Group>findByEvaluator(Evaluator evaluator);
 	//void removeAll(List<Group> grouplist);

@@ -20,7 +20,7 @@ public class MyUserDetailsTest{
 		user.setId((long) 7);
 		user.setEmail("Test@Test.com");
 		user.setPassword("Test");
-		user.setRoles("Test");
+		user.setRoleName("Test");
 		myUserDetails = new MyUserDetails(user);
 	}
 	
@@ -46,7 +46,7 @@ public class MyUserDetailsTest{
 	@Test
 	void getRolesTest() {
 		String actual = "Test";
-		assertEquals(myUserDetails.getRoles(), actual);
+		assertEquals(myUserDetails.getUser().getRoleName(), actual);
 	}
 
 	@Test

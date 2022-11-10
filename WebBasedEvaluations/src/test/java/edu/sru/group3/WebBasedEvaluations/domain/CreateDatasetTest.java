@@ -57,7 +57,7 @@ public class CreateDatasetTest {
 		actual.setValue(5, "test 2", "test 2");
 		assertEquals(expected, actual);
 	}
-	/*
+	
 	@Test
 	public void createPieDatasetTest() {
 		completedEvals = new ArrayList<>();
@@ -72,7 +72,7 @@ public class CreateDatasetTest {
 		
 		assertEquals(expected, actual);
 	}
-	*/
+	
 	@Test
 	public void createDefaultDatasetTest() {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();

@@ -64,15 +64,55 @@ public class RevieweeController {
     public Object getreviewee(Model model, Authentication authentication) {
     	MyUserDetails userD = (MyUserDetails) authentication.getPrincipal();
     	Long id = userD.getID() ;
+    	User user2 = userRepository.findByid(userD.getID());
     	List<Reviewee> reviewee = revieweeRepository.findByuser_Id(id);
     	List<Group> grouplist = (List<Group>) groupRepository.findByevaluatorUserId(userD.getID());
     	model.addAttribute("groups", grouplist);
 
     	List<EvalRole>roles = (List<EvalRole>) roleRepository.findAll();
     	
+    	if((user2.hasRead() || user2.hasWrite() || user2.hasDelete()) && user2.hasEditEvalPerm()) {
+			model.addAttribute("EVAL_ADMIN", true);
+//			role = "EVAL_ADMIN";
+		}
+		else {
+			//testing
+//			model.addAttribute("EVAL_ADMIN", true);
+			model.addAttribute("EVAL_ADMIN", false);
+		}
+		
+		
+		if(evaluatorRepository.findById(user2.getId()) != null) {
+			model.addAttribute("EVALUATOR", true);
+		}
+		else {
+			//testing
+//			model.addAttribute("EVALUATOR", true);
+			model.addAttribute("EVALUATOR", false);
+		}
+		
+		
+		if(user2.hasEvaluator()) {
+			model.addAttribute("USER", true);
+		}
+		else {
+			//testing
+//			model.addAttribute("USER", true);
+			model.addAttribute("USER", false);
+		}
+		
+		
+		if((user2.hasRead() || user2.hasWrite() || user2.hasDelete())) {
+			model.addAttribute("ADMIN", true);
+		}
+		else {
+			//testing
+//			model.addAttribute("ADMIN", true);
+			model.addAttribute("ADMIN", false);
+		}
 
-    	model.addAttribute("myRole", userD.getRoles());
-    	model.addAttribute("role", roles);
+//    	model.addAttribute("myRole", userD.getRole());
+//    	model.addAttribute("role", roles);
     	model.addAttribute("id", userD.getID());
     	model.addAttribute("groups", grouplist);
     	model.addAttribute("reviewee", reviewee);

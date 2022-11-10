@@ -38,7 +38,7 @@ public class Continent {
 	private int numCountries;
 
 	@NonNull
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "world_id", nullable = false)
 	private World parentWorld;
 
@@ -48,11 +48,18 @@ public class Continent {
 	
 	
 	
+	/**
+	 * default constructor
+	 */
 	public Continent() {
 		
 	}
 	
 	
+	/**
+	 * @param continentName name of the continent 
+	 * @param parentWorld the parent world object
+	 */
 	public Continent(String continentName, World parentWorld) {
 		this.continentName = continentName;
 		this.numCountries = 0;
@@ -60,6 +67,12 @@ public class Continent {
 		this.childCountries = new ArrayList<Country>();;
 	}
 	
+	/**
+	 * @param continentName name of continent
+	 * @param numCountries number of countries in the continent
+	 * @param parentWorld world object that this continent is a child of
+	 * @param childCountries countries in this continent. 
+	 */
 	public Continent(String continentName, int numCountries, World parentWorld, List<Country> childCountries) {
 		this.continentName = continentName;
 		this.numCountries = numCountries;
@@ -67,6 +80,12 @@ public class Continent {
 		this.childCountries = childCountries;
 	}
 
+	/**
+	 * @param continentName name of continent
+	 * @param numCountries number of countries in the continent
+	 * @param parentWorld world object that this continent is a child of
+	 * @param childCountry country in this continent. 
+	 */
 	public Continent(String continentName, int numCountries, World parentWorld, Country childCountry) {
 		this.continentName = continentName;
 		this.numCountries = numCountries;
@@ -76,9 +95,10 @@ public class Continent {
 	}
 	
 	
-	
-	/*
+	/**
 	 * adds a location
+	 * @param childCountry country to add
+	 * @return true if added. 
 	 */
 	public boolean addCountry(Country childCountry) {
 		this.childCountries.add(childCountry);
@@ -87,27 +107,40 @@ public class Continent {
 	}
 
 
-	/*
+	/**
 	 * adds a list of locations
+	 * @param childCountries to add
+	 * @return true if added
 	 */
 	public boolean addCountry(List<Country> childCountries) {
-		for(Country childCountry : childCountries) { 
-			this.childCountries.add(childCountry);
-			this.numCountries++;
-		}
+		
+		this.childCountries.addAll(childCountries);
+		
+		numCountries += childCountries.size();
+		
 		return true;
 	}
 	
 	/*
 	 * removes a country, should not be needed though. 
 	 */
-	public boolean removeCountry(Country childCountry) {
-		if(this.childCountries.contains(childCountry)) {
-			this.childCountries.remove(childCountry);
-			this.numCountries--;
-			return true;
+	/**
+	 * @param id of country to remove
+	 * @return true if removed. 
+	 */
+	public boolean removeCountry(Long id) {
+		for(int i = 0; i < childCountries.size(); i++)
+		{
+			if(this.childCountries.get(i).getId() == id) {
+				this.childCountries.remove(childCountries.get(i));
+				this.numCountries--;
+				return true;
+			}
+			
 		}
+		
 		return false;
+
 	}
 
 	

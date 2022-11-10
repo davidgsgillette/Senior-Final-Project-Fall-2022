@@ -21,14 +21,26 @@ public class ContinentTest {
 	static int numCountires = 3;
 	static World parent;
 	static Country child;
+	static long id = 1;
+	static World planet;
+	
+	static List<Country> countries;
 	
 	static Continent continent;
 	
 	@BeforeAll
 	static public void initialize() {
 		
-		continent = new Continent(name, numCountires, parent, child);
-		continent.setNumCountries(3);
+		child = new Country();
+		
+		child.setId(id);
+		
+		countries = new ArrayList<Country>();
+		countries.add(child);
+		
+		planet = new World();
+		
+		continent = new Continent(name, numCountires, parent, countries);
 		
 	}
 	
@@ -36,6 +48,7 @@ public class ContinentTest {
 	public void addCountryTest() {
 		
 		Country country = new Country();
+		countries.add(country);
 		
 		assertTrue(continent.addCountry(country));
 		
@@ -44,7 +57,6 @@ public class ContinentTest {
 	@Test
 	public void addCountryListTest() {
 		
-		List<Country> countries = new ArrayList<Country>();
 		Country otherChild = new Country();
 		countries.add(otherChild);
 		
@@ -55,7 +67,7 @@ public class ContinentTest {
 	@Test
 	public void removeCountryTest() {
 		
-		assertTrue(continent.removeCountry(child));
+		assertTrue(continent.removeCountry(id));
 		
 	}
 	
@@ -95,7 +107,7 @@ public class ContinentTest {
 	@Test
 	public void getNumCountriesTest() {
 		
-		assertTrue(continent.getNumCountries() == 3);
+		assertTrue(continent.getNumCountries() == countries.size());
 		
 	}
 	
@@ -110,14 +122,14 @@ public class ContinentTest {
 	@Test
 	public void getParentWorldTest() {
 		
-		assertTrue(continent.getParentWorld() == parent);
+		assertTrue(continent.getParentWorld() == planet);
 		
 	}
 	
 	@Test
 	public void setParentWorldTest() {
 		
-		World planet = new World();
+		planet = new World();
 		continent.setParentWorld(planet);
 		assertTrue(continent.getParentWorld() == planet);
 	}
@@ -125,15 +137,17 @@ public class ContinentTest {
 	@Test
 	public void getChildCountriesTest() {
 		
-		assertTrue(continent.getChildCountries() == child);
+		assertTrue(continent.getChildCountries() == countries);
 		
 	}
 	
 	@Test
 	public void setChildCountriesTest() {
 		
-		List<Country> countries = new ArrayList<Country>();
 		Country otherChild = new Country();
+		
+		otherChild.setId(id);
+		
 		countries.add(otherChild);
 		
 		continent.setChildCountries(countries);

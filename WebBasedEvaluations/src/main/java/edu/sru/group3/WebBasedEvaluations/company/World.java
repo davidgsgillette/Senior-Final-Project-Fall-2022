@@ -10,11 +10,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.lang.NonNull;
-
-import edu.sru.group3.WebBasedEvaluations.domain.User;
 
 
 /**Class for methods of a World object, almost exclusively made out of getters and setters.
@@ -38,24 +37,40 @@ public class World {
 	private List<Continent> childContinents;
 	
 	
+	
+	
+	
+	/**
+	 * default constructor
+	 */
 	public World() {
 		this.numContinents = 0;
 		this.childContinents = new ArrayList<Continent>();
 	}
 	
+	/**
+	 * @param numContinents number of continents in the world
+	 * @param childContinents continents in this world 
+	 */
 	public World(int numContinents, List<Continent> childContinents) {
 		this.numContinents = numContinents;
 		this.childContinents = childContinents;
 	}
 
-	public World(int numContinents, Continent childCountry) {
+	/**
+	 * @param numContinents number of continents in the world
+	 * @param childContinents continents in the world.
+	 */
+	public World(int numContinents, Continent childContinents) {
 		this.numContinents = numContinents;
 		this.childContinents = new ArrayList<Continent>();
-		this.childContinents.add(childCountry);
+		this.childContinents.add(childContinents);
 	}
 
-	/*
-	 * adds a location
+	
+	/**
+	 * @param childContinent to add
+	 * @return true if added. 
 	 */
 	public boolean addContinent(Continent childContinent) {
 		this.childContinents.add(childContinent);
@@ -64,26 +79,38 @@ public class World {
 	}
 
 
-	/*
-	 * adds a list of locations
+	
+	/**
+	 * @param childContinents to add
+	 * @return true if added
 	 */
 	public boolean addContinent(List<Continent> childContinents) {
-		for(Continent childContinent : childContinents) { 
-			this.childContinents.add(childContinent);
-			this.numContinents++;
-		}
+		
+		this.childContinents.addAll(childContinents);
+		
 		return true;
 	}
 	
 	/*
 	 * removes a continent, should not be needed though. 
 	 */
-	public boolean removeContinent(Continent childContinent) {
-		if(this.childContinents.contains(childContinent)) {
-			this.childContinents.remove(childContinent);
-			this.numContinents--;
-			return true;
+	/**
+	 * @param id of continent to remove
+	 * @return true if added. 
+	 */
+	public boolean removeContinent(long id) {
+		
+		for(int i = 0; i < childContinents.size(); i++)
+		{
+			
+			if (childContinents.get(i).getId() == id)
+			{
+				childContinents.remove(i);
+				return true;
+			}
+			
 		}
+		
 		return false;
 	}
 	

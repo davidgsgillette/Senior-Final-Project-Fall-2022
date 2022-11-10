@@ -16,9 +16,11 @@ public class ProvienceTest {
 	
 	static Province pro;
 	static String name = "test Name";
+	static String newName;
 	static int numCities = 6;
 	static long id = 1;
 	static Country parentCountry;
+	static Country country;
 	static City city;
 	static List<City> cities;
 	
@@ -58,7 +60,11 @@ public class ProvienceTest {
 	@Test
 	public void removeCity() {
 		
-		assertTrue(pro.removeCity(city));
+		pro.addCity(city);
+		
+		pro.getChildCities().get(0).setId(id);
+		
+		assertTrue(pro.removeCity(id));
 		
 	}
 	
@@ -83,14 +89,14 @@ public class ProvienceTest {
 	@Test
 	public void getProvinceName() {
 		
-		assertTrue(pro.getProvinceName() == name);
+		assertTrue(pro.getProvinceName() == newName);
 		
 	}
 	
 	@Test
 	public void setProvinceName() {
 		
-		String newName = "Name 2 electric boogallo";
+		newName = "Name 2 electric boogallo";
 		
 		pro.setProvinceName(newName);
 		
@@ -101,7 +107,7 @@ public class ProvienceTest {
 	@Test
 	public void getNumCities() {
 		
-		assertTrue(pro.getNumCities() == numCities);
+		assertTrue(pro.getNumCities() == 4);
 		
 	}
 	
@@ -119,14 +125,14 @@ public class ProvienceTest {
 	@Test
 	public void getParentCountry() {
 		
-		assertTrue(pro.getParentCountry() == parentCountry);
+		assertTrue(pro.getParentCountry() == country);
 		
 	}
 	
 	@Test
 	public void setParentCountry() {
 		
-		Country country = new Country();
+		country = new Country();
 		
 		pro.setParentCountry(country);
 		

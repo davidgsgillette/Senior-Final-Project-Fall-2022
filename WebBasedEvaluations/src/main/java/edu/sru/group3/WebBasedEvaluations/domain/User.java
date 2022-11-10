@@ -3,9 +3,12 @@ package edu.sru.group3.WebBasedEvaluations.domain;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.FetchType;
 
@@ -36,6 +40,7 @@ public class User {
 	private Long id;
 
 	@NonNull
+	@Column(unique=true) 
 	private String name;
 
 	@NonNull
@@ -50,8 +55,6 @@ public class User {
 	private String email;
 	@NonNull
 	private String password;
-	@NonNull
-	private String rolesStr;
 
 	@NonNull
 	private boolean resetP;
@@ -59,87 +62,151 @@ public class User {
 	@NonNull
 	private String companyName;
 
+	@NonNull
+	private String roleName;
+
 
 //	@OneToMany(mappedBy = "user")
 //	private List<Evaluator> evaluator = new ArrayList<>();
 
 
 	@NonNull
-	@ManyToOne(fetch = FetchType.LAZY)
+	private boolean companySuperUser;
+	
+	@NonNull
+	private boolean superUser;
+
+	//	@NonNull
+	//	private List<User> evaluatees;
+
+
+	@OneToMany(mappedBy = "user")
+	private Set<Evaluator> evaluator = new HashSet<Evaluator>();
+
+
+	@NonNull
+	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinColumn(name = "company_id", nullable = false)
 	private Company company;
 
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "user_location", 
 			joinColumns = @JoinColumn(name = "user_id"), 
 			inverseJoinColumns = @JoinColumn(name = "location_id"))
-	private List<Location> locations;
-	
-	
-	
-	@ManyToMany
-	@JoinTable(
-			name = "user_roles", 
-			joinColumns = @JoinColumn(name = "user_id"), 
-			inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private List<Role> roles;
-	
-	
-	
-	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private List<Department> departments;
+	private Set<Location> locations;
 
+	@NonNull
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "role_id", nullable = false)
+	private Role role;
+
+
+
+	//departments which this user is the head of (essentially this user is a supervisor over this lis tof users). 
+	@OneToMany(mappedBy = "deptHead", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Department> subDepartments;
+
+
+
+	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Department> departments;
 
 	// Preload
 	//private long employeeId;
 	private String dateOfHire;
 	private String jobTitle;
-	private String supervisor;
+	
 	private String divisionBranch;
+	private String departmentName;
+	
+	private String supervisor;
 
+	/**
+	 * default constructor
+	 */
 	public User() {
-		
+		this.locations = new HashSet<Location>();
+		this.departments = new HashSet<Department>(); 
+		this.subDepartments = new HashSet<Department>(); 
+		this.companySuperUser = false;
+		this.superUser = false;
 	}
 
 	//adds user to a no location
-	public User(String name, String firstName, String lastName, String email, String password, String role,
-			long employeeId, String dateOfHire, String jobTitle, String supervisor,
-			String divisionBranch, Company co) {
+	/**
+	 * @param name of user
+	 * @param firstName 
+	 * @param lastName
+	 * @param email
+	 * @param password
+	 * @param employeeId
+	 * @param dateOfHire
+	 * @param jobTitle
+	 
+	 */
+	public User(String name, String firstName, String lastName, String email, String password, /*String role,*/
+			int employeeId, String dateOfHire, String jobTitle, String supervisor,
+			String divisionBranch, String deptName, Company co, Role role, boolean companySuperUser, boolean superUser) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.rolesStr = role;
+		this.departmentName = deptName;
 		this.resetP = true;
 		//this.companyID = companyID;
 		this.companyName = co.getCompanyName();
 		this.company = co;
-		
+
 		//this.employeeId = employeeId;
 		this.dateOfHire = dateOfHire;
 		this.jobTitle = jobTitle;
 		this.supervisor = supervisor;
 		this.divisionBranch = divisionBranch;
-		this.locations = new ArrayList<Location>();
-		this.departments = new ArrayList<Department>(); 
-		this.roles = new ArrayList<Role>();
+		this.locations = new HashSet<Location>();
+		this.departments = new HashSet<Department>(); 
+		if(role == null) {
+			this.role = new Role (co.getDefaultRoleName(),co);
+		}
+		else {
+			this.role = role;
+		}
+		this.roleName = role.getName();
+		this.companySuperUser = companySuperUser;
+		this.superUser = superUser;
 
 
 	}
 
 	//adds user to a single location
-	public User(String name, String firstName, String lastName, String email, String password, String roleStr,
+	/**
+	 * @param name
+	 * @param firstName
+	 * @param lastName
+	 * @param email
+	 * @param password
+	 * @param employeeId
+	 * @param dateOfHire
+	 * @param jobTitle
+	 * @param supervisor
+	 * @param divisionBranch name of locatoin
+	 * @param co company the user is in
+	 * @param location location the use ris in
+	 * @param dept dept the user is in
+	 * @param role the user has
+	 * @param companySuperUser if user is companySU
+	 * @param superUser if user is SSU
+	 */
+	public User(String name, String firstName, String lastName, String email, String password, /*String roleStr,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor, 
-			String divisionBranch, Company co, Location location, Department dept, Role role) {
+			String divisionBranch, Company co, Location location, Department dept, Role role, boolean companySuperUser, boolean superUser) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.rolesStr = roleStr;
 		this.resetP = true;
 		//this.companyID = companyID;
 		this.companyName = co.getCompanyName();
@@ -150,26 +217,51 @@ public class User {
 		this.jobTitle = jobTitle;
 		this.supervisor = supervisor;
 		this.divisionBranch = divisionBranch;
-		this.locations = new ArrayList<Location>();
+		this.locations = new HashSet<Location>();
 		this.locations.add(location);
-		this.departments = new ArrayList<Department>(); 
+		this.departments = new HashSet<Department>(); 
 		this.departments.add(dept);
-		this.roles = new ArrayList<Role>();
-		this.roles.add(role);
-		
+		if(role == null) {
+			this.role = new Role (co.getDefaultRoleName(),co);
+		}
+		else {
+			this.role = role;
+		}
+		this.roleName = role.getName();
+		this.companySuperUser = companySuperUser;
+		this.superUser = superUser;
+
 
 	}
 
 	//adds user to multiple locations. 
-	public User(String name, String firstName, String lastName, String email, String password, String role,
+	/**
+	 * @param name
+	 * @param firstName
+	 * @param lastName
+	 * @param email
+	 * @param password
+	 * @param employeeId
+	 * @param dateOfHire
+	 * @param jobTitle
+	 * @param supervisor name of supervisors
+	 * @param divisionBranch name of location
+	 * @param co company the user is in
+	 * @param locations the user is in
+	 * @param depts the user is a part of
+	 * @param role the user has
+	 * @param companySuperUser if user is companySU
+	 * @param superUser if user is SSU
+	 */
+	public User(String name, String firstName, String lastName, String email, String password, /*String role,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor,
-			String divisionBranch, Company co, List<Location> locations, List<Department> depts, List<Role> roles) {
+			String divisionBranch, Company co, Set<Location> locations, Set<Department> depts, Role role, boolean companySuperUser, boolean superUser) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		this.rolesStr = role;
+
 		this.resetP = true;
 		//this.companyID = companyID;
 		this.companyName = co.getCompanyName();
@@ -182,39 +274,214 @@ public class User {
 		this.divisionBranch = divisionBranch;
 		this.locations = locations;
 		this.departments = depts;
-		this.roles = roles;
+		if(role == null) {
+			this.role = new Role (co.getDefaultRoleName(),co);
+		}
+		else {
+			this.role = role;
+		}
+		this.roleName = role.getName();
+		this.companySuperUser = companySuperUser;
+		this.superUser = superUser;
+
+	}	
+
+	/**
+	 * @param dept to be added
+	 */
+	public void addSubDept(Department dept) {
+		this.subDepartments.add(dept);
+	}
+
+	/**
+	 * @param depts to be added
+	 */
+	public void addSubDepts(Set<Department> depts) {
+		for(Department dept : depts) {
+			this.subDepartments.add(dept);
+		}
+	}
+
+	/**
+	 * @param dept to be removed
+	 * @return true if found/removed
+	 */
+	public boolean removesubDept(Department dept) {
+		if(this.subDepartments.contains(dept)) {
+			this.subDepartments.remove(dept);
+			return true;
+		}
+		return false;
+	}
+
+
+	/**
+	 * @return true if the user has a privilege with read access
+	 */
+	public boolean hasRead() {
+		for(Privilege priv : this.role.getPrivileges()) {
+			if(priv.getRead() == true)
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @return true if the user has a privilege with write access
+	 */
+	public boolean hasWrite() {
+		for(Privilege priv : this.role.getPrivileges()) {
+			if(priv.getWrite() == true)
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @return true if the user has a privilege with delete access
+	 */
+	public boolean hasDelete() {
+		for(Privilege priv : this.role.getPrivileges()) {
+			if(priv.getDelete() == true)
+				return true;
+		}
+		return false;
+	}
+
+	
+	
+	/**
+	 * @return true if the user has an evaluator
+	 */
+	public boolean hasEvaluator() {
+		return this.evaluator.size() > 0;
+	}
+
+	
+	/**
+	 * @return has permission to give evaluator permission. 
+	 */
+	public boolean hasEditEvalPerm() {
+		for(Privilege priv : this.role.getPrivileges()) {
+			if(priv.getEditEvaluate() == true)
+				return true;
+		}
+		return false;
+	}
+
+
+	
+
+	/**
+	 * @param loc to add
+	 */
+	public void addLocation(Location loc) {
+		this.locations.add(loc);
+	}
+
+	/**
+	 * @param locations to add
+	 */
+	public void addLocations(List<Location> locations) {
+		for(Location loc : locations) {
+			this.locations.add(loc);
+		}
+	}
+
+	/**
+	 * @param loc to remove
+	 * 
+	 * @return true if removed
+	 */
+	public boolean removeLocation(Location loc) {
+		if(this.locations.contains(loc)) {
+			this.locations.remove(loc);
+			return true;
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * @return names of the privileges
+	 */
+	public String getPrivilegeNames(){
+		String list = "";
+		for(Privilege priv : role.getPrivileges()) {
+			list += priv.getName()+",";
+		}
+		if(list.length()>0)
+			return list.substring(0,list.length()-1);		
+		return list;
 
 	}
 	
-	public void addDepartment(Department dept) {
-		this.departments.add(dept);
-	}
-	public List<Department> getDepartments() {
-		return departments;
-	}
 
-	public String getRolesStr() {
-		return rolesStr;
-	}
-
-	public void setRolesStr(String rolesStr) {
-		this.rolesStr = rolesStr;
-	}
-
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
-	}
-
-	public void setDepartments(List<Department> departments) {
-		this.departments = departments;
-	}
-
+	/**
+	 * @param dept to be removed
+	 * @return true if removed
+	 */
 	public boolean removeDepartment(Department dept) {
 		if(this.departments.contains(dept)) {
 			this.departments.remove(dept);
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * @param dept to add
+	 */
+	public void addDepartment(Department dept) {
+		this.departments.add(dept);
+	}
+
+
+
+	//getters and setters. 
+	
+	public Role getRole() {
+		if(this.role != null)
+			return role;
+
+		return new Role("NO ROLL ASSIGNED", this.getCompany());
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
+		this.roleName = role.getName();
+	}
+
+	public void setDepartments(Set<Department> departments) {
+		this.departments = departments;
+	}
+	
+	public boolean isCompanySuperUser() {
+		return companySuperUser;
+	}
+
+	public void setCompanySuperUser(boolean superUser) {
+		this.companySuperUser = superUser;
+	}	
+	
+	public boolean isSuperUser() {
+		return superUser;
+	}
+
+	public void setSuperUser(boolean superUser) {
+		this.superUser = superUser;
+	}
+
+	public Set<Evaluator> getEvaluator() {
+		return evaluator;
+	}
+
+	public void setEvaluator(Set<Evaluator> evaluator) {
+		this.evaluator = evaluator;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
 	}
 
 	public String getPassword() {
@@ -255,41 +522,37 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email/*.replaceAll("\\s", "")*/;
 	}
-
-	public String getRoles() {
-		return rolesStr;
+	public boolean isEvaluator() {
+		return this.evaluator.size() >0;
+	}
+	
+	public Set<Department> getDepartments() {
+		return departments;
 	}
 
-	public List<Location> getLocations() {
+	public String getDepartmentName() {
+		return departmentName;
+	}
+
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
+
+
+	public Set<Location> getLocations() {
 		return locations;
 	}
 
-	public void setLocations(List<Location> locations) {
+	public void setLocations(Set<Location> locations) {
 		this.locations = locations;
 	}
 
-	public void addLocation(Location loc) {
-		this.locations.add(loc);
-	}
 	
-	public void addLocations(List<Location> locations) {
-		for(Location loc : locations) {
-			this.locations.add(loc);
-		}
-	}
-	
-	public boolean removeLocation(Location loc) {
-		if(this.locations.contains(loc)) {
-			this.locations.remove(loc);
-			return true;
-		}
-		return false;
-	}
-	
-	public void setRoles(String roles) {
 
-		this.rolesStr = roles;
+	public String getRoleName() {
+		return roleName;
 	}
+
 	/*
 	public List<Evaluator> getEvaluator() {
 		return evaluator;
@@ -299,9 +562,13 @@ public class User {
 		this.evaluator = evaluator;
 	}
 	 */
+	
+	
 	public String getFirstName() {
 		return firstName;
 	}
+
+	
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName/* .replaceAll("\\s", "") */;
@@ -359,8 +626,20 @@ public class User {
 		this.employeeId = employeeId;
 	}
 	 */
+
+
+
+
 	public String getDateOfHire() {
 		return dateOfHire;
+	}
+
+	public Set<Department> getSubDepartments() {
+		return subDepartments;
+	}
+
+	public void setSubDepartments(Set<Department> subDepartments) {
+		this.subDepartments = subDepartments;
 	}
 
 	public void setDateOfHire(String dateOfHire) {
@@ -404,13 +683,9 @@ public class User {
 
 
 	public Long getCompanyID() {
-		return id;
+		return this.company.getId();
 	}
-
-	public void setCompanyID(Long companyID) {
-		this.id = companyID;
-	}
-
+	
 	public Company getCompany() {
 		return company;
 	}
@@ -418,6 +693,9 @@ public class User {
 	public void setCompany(Company company) {
 		this.company = company;
 	}
+
+
+
 
 
 

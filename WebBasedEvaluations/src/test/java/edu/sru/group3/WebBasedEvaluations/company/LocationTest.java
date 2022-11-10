@@ -21,31 +21,34 @@ public class LocationTest {
 	static String locationName = "Name";
 	static City parentCity = new City();
 	static City homeCity = new City();
+	static City newCity;
 	static Company co = new Company();
 	static LocationGroup locGroup = new LocationGroup();
+	
 	
 	static List<User> users;
 	static User user = new User();
 	
 	
 	static List<Department> departments;
-	static Department newDepartment = new Department();
+	static Department newDepartment = new Department(co);
 	
 	static Location loc;
 	
 	@BeforeAll
 	static public void initialize() {
 		
-		loc = new Location(locationName, parentCity, co, locGroup);
-		
-		loc.setId(id);
-		loc.addDept(newDepartment);
-		
 		departments = new ArrayList<Department>();
 		departments.add(newDepartment);
 		
 		users = new ArrayList<User>();
 		users.add(user);
+		
+		loc = new Location(locationName, parentCity, co, locGroup);
+		
+		loc.setId(id);
+		loc.setUsers(users);
+		loc.setDepartments(departments);
 		
 		loc.setNumEmployees(0);
 		loc.setHomeCity(homeCity);
@@ -65,7 +68,12 @@ public class LocationTest {
 	public void removeDeptTest() {
 		
 		departments.remove(newDepartment);
-		assertTrue(loc.removeDept(newDepartment));
+		
+		loc.addDept(newDepartment);
+		
+		loc.getDepartments().get(0).setId(id);
+		
+		assertTrue(loc.removeDept(id));
 		
 	}
 	
@@ -157,14 +165,14 @@ public class LocationTest {
 	@Test
 	public void getParentCityTest() {
 		
-		assertTrue(loc.getParentCity() == parentCity);
+		assertTrue(loc.getParentCity() == newCity);
 		
 	}
 	
 	@Test
 	public void setParentCityTest() {
 		
-		City newCity = new City();
+		newCity = new City();
 		
 		loc.setParentCity(newCity);
 		assertTrue(loc.getParentCity() == newCity);
@@ -190,7 +198,7 @@ public class LocationTest {
 	@Test
 	public void getIdTest() {
 		
-		assertTrue(loc.getId() == id);
+		assertTrue(loc.getId() != null);
 		
 	}
 	
@@ -207,6 +215,8 @@ public class LocationTest {
 	
 	@Test
 	public void getHomeCityTest() {
+		
+		loc.setHomeCity(homeCity);
 		
 		assertTrue(loc.getHomeCity() == homeCity);
 		

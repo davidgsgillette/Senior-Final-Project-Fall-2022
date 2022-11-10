@@ -98,8 +98,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				// .antMatchers("/signup").hasAuthority(ADMIN)
 
 				.antMatchers("/admin_users/").hasAuthority(ADMIN).antMatchers("/admin_evaluations")
-				.hasAnyAuthority(EVAL_ADMIN, EVALUATOR_EVAL, EVALUATOR).antMatchers("/admin_groups")
-				.hasAnyAuthority(EVAL_ADMIN, EVALUATOR_EVAL, EVALUATOR).antMatchers("/admin_home").hasAuthority(ADMIN)
+				.hasAnyAuthority(EVAL_ADMIN, EVALUATOR_EVAL, EVALUATOR, ADMIN).antMatchers("/admin_groups")
+				.hasAnyAuthority(EVAL_ADMIN, EVALUATOR_EVAL, EVALUATOR, ADMIN).antMatchers("/admin_home").hasAuthority(ADMIN)
 				// .antMatchers("/base").permitAll()
 				.antMatchers("/home").hasAnyAuthority(ADMIN, USER, EVALUATOR, EVAL_ADMIN, EVALUATOR_EVAL)
 

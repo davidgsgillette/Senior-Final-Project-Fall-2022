@@ -19,10 +19,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.EvalRole;
 import edu.sru.group3.WebBasedEvaluations.domain.Evaluator;
 import edu.sru.group3.WebBasedEvaluations.domain.Group;
 import edu.sru.group3.WebBasedEvaluations.domain.Reviewee;
+import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.repository.EvalRoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
@@ -36,6 +38,9 @@ public class EvaluationTests {
 	private static User user = new User();
 	private static User user2 = new User();
 	private static User user3 = new User();
+	private static Company co = new Company("test");
+
+	
 	  @Autowired
 	  private UserRepository userRepository;
 	  @Autowired
@@ -51,8 +56,8 @@ public class EvaluationTests {
 			user.setLastName("Thangiah");
 			user.setCompanyName("Thangiah Inc");
 			user.setDivisionBranch("Retroville");
-			user.setRoles("USER");
-			user.setSupervisor("Jimmy");
+			user.setRole(new Role("USER",co));
+			user.setSupervisor(null);
 			user.setEmail("sam.thangiah@sru.edu");
 			user.setEncryptedPassword("test");
 			
@@ -60,12 +65,12 @@ public class EvaluationTests {
 			user2.setFirstName("Dalton");
 			user2.setLastName("Stenzel");
 			user2.setEmail("daltonrstenzel@gmail.com");
-			user2.setRoles("USER");
+			user2.setRole(new Role("USER",co));
 			user2.setEncryptedPassword("test");
 			
 			user2.setCompanyName("Thangiah Inc");
 			user2.setDivisionBranch("Retroville");
-			user2.setSupervisor("Jimmy");
+			user2.setSupervisor(null);
 			user2.setDateOfHire("10/15/2022");
 			user2.setJobTitle("Assistant");
 			
@@ -73,33 +78,33 @@ public class EvaluationTests {
 			user3.setFirstName("Dalton");
 			user3.setLastName("Stenzel");
 			user3.setEmail("daltonrstenzel @gmail.com");
-			user3.setRoles("USER");
+			user3.setRole(new Role("USER",co));
 			user3.setEncryptedPassword("test");
 			
 			user3.setCompanyName("Thangiah Inc");
 			user3.setDivisionBranch("Retroville");
-			user3.setSupervisor("Jimmy");
+			user3.setSupervisor(null);
 			user3.setDateOfHire("10/15/2022");
 			user3.setJobTitle("Assistant");
 			
 			 userRepository.save(user);
 			 userRepository.save(user2);
 			 userRepository.save(user3);
-			 evalRoleRepository.save(new EvalRole("level 1",1));
-			 evalRoleRepository.save(new EvalRole("level 2",2));
+			 evalRoleRepository.save(new EvalRole("level 1",1,null));
+			 evalRoleRepository.save(new EvalRole("level 2",2,null));
 			
 	  }
 
 	@Test
 	public void creating_group()  {
 		
-		Group group =new Group();
-		group.setId((long) 1);
+		Group group =new Group(co);
+		group.setGroupNum((int) 1);
 		
 		group.appendReviewee(new Reviewee(group, "sam", userRepository.findByFirstName("Sam")));
 		ArrayList<Evaluator> eval= new ArrayList<Evaluator>();
-		eval.add(new Evaluator(((List<User>) userRepository.findAll()).get(1), group, evalRoleRepository.findById(1).orElse(null)));
-		eval.add(new Evaluator(((List<User>) userRepository.findAll()).get(2), group, evalRoleRepository.findById(1).orElse(null)));
+		eval.add(new Evaluator(((List<User>) userRepository.findAll()).get(1), group, evalRoleRepository.findById(1).orElse(null),co));
+		eval.add(new Evaluator(((List<User>) userRepository.findAll()).get(2), group, evalRoleRepository.findById(1).orElse(null),co));
 		group.setEvaluator(eval);
 		groupRepository.save(group);
 		//evaluatorR.saveAll(eval);
@@ -114,13 +119,13 @@ public class EvaluationTests {
 	@Test
 	public void creating_findeval()  {
 		
-		Group group =new Group();
-		group.setId((long) 1);
+		Group group =new Group(co);
+		group.setGroupNum((int) 1);
 		
 		group.appendReviewee(new Reviewee(group, "sam", userRepository.findByFirstName("Sam")));
 		ArrayList<Evaluator> eval= new ArrayList<Evaluator>();
-		eval.add(new Evaluator(((List<User>) userRepository.findAll()).get(1), group, evalRoleRepository.findById(1).orElse(null)));
-		eval.add(new Evaluator(((List<User>) userRepository.findAll()).get(2), group, evalRoleRepository.findById(1).orElse(null)));
+		eval.add(new Evaluator(((List<User>) userRepository.findAll()).get(1), group, evalRoleRepository.findById(1).orElse(null),co));
+		eval.add(new Evaluator(((List<User>) userRepository.findAll()).get(2), group, evalRoleRepository.findById(1).orElse(null),co));
 		group.setEvaluator(eval);
 		groupRepository.save(group);
 	    System.out.print(groupRepository.findById(1).getId());

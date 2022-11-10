@@ -50,14 +50,16 @@ public class WorldTest {
 	@Test
 	public void removeContinentTest() {
 		
-		assertTrue(world.removeContinent(con));
+		childContinents.get(0).setId(id);
+		
+		assertTrue(world.removeContinent(id));
 		
 	}
 	
 	@Test
 	public void getIdTest() {
 		
-		assertTrue(world.getId() == id);
+		assertTrue(world.getId() != null);
 		
 	}
 	

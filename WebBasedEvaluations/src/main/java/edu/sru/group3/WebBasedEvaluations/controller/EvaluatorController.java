@@ -170,10 +170,10 @@ public class EvaluatorController {
     	int rolenum=0;
     	for(int x =0; x< evaluator.size();x++) {
     		if(rolenum < evaluator.get(x).getLevel().getId()) {
-    			rolenum = evaluator.get(x).getLevel().getId();
+    			rolenum = evaluator.get(x).getLevel().getLevel();
     		}
     	}
-    	if(userD.getRoles().equals("EVAL_ADMIN") ){
+    	if(userD.getRole().getName().equals("EVAL_ADMIN") ){
     		model.addAttribute("address", "/admineval/"+evaluationLog.getReviewee().getUser().getId());
     	}
     	else if(evaluationLog.getReviewee().getUser().getId() == userD.getID()) {
@@ -333,7 +333,7 @@ public class EvaluatorController {
     		evaluationLogRepository.save(evaluationLog);
     		this.log.info("Evaluator '" + evaluationLog.getEvaluator().getUser().getEmail() + "' submitted a completed evaluation.");
 
-    		List<Evaluator> eval1 = evaluatorRepository.findByLevelIdAndGroupId(level.getId(), groupid);
+    		List<Evaluator> eval1 = evaluatorRepository.findByLevelLevelAndGroupId(level.getLevel(), groupid);
     		//other evaluation
     		for(int i =0; i< eval1.size();i++) {
     			EvaluationLog  evaluationLog1 = evaluationLogRepository.findByEvaluatorIdAndRevieweeId(eval1.get(i).getId(),revid);
@@ -343,7 +343,7 @@ public class EvaluatorController {
     			}
     		}
 
-    		int rolenum =level.getId();
+    		int rolenum =level.getLevel();
     		// is evaluator is not sync it will  run back to the evaluation page
     		if(evaluationLog.getEvaluator().isSync() != true) {
     			return "redirect:/Evaluationgroups";
@@ -355,7 +355,7 @@ public class EvaluatorController {
     				eval2=null;
     			}
     			else {
-    				eval2 = evaluatorRepository.findByLevelIdAndGroupId(role.getId(), groupid);
+    				eval2 = evaluatorRepository.findByLevelLevelAndGroupId(role.getLevel(), groupid);
     			}
 
     			if(eval2!=null) {

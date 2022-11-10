@@ -11,22 +11,25 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
+
 
 public class GroupTest {
-	@Mock static long id;
+	@Mock static int groupNum;
 	@Mock static Boolean selfEval;
 	@Mock static Reviewee rev;
 	@Mock static User user;
+	@Mock static Company co;
 	static Group group;
 	@BeforeAll
 	static void setup() {
-		group = new Group(id, selfEval);
+		group = new Group(selfEval,co,groupNum);
 	}
 
 	@Test
 	public void getIdTest() {
-		long actual = 5;
-		group.setId(actual);
+		int actual = 5;
+		group.setGroupNum(actual);
 		assertEquals(group.getId(), actual);
 	}
 
@@ -43,7 +46,7 @@ public class GroupTest {
 		group.setEvaluator(actual);
 		assertNull(group.getEvaluator());
 	}
-/* I have no idea why this doesn't work but here we are
+
 	@Test
 	public void appendRevieweeTest() {
 		List<Reviewee> actual = null;
@@ -52,11 +55,12 @@ public class GroupTest {
 		group.appendReviewee(rev);
 		assertEquals(group.getReviewee(), actual);
 		
+
 	}
-*/
+
 	@Test
 	public void getEvalTemplatesTest() {
-		EvalTemplates actual = new EvalTemplates();
+		EvalTemplates actual = new EvalTemplates(co);
 		group.setEvalTemplates(actual);
 		assertEquals(group.getEvalTemplates(), actual);
 	}

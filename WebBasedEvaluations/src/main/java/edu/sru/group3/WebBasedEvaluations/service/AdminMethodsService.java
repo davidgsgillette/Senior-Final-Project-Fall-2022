@@ -4,15 +4,20 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.controller.HomePage;
+import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
+import edu.sru.group3.WebBasedEvaluations.repository.RoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 
 /**
@@ -20,6 +25,7 @@ import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 
  * @author Dalton Stenzel
  * @author J Abbigail Rowe
+ * @Author David Gillette
  * 
  *
  */
@@ -27,20 +33,21 @@ import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 public class AdminMethodsService {
 
 	private UserRepository userRepository;
+	private RoleRepository roleRepo;
 	private Logger log = LoggerFactory.getLogger(AdminMethodsService.class);
 	private static final int PASSWORDSIZE = 5;
-	private static final String ADMIN = "ADMIN";
-	private static final String EVALUATOR_EVAL = "EVALUATOR_EVAL";
-	private static final String EVAL_ADMIN = "EVAL_ADMIN";
-	private static final String EVALUATOR = "EVALUATOR";
-	private static final String USER = "USER";
+	//	private static final String ADMIN = "ADMIN";
+	//	private static final String EVALUATOR_EVAL = "EVALUATOR_EVAL";
+	//	private static final String EVAL_ADMIN = "EVAL_ADMIN";
+	//	private static final String EVALUATOR = "EVALUATOR";
+	//	private static final String USER = "USER";
 
 	/**
 	 * @param userRepository is a user repository, contains list of users
 	 */
-	public AdminMethodsService(UserRepository userRepository) {
+	public AdminMethodsService(UserRepository userRepository,RoleRepository roleRepo) {
 		this.userRepository = userRepository;
-
+		this.roleRepo = roleRepo;
 	}
 
 	@Autowired
@@ -149,40 +156,41 @@ public class AdminMethodsService {
 
 			return false;
 
-		} else if (user.getCompanyName() == null
-				|| user.getCompanyName().equals("") /* || hasSpace(user.getEmail()) */) {
+		} else if (user.getCompanyName() == null || user.getCompanyName().equals("")) {
 
 			log.info("Manual User Add- " + "Company Name failed: " + user.getCompanyName());
 
 			return false;
 
-		} else if (user.getDivisionBranch() == null
-				|| user.getDivisionBranch().equals("") /* || hasSpace(user.getEmail()) */) {
+		} else if (user.getDivisionBranch() == null	|| user.getDivisionBranch().equals("")) {
 
 			log.info("Manual User Add- " + "Division Branch failed: " + user.getDivisionBranch());
 
 			return false;
 
-		} else if (user.getJobTitle() == null || user.getJobTitle().equals("") /* || hasSpace(user.getEmail()) */) {
+		} else if (user.getJobTitle() == null || user.getJobTitle().equals("") ) {
 
 			log.info("Manual User Add- " + "Job Title failed: " + user.getJobTitle());
 
 			return false;
 
-		} else if (user.getSupervisor() == null || user.getSupervisor().equals("") /* || hasSpace(user.getEmail()) */) {
+		} else if (user.getSupervisor() == null || user.getSupervisor().equals("")) {
 
 			log.info("Manual User Add- " + "Supervisor failed: " + user.getSupervisor());
 
 			return false;
 
-		} else if (user.getDateOfHire() == null || user.getDateOfHire().equals("") /* || hasSpace(user.getEmail()) */) {
+		} else if (user.getDateOfHire() == null || user.getDateOfHire().equals("")) {
 
 
 			log.info("Manual User Add- " + "Date of Hire failed: " + user.getDateOfHire());
 
 			return false;
 
-		}  else {
+
+		}
+		
+		else {
 
 			return true;
 
@@ -212,11 +220,26 @@ public class AdminMethodsService {
 	 * @param sortOr   is an Integer value used to determine whether the sort order will be ascending or descending, 1 and 0 respectively.
 	 */
 	public void adminUserPageItems(String ansr, String keyword, String mess, Integer perPage, Model model, String sort,
-			Integer currPage, Integer sortOr) {
-		List<User> listTotal = service.getAllUsers();
-
+			Integer currPage, Integer sortOr, Authentication auth) {
+		//List<User> listTotal = service.getAllUsers();
+		
+		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+		User loggedInUser = userRepository.findByid(userD.getID());	
+		Company currentCompany = loggedInUser.getCompany();
+		//gets only the users that the currently logged in user has access to. 
+		List<User> listTotal = new ArrayList<User>();
+		if(loggedInUser.isCompanySuperUser() || loggedInUser.isSuperUser()) {
+			listTotal = userRepository.findByCompany(currentCompany);
+		}
+		else {
+			
+			listTotal.addAll(loggedInUser.getRole().readableUsers());
+		}
+		
+//				new ArrayList<User>(loggedInUser.getRole().readableUsers());
+		
 		int startVal = 0;
-		model.addAttribute("users", userRepository.findAll());
+		model.addAttribute("users", listTotal);
 		model.addAttribute("mess", mess);
 		model.addAttribute("perPage", perPage);
 		model.addAttribute("sort", sort);
@@ -240,7 +263,7 @@ public class AdminMethodsService {
 		}
 
 		else {
-			List<User> list = sortCheck(sort, service.getByKeyword(keyword), sortOr, model);
+			List<User> list = sortCheck(sort, service.getByKeyword(keyword,currentCompany), sortOr, model);
 			model.addAttribute("list", list);
 		}
 
@@ -378,30 +401,29 @@ public class AdminMethodsService {
 
 		log.info("User Pre Changes- Id:" + user2.getId() + " | First Name:" + user2.getFirstName() + " | Last Name:"
 				+ user2.getLastName() + " | Suffix Name:" + user2.getSuffixName() + " | Email:" + user2.getEmail()
-				+ " | Role:" + user2.getRoles() + " | Company Name:" + user2.getCompanyName() + " | Division Branch:"
+				+ " | Role:" + user2.getRole().getName() + " | Company Name:" + user2.getCompanyName() + " | Division Branch:"
 				+ user2.getDivisionBranch() + " | Job Title:" + user2.getJobTitle() + " | Supervisor:"
 				+ user2.getSupervisor() + " | Date of Hire:" + user2.getDateOfHire());
 
 		log.info("User Attempted Changes- Id:" + user.getId() + " | First Name:" + user.getFirstName() + " | Last Name:"
 				+ user.getLastName() + " | Suffix Name:" + user.getSuffixName() + " | Email:" + user.getEmail()
-				+ " | Role:" + user.getRoles() + " | Company Name:" + user.getCompanyName() + " | Division Branch:"
+				+ " | Role:" + user.getRole().getName() + " | Company Name:" + user.getCompanyName() + " | Division Branch:"
 				+ user.getDivisionBranch() + " | Job Title:" + user.getJobTitle() + " | Supervisor:"
 				+ user.getSupervisor() + " | Date of Hire:" + user.getDateOfHire());
 		if (true) {
-			
+
 			if (user.getPassword() == "" || user.getPassword() == null || user.getPassword().length() < PASSWORDSIZE) {
 
 				user.setPassword(user2.getPassword());
 			} else if (hasSpace(user.getPassword())) {
 				user.setPassword(user2.getPassword());
-
 			}
 
 			else if (user.getPassword().equals(user2.getPassword())) {
 				user2.setPassword(user.getPassword());
 
 			} else if (hasSpace(user.getPassword())) {
-
+				user.setPassword(user2.getPassword());
 			}
 
 			else {
@@ -503,28 +525,13 @@ public class AdminMethodsService {
 
 		}
 		if (true) {
-			/*
-			System.out.println(user.getId());
-			System.out.println(id);
-			System.out.println(user.getRoles());
-			*/
 
-			if (/*user.getId() == id ||*/ user.getRoles() == ADMIN) {
-				user.setRoles(user2.getRoles());
-
-			} else {
-				if (user.getRoles() == null) {
-					user.setRoles(user2.getRoles());
-				}
-
-				else if (user.getRoles().equals(user2.getRoles())) {
-					user2.setRoles(user.getRoles());
-
-				} else {
-					user2.setRoles(user.getRoles());
-
-					check = true;
-				}
+			if (user.getRole() == null || this.roleRepo.findById(user2.getRole().getId()) == null) { //user.getRoles() == ADMIN) {
+				user.setRole(user2.getRole());
+			} 
+			else {				
+				user2.setRole(user.getRole());
+				check = true;				
 			}
 
 		}
@@ -535,11 +542,11 @@ public class AdminMethodsService {
 				user.setCompanyName(user2.getCompanyName());
 
 			} /*
-				 * else if (hasSpace(user.getFirstName())) {
-				 * user.setFirstName(user2.getFirstName());
-				 * 
-				 * }
-				 */
+			 * else if (hasSpace(user.getFirstName())) {
+			 * user.setFirstName(user2.getFirstName());
+			 * 
+			 * }
+			 */
 
 			else if (user.getCompanyName().equals(user2.getCompanyName())) {
 				user2.setCompanyName(user.getCompanyName());
@@ -553,16 +560,16 @@ public class AdminMethodsService {
 		}
 
 		if (true) {
-			if (user.getSupervisor() == "" || user.getSupervisor() == null) {
+			if (user.getSupervisor() == null || user.getSupervisor() == "") {
 
 				user.setSupervisor(user2.getSupervisor());
 
 			} /*
-				 * else if (hasSpace(user.getFirstName())) {
-				 * user.setFirstName(user2.getFirstName());
-				 * 
-				 * }
-				 */
+			 * else if (hasSpace(user.getFirstName())) {
+			 * user.setFirstName(user2.getFirstName());
+			 * 
+			 * }
+			 */
 
 			else if (user.getSupervisor().equals(user2.getSupervisor())) {
 				user2.setSupervisor(user.getSupervisor());
@@ -580,11 +587,11 @@ public class AdminMethodsService {
 				user.setDivisionBranch(user2.getDivisionBranch());
 
 			} /*
-				 * else if (hasSpace(user.getFirstName())) {
-				 * user.setFirstName(user2.getFirstName());
-				 * 
-				 * }
-				 */
+			 * else if (hasSpace(user.getFirstName())) {
+			 * user.setFirstName(user2.getFirstName());
+			 * 
+			 * }
+			 */
 
 			else if (user.getDivisionBranch().equals(user2.getDivisionBranch())) {
 				user2.setDivisionBranch(user.getDivisionBranch());
@@ -603,11 +610,11 @@ public class AdminMethodsService {
 				user.setJobTitle(user2.getJobTitle());
 
 			} /*
-				 * else if (hasSpace(user.getFirstName())) {
-				 * user.setFirstName(user2.getFirstName());
-				 * 
-				 * }
-				 */
+			 * else if (hasSpace(user.getFirstName())) {
+			 * user.setFirstName(user2.getFirstName());
+			 * 
+			 * }
+			 */
 
 			else if (user.getJobTitle().equals(user2.getJobTitle())) {
 				user2.setJobTitle(user.getJobTitle());
@@ -625,11 +632,11 @@ public class AdminMethodsService {
 				user.setDateOfHire(user2.getDateOfHire());
 
 			} /*
-				 * else if (hasSpace(user.getFirstName())) {
-				 * user.setFirstName(user2.getFirstName());
-				 * 
-				 * }
-				 */
+			 * else if (hasSpace(user.getFirstName())) {
+			 * user.setFirstName(user2.getFirstName());
+			 * 
+			 * }
+			 */
 
 			else if (user.getDateOfHire().equals(user2.getDateOfHire())) {
 				user2.setDateOfHire(user.getDateOfHire());
@@ -668,12 +675,9 @@ public class AdminMethodsService {
 
 		}
 
-		if (user.getRoles() != null) {
-			user2.setRoles(user.getRoles());
-		}
 		log.info("User Post Changes- Id:" + user2.getId() + " | First Name:" + user2.getFirstName() + " | Last Name:"
 				+ user2.getLastName() + " | Suffix Name:" + user2.getSuffixName() + " | Email:" + user2.getEmail()
-				+ " | Role:" + user2.getRoles() + " | Company Name:" + user2.getCompanyName() + " | Division Branch:"
+				+ " | Role:" + user2.getRole().getName() + " | Company Name:" + user2.getCompanyName() + " | Division Branch:"
 				+ user2.getDivisionBranch() + " | Job Title:" + user2.getJobTitle() + " | Supervisor:"
 				+ user2.getSupervisor() + " | Date of Hire:" + user2.getDateOfHire());
 

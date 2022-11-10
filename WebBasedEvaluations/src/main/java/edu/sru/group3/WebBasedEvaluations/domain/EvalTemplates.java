@@ -1,8 +1,23 @@
 package edu.sru.group3.WebBasedEvaluations.domain;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+
+import edu.sru.group3.WebBasedEvaluations.company.Company;
+import edu.sru.group3.WebBasedEvaluations.company.Department;
 
 
 /**
@@ -14,7 +29,22 @@ import javax.persistence.Lob;
 public class EvalTemplates {
 
 	@Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+	long id;
+	
 	String name;
+	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "company", nullable = false)
+    private Company company;
+	
+	@ManyToMany(cascade = CascadeType.MERGE)
+	@JoinTable(
+			name = "EvalTemplates_depts", 
+			joinColumns = @JoinColumn(name = "eval_template_id"), 
+			inverseJoinColumns = @JoinColumn(name = "dept_id"))
+	private Set<Department> depts = new HashSet<Department>();
+	
 	@Lob
 	byte[] eval;
 	@Lob
@@ -25,18 +55,60 @@ public class EvalTemplates {
 		this.name = null;
 		this.eval = null;
 		this.excelFile = null;
+		
 	}
-	
-	public EvalTemplates(String name, byte[] eval, byte[] excelFile) {
+	public EvalTemplates(Company company) {
+		this.name = null;
+		this.eval = null;
+		this.excelFile = null;
+		this.company = company;
+	}
+	public EvalTemplates(String name, byte[] eval, byte[] excelFile, Company company) {
 		this.name = name;
 		this.eval = eval;
 		this.excelFile = excelFile;
+		this.company = company;
+	}
+	public EvalTemplates(String name, byte[] eval, byte[] excelFile, Company company, Department dept) {
+		this.name = name;
+		this.eval = eval;
+		this.excelFile = excelFile;
+		this.company = company;
+		this.depts.add(dept);
+	}
+	public EvalTemplates(String name, byte[] eval, byte[] excelFile, Company company, Set<Department> dept) {
+		this.name = name;
+		this.eval = eval;
+		this.excelFile = excelFile;
+		this.company = company;
+		System.out.println("added the depts to the eval template");
+		this.depts.addAll(dept);
 	}
 	
-	public EvalTemplates(String name, byte[] eval) {
+	public EvalTemplates(String name, byte[] eval, Company company) {
 		this.name = name;
 		this.eval = eval;
 		this.excelFile = null;
+		this.company = company;
+	}
+	
+	public boolean addDept(Department dept) {
+		this.depts.add(dept);
+		return true;
+	}
+
+	public boolean addDepts(Collection<Department> depts) {
+		this.depts.addAll(depts);
+		return true;
+	}
+
+	public boolean removeDept(Department dept) {
+
+		if(this.depts.contains(dept)) {
+			this.depts.remove(dept);			
+			return true;
+		}
+		return false;
 	}
 
 	// Setters and Getters
@@ -48,6 +120,15 @@ public class EvalTemplates {
 		this.name = name;
 	}
 
+	public Set<Department> getDepts() {
+		return depts;
+	}
+	public void setDepts(Set<Department> depts) {
+		this.depts = depts;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 	public byte[] getEval() {
 		return eval;
 	}
@@ -62,6 +143,18 @@ public class EvalTemplates {
 
 	public void setExcelFile(byte[] excelFile) {
 		this.excelFile = excelFile;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public long getId() {
+		return id;
 	}
 	
 }

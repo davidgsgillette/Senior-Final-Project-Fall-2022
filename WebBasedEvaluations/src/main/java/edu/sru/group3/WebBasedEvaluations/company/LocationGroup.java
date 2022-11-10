@@ -32,6 +32,8 @@ public class LocationGroup {
 	
 	
 	@NonNull
+	private String name;
+	
 	@OneToMany(mappedBy = "locGroup", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Location> locations;
 	
@@ -43,19 +45,44 @@ public class LocationGroup {
 	@NonNull
 	private int numLocations;
 	
+	/**
+	 *  default constructor
+	 */
 	public LocationGroup() {
 		this.locations = new ArrayList<Location>();
 		this.numLocations = 0;
 	}
 	
 	
-	public LocationGroup(List<Location> locations, List<Privilege> privileges) {
+	/**
+	 * @param name name of location group ex: "eastUS"
+	 */
+	public LocationGroup(String name) {
+		this.name = name;
+		this.locations = new ArrayList<Location>();
+		this.numLocations = 0;
+	}
+	
+	
+	/**
+	 * @param locations locations to add
+	 * @param privileges privileges to add
+	 * @param name name of locationgroup
+	 */
+	public LocationGroup(List<Location> locations, List<Privilege> privileges, String name) {
+		this.name = name;
 		this.locations = locations;
 		this.privileges = privileges;
 		this.numLocations = this.locations.size();
 	}
 	
-	public LocationGroup(Location location, Privilege privilege) {
+	/**
+	 * @param location to add
+	 * @param privilege to add
+	 * @param name of locGroup
+	 */
+	public LocationGroup(Location location, Privilege privilege, String name) {
+		this.name = name;
 		this.locations = new ArrayList<Location>();
 		this.numLocations = 0;
 		this.addLocation(location);
@@ -65,11 +92,17 @@ public class LocationGroup {
 	}
 	
 	
+	/**
+	 * @param locations to add
+	 */
 	public LocationGroup(List<Location> locations) {
 		this.locations = locations;
 		this.numLocations = this.locations.size();
 	}
 	
+	/**
+	 * @param location to add
+	 */
 	public LocationGroup(Location location) {
 		this.locations = new ArrayList<Location>();
 		this.numLocations = 0;
@@ -78,10 +111,17 @@ public class LocationGroup {
 	}
 	
 	
+	/**
+	 * @param priv to add
+	 */
 	public void addPrivilege(Privilege priv) {
 		this.privileges.add(priv);
 	}
 	
+	/**
+	 * @param priv to remove
+	 * @return true if removed
+	 */
 	public boolean removePrivilege(Privilege priv) {
 		if(this.privileges.contains(priv)) {
 			this.privileges.remove(priv);
@@ -92,11 +132,18 @@ public class LocationGroup {
 	
 	
 	
+	/**
+	 * @param loc to add
+	 */
 	public void addLocation(Location loc) {
 		this.locations.add(loc);
 		numLocations++;
 	}
 	
+	/**
+	 * @param loc to remove
+	 * @return true if removed
+	 */
 	public boolean removeLocation(Location loc) {
 		if(this.locations.contains(loc)) {
 			this.locations.remove(loc);
@@ -106,6 +153,9 @@ public class LocationGroup {
 		return false;
 	}
 	
+	/**
+	 * @param locations to add
+	 */
 	public void addLocations(List<Location> locations) {
 		for(Location loc : locations) {
 			locations.add(loc);

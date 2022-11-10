@@ -49,8 +49,8 @@ public class UserTest {
 	@Test
 	void getRolesTest() {
 		String actual = "Test";
-		user.setRoles(actual);
-		assertEquals(user.getRoles(), actual);
+		user.setRoleName(actual);
+		assertEquals(user.getRoleName(), actual);
 	}
 
 	@Test
@@ -106,7 +106,7 @@ public class UserTest {
 
 	@Test
 	void getSupervisorTest() {
-		String actual = "Test";
+		String actual = "test";
 		user.setSupervisor(actual);
 		assertEquals(user.getSupervisor(), actual);
 	}

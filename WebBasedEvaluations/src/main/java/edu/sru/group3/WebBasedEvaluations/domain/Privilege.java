@@ -2,9 +2,13 @@ package edu.sru.group3.WebBasedEvaluations.domain;
 
 import lombok.NonNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import javax.persistence.*;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.company.Department;
 import edu.sru.group3.WebBasedEvaluations.company.LocationGroup;
 
@@ -25,16 +29,25 @@ public class Privilege {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
-	
+		
+	//read
 	@NonNull
 	private boolean r;
-	
+		
+	//write
 	@NonNull
 	private boolean w;
-	
+		
+	//delete
 	@NonNull
 	private boolean d;
+	
+	@NonNull
+	private boolean editEvaluator;
 
+	
+	
+	
 	@NonNull
 	@Column(unique=true)
     private String name;
@@ -58,39 +71,53 @@ public class Privilege {
 			inverseJoinColumns = @JoinColumn(name = "location_group_id"))
     private List<LocationGroup> locationGroups;
     
+    
+    //list of companies the privilege has access to. 
+    @ManyToMany
+   	@JoinTable(
+		name = "privilege_companies", 
+		joinColumns = @JoinColumn(name = "privilege_id"), 
+		inverseJoinColumns = @JoinColumn(name = "company_id"))
+   private Set<Company> companies;
+    
    
     public Privilege() {
     	
     }
     
     
-    public Privilege(String name, Role role, boolean read, boolean write, boolean delete) {
+    public Privilege(String name, Role role, boolean read, boolean write, boolean delete, boolean evaluate) {
     	this.name = name;
     	this.roles = new ArrayList<Role>();
     	this.roles.add(role);
     	this.depts = new ArrayList<Department>();
     	this.locationGroups = new ArrayList<LocationGroup>(); 
+    	this.companies = new HashSet<Company>();
     	this.r = read;
-//    	this.write = write;
-//    	this.delete = delete;
+    	this.w = write;
+    	this.d = delete;
+    	this.editEvaluator = evaluate;
     }
     
     
-	public Privilege(String name, Role role, LocationGroup locGroup, Department dept, boolean read, boolean write, boolean delete) {
+	public Privilege(String name, Role role, LocationGroup locGroup, Department dept, Company co, boolean read, boolean write, boolean delete, boolean evaluate) {
     	this.name = name;
     	this.roles = new ArrayList<Role>();
     	this.roles.add(role);
     	this.depts = new ArrayList<Department>();
     	this.locationGroups = new ArrayList<LocationGroup>();
+    	this.companies = new HashSet<Company>();
+    	companies.add(co);
     	this.depts.add(dept);
     	this.locationGroups.add(locGroup);
     	this.r = read;
     	this.w = write;
     	this.d = delete;
+    	this.editEvaluator = evaluate;
     }
 	
 	
-    public Privilege(String name, List<Role> roles, List<LocationGroup> locGroups, List<Department> depts, boolean read,boolean write,boolean delete) {
+    public Privilege(String name, List<Role> roles, List<LocationGroup> locGroups, List<Department> depts,Set<Company> cos, boolean read,boolean write,boolean delete, boolean evaluate) {
     	this.name = name;
     	this.roles = roles;
     	this.locationGroups = locGroups;
@@ -98,7 +125,23 @@ public class Privilege {
     	this.r = read;
     	this.w = write;
     	this.d = delete;
+    	this.editEvaluator = evaluate;
+    	this.companies = cos;
     }
+    
+    
+    public void addCompany(Company co) {
+		this.companies.add(co);
+	}
+	
+	public boolean removeCompany(Company co) {
+		if(this.companies.contains(co)) {
+			this.companies.remove(co);
+			return true;
+		}
+		return false;
+	}
+    
     
     
     public void addLocGroup(LocationGroup locGroup) {
@@ -145,6 +188,67 @@ public class Privilege {
     public boolean getRead() {
 		return r;
 	}
+    
+	public boolean getEditEvaluator() {
+		return editEvaluator;
+	}
+
+
+	public void setEditEvaluator(boolean editEvaluator) {
+		this.editEvaluator = editEvaluator;
+	}
+
+
+	public Set<Company> getCompanies() {
+		return companies;
+	}
+
+
+	public void setCompanies(Set<Company> companies) {
+		this.companies = companies;
+	}
+
+
+	public boolean isR() {
+		return r;
+	}
+
+
+	public void setR(boolean r) {
+		this.r = r;
+	}
+
+
+	public boolean isW() {
+		return w;
+	}
+
+
+	public void setW(boolean w) {
+		this.w = w;
+	}
+
+
+	public boolean isD() {
+		return d;
+	}
+
+
+	public void setD(boolean d) {
+		this.d = d;
+	}
+
+
+	public boolean getEditEvaluate() {
+		return editEvaluator;
+	}
+
+
+	public void setEvaluate(boolean evaluate) {
+		this.editEvaluator = evaluate;
+	}
+
+
 	public void setRead(boolean read) {
 		this.r = read;
 	}

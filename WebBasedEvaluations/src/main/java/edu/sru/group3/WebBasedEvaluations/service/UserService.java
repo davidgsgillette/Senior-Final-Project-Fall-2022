@@ -1,5 +1,6 @@
 package edu.sru.group3.WebBasedEvaluations.service;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 
 import java.util.ArrayList;
@@ -39,8 +40,8 @@ public class UserService {
 	 * @param keyword is a set characters provided by a user.
 	 * @return list of users that contains the keyword provided by a user.
 	 */
-	public List<User> getByKeyword(String keyword) {
-		List<User> list = userRepository.findByKeyword(keyword);
+	public List<User> getByKeyword(String keyword,Company company) {
+		List<User> list = userRepository.findByKeywordAndCompany(keyword,company.getId());
 		return list;
 	}
 
@@ -111,10 +112,10 @@ public class UserService {
 
 		else if (type.equals("role")) {
 			Collections.sort(list, new Comparator<User>() {
+//changed
 				@Override
 				public int compare(final User object1, final User object2) {
-
-					return object1.getRoles().compareTo(object2.getRoles());
+					return object1.getRole().getName().compareTo(object2.getRole().getName());
 				}
 			});
 		}

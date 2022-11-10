@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
+
 /**Reviewee
  *   is the user that being evaluated 
  *
@@ -16,20 +18,26 @@ public class Reviewee {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@ManyToOne
+	
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="group_id")
 	private Group group;
+	
 	private String name;
 	@OneToOne
 	@JoinColumn(name="user_id")
 	private User user;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="company_id")
+	private Company company;
+	
 	/**
 	 * id is auto generated
 	 * group is the evaluation group the reviewee is associated with
 	 * user  is the reviewee account
 	 */
-	@OneToMany(mappedBy = "reviewee",cascade = CascadeType.ALL)
-	
+	@OneToMany(mappedBy = "reviewee",cascade = CascadeType.ALL)	
  	private List<EvaluationLog> evalutationLog= new ArrayList<>();
 	
 	@OneToOne(mappedBy="reviewee")
@@ -48,6 +56,7 @@ public class Reviewee {
 		this.user  = user;
 		this.name = name;
 		this.group =group;
+		this.company = user.getCompany();
 	}
 	public Long getId() {
 		return id;

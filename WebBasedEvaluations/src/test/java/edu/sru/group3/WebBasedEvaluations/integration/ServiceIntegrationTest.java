@@ -3,7 +3,6 @@ package edu.sru.group3.WebBasedEvaluations.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.apache.tomcat.util.http.parser.MediaType;
 import org.junit.jupiter.api.BeforeAll;
 //https://reflectoring.io/spring-boot-test/
@@ -34,6 +33,7 @@ import edu.sru.group3.WebBasedEvaluations.WebBasedEvaluationsApplication;
 import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.controller.AddUserController;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
+import edu.sru.group3.WebBasedEvaluations.domain.Role;
 
 @ExtendWith(SpringExtension.class)
 //@SpringBootTest

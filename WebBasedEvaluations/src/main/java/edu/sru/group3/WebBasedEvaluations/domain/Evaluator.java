@@ -3,6 +3,8 @@ package edu.sru.group3.WebBasedEvaluations.domain;
 import java.util.*;
 
 import javax.persistence.*;
+
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 /**Evaluator
  * is the user that doing  the Evaluation
  *
@@ -23,18 +25,18 @@ public class Evaluator {
     @GeneratedValue(strategy = GenerationType.AUTO)
 	long id;
 	
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name="group_id")
 	private Group group;
     
     private boolean sync;
     private boolean preview;
   
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "level")
     private EvalRole level;
     
@@ -42,6 +44,10 @@ public class Evaluator {
     @OneToMany(mappedBy = "evaluator",cascade = CascadeType.ALL)
  	private List<EvaluationLog> evalutationLog= new ArrayList<>();
     
+    
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "company", nullable = false)
+    private Company company;
     
 	public Evaluator() {
 		
@@ -51,11 +57,12 @@ public class Evaluator {
 	 * @param group is the evaluation group the evaluator is associated  with 
 	 * @param level is the role the evaluator  is responsible for 
 	 */
-	public Evaluator(User user ,Group group, EvalRole level) {
+	public Evaluator(User user ,Group group, EvalRole level, Company company) {
 	
 		this.user = user;
 		this.group = group;
 		this.level=level;
+		this.company = company;
 	
 	}
 
@@ -67,6 +74,15 @@ public class Evaluator {
 	}
 	
 	
+	
+	
+	
+	public Company getCompany() {
+		return company;
+	}
+	public void setCompany(Company company) {
+		this.company = company;
+	}
 	public User getUser() {
 		return user;
 	}

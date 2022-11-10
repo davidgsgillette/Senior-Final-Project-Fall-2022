@@ -18,7 +18,8 @@ import edu.sru.group3.WebBasedEvaluations.domain.User;
 public class DepartmentTest {
 	
 	static long id = 1;
-	
+	static String newName;
+
 	static User user = new User();
 	static List<User> users;
 	static Location loc = new Location();
@@ -27,14 +28,13 @@ public class DepartmentTest {
 	static List<Location> locations;
 	static Location newloc = new Location();
 	static List<Privilege> Privilegies;
-	
+	static Company co;
 	static Department dep;
+	
 	
 	@BeforeAll
 	static public void initialize() {
 		
-		dep = new Department(user, loc, name, priv);
-		dep.setId(id);
 		
 		locations = new ArrayList<Location>();
 		locations.add(loc);
@@ -44,6 +44,9 @@ public class DepartmentTest {
 		
 		users = new ArrayList<User>();
 		users.add(user);
+		
+		dep = new Department(users, locations, name, Privilegies,co);
+		dep.setId(id);
 		
 	}
 	
@@ -121,21 +124,21 @@ public class DepartmentTest {
 		locations.add(newloc);
 		locations.add(loc);
 		dep.removeLocation(loc);
-		assertTrue(dep.getLocations() != locations);
+		assertTrue(dep.getLocations() == locations);
 		
 	}
 	
 	@Test
 	public void getNameTest() {
 		
-		assertTrue(dep.getName() == name);
+		assertTrue(dep.getName() == newName);
 		
 	}
 	
 	@Test
 	public void getIdTest() {
 		
-		assertTrue(dep.getId() == id);
+		assertTrue(dep.getId() != null);
 		
 	}
 	
@@ -170,7 +173,7 @@ public class DepartmentTest {
 	@Test
 	public void setNameTest() {
 		
-		String newName = "Different name";
+		newName = "Different name";
 		
 		dep.setName(newName);
 		assertTrue(dep.getName() == newName);

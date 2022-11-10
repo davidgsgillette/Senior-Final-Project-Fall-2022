@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.*;
 
 import edu.sru.group3.WebBasedEvaluations.domain.Reviewee;
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.Group;
 
 @Repository
@@ -31,6 +32,8 @@ public interface RevieweeRepository extends CrudRepository<Reviewee,Long >{
 	Reviewee findByname(String string);
 
 	List<Reviewee> findByuser_Id(long id);
+	
+	List<Reviewee> findByGroupNumberAndCompany(int groupNum, Company company);
 	
 	
 }

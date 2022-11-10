@@ -23,6 +23,10 @@ import edu.sru.group3.WebBasedEvaluations.domain.User;
  * @author David Gillette
  *
  */
+/**
+ * @author david
+ *
+ */
 @Entity
 @Table(name = "location")
 public class Location {
@@ -38,18 +42,18 @@ public class Location {
 	
 	
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "company_id", nullable = false)
 	private Company company;
 
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "location_group_id", nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "location_group_id")
 	private LocationGroup locGroup;
 
-	@NonNull
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "city_id", nullable = false)
+	
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinColumn(name = "city_id")
 	private City parentCity;
 	
 	
@@ -58,19 +62,28 @@ public class Location {
 	
 	
 	
-	@ManyToMany(mappedBy = "locations", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "locations", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	private List<Department> departments;
 	
 	
 	 
-	@ManyToMany(mappedBy = "locations", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "locations", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	private List<User> users;
 
 	
+	/**
+	 *  DEFAULT CONSTRUCTOR
+	 */
 	public Location() {
 		
 	}
 	
+	/**
+	 * @param locationName name of the location
+	 * @param parentCity city locatoin is in. 
+	 * @param co company the company is a part of
+	 * @param locGroup locationgroup this location is in. 
+	 */
 	public Location(String locationName, City parentCity, Company co, LocationGroup locGroup) {
 		this.numEmployees = 0;
 		this.parentCity = parentCity;
@@ -81,6 +94,15 @@ public class Location {
 		this.locGroup = locGroup;
 	}
 	
+	/**
+	 * @param parentCity city locatoin is in. 
+	 * @param numEmployees number of employees in the location
+	 * @param users users to add to location
+	 * @param locationName name of the location
+	 * @param co company the company is a part of
+	 * @param locGroup locationgroup this location is in. 
+	 * @param dept that is a part of this location
+	 */
 	public Location(City parentCity, int numEmployees, List<User> users, String locationName, Company co, LocationGroup locGroup, Department dept) {
 		this.numEmployees = numEmployees;
 		this.parentCity = parentCity;
@@ -92,6 +114,15 @@ public class Location {
 		this.departments.add(dept);
 	}
 	
+	/**
+	 * @param parentCity city locatoin is in. 
+	 * @param numEmployees number of employees in the location
+	 * @param user to add to the locatoin
+	 * @param locationName name of the location
+	 * @param co company the company is a part of
+	 * @param locGroup locationgroup this location is in. 
+	 * @param depts that are a part of this location
+	 */
 	public Location(City parentCity, int numEmployees, User user, String locationName, Company co, LocationGroup locGroup, List<Department> depts) {
 		this.numEmployees = numEmployees;
 		this.parentCity = parentCity;
@@ -103,8 +134,10 @@ public class Location {
 		this.departments = depts;
 	}
 		
-	/*
-	 * adds a single dept to a location. 
+	
+	/**
+	 * @param dept to add
+	 * @return true if added
 	 */
 	public boolean addDept(Department dept) {
 		this.departments.add(dept);
@@ -115,33 +148,32 @@ public class Location {
 	/*
 	 * removes a dept from a location
 	 */
-	public boolean removeDept(Department dept) {
-		if(this.departments.contains(dept)) {
-			this.departments.remove(dept);
-			return true;
+	/**
+	 * @param id id of the dept to remove
+	 * @return true if dept is removed. 
+	 */
+	public boolean removeDept(long id) {
+		
+		for (int i = 0; i < departments.size(); i++)
+		{
+			if (departments.get(i).getId() == id);
+			{
+				departments.remove(i);
+				return true;
+			}
 		}
+		
 		return false;
 	}	
 	
 	
-	public LocationGroup getLocGroup() {
-		return locGroup;
-	}
+	
 
-	public void setLocGroup(LocationGroup locGroup) {
-		this.locGroup = locGroup;
-	}
 
-	public List<Department> getDepartments() {
-		return departments;
-	}
 
-	public void setDepartments(List<Department> departments) {
-		this.departments = departments;
-	}
-
-	/*
-	 * adds a single user to a location. 
+	/**
+	 * @param user to add
+	 * @return true if added. 
 	 */
 	public boolean addUser(User user) {
 		this.users.add(user);
@@ -150,20 +182,21 @@ public class Location {
 	}
 	
 	
-	/*
-	 * adds a list of users to the location
+	
+	/**
+	 * @param users users to add
+	 * @return true if added
 	 */
 	public boolean addUsers(List<User> users) {
 		
-		for(User user : users) {
-			this.users.add(user);
-			this.numEmployees++;
-		}	
+		this.users.addAll(users);	
 		return true;
 	}
 	
-	/*
-	 * removes a user from a location
+	
+	/**
+	 * @param user to remove
+	 * @return true if removed
 	 */
 	public boolean removeUser(User user) {
 		if(this.users.contains(user)) {
@@ -240,7 +273,21 @@ public class Location {
 		this.users = users;
 	}
 
+	public LocationGroup getLocGroup() {
+		return locGroup;
+	}
 
+	public void setLocGroup(LocationGroup locGroup) {
+		this.locGroup = locGroup;
+	}
+
+	public List<Department> getDepartments() {
+		return departments;
+	}
+
+	public void setDepartments(List<Department> departments) {
+		this.departments = departments;
+	}
 //	public List<User> getUsers() {
 //		return users;
 //	}
