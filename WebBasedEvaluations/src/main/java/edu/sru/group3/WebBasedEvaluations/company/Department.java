@@ -1,7 +1,9 @@
 package edu.sru.group3.WebBasedEvaluations.company;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -19,6 +21,7 @@ import javax.persistence.Table;
 import edu.sru.group3.WebBasedEvaluations.domain.EvalTemplates;
 import edu.sru.group3.WebBasedEvaluations.domain.Privilege;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
+import edu.sru.group3.WebBasedEvaluations.domain.Group;
 
 
 /**
@@ -54,6 +57,13 @@ public class Department {
 			joinColumns = @JoinColumn(name = "dept_id"), 
 			inverseJoinColumns = @JoinColumn(name = "location_id"))
 	private List<Location> locations;
+	
+	
+	
+	
+	@ManyToMany(mappedBy = "departments", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private List<Group> groups = new ArrayList<>();
+	
 	
 	@ManyToMany(mappedBy = "depts", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	private List<EvalTemplates> evalTemplates;
@@ -196,7 +206,7 @@ public class Department {
 	 * @param evalTemplates to add
 	 * @return true if all are added. 
 	 */
-	public boolean addTemplate(List<EvalTemplates> evalTemplates) {
+	public boolean addTemplates(List<EvalTemplates> evalTemplates) {
 		
 		this.evalTemplates.addAll(evalTemplates);
 			
@@ -308,6 +318,14 @@ public class Department {
 	}
 	public void setUsers(List<User> users) {
 		this.users = users;
+	}
+
+	public List<Group> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Group> groups) {
+		this.groups = groups;
 	}
 	
 	

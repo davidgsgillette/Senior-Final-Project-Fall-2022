@@ -14,12 +14,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -38,7 +38,7 @@ import edu.sru.group3.WebBasedEvaluations.service.UserService;
 
 @ExtendWith(SpringExtension.class) //Replaces @RunWith(SpringRunner.class) in JUnit 5
 
-@WebMvcTest(AddUserController.class)
+//@WebMvcTest(AddUserController.class)
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 public class RepositoryTest {
@@ -73,8 +73,11 @@ public class RepositoryTest {
 	Model model;
 	Authentication auth;
 
+//TODO this test tries to pull a user that does not exist in the program. 
 	@Test
 	public void saveRepoTest() {
+		
+		
 		MyUserDetails userD = new MyUserDetails(userRepo.findByEmail("jimmy@gmail.com"));
 		
 		//auth.setAuthenticated(true);

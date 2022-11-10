@@ -483,44 +483,39 @@ public class UserController {
 		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getId());
 		
 		//navbar
-		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEditEvalPerm()) {
+		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEditEvalPerm() || currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
 			model.addAttribute("EVAL_ADMIN", true);
-//			role = "EVAL_ADMIN";
 		}
 		else {
 			//testing
-			model.addAttribute("EVAL_ADMIN", true);
-//			model.addAttribute("EVAL_ADMIN", false);
+			model.addAttribute("EVAL_ADMIN", false);
 		}
 		
 		
-		if(evaluatorRepository.findById(currentUser.getId()) != null) {
+		if(evaluatorRepository.findById(currentUser.getId()) != null ||currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
 			model.addAttribute("EVALUATOR", true);
 		}
 		else {
 			//testing
-			model.addAttribute("EVALUATOR", true);
-//			model.addAttribute("EVALUATOR", false);
+			model.addAttribute("EVALUATOR", false);
 		}
 		
 		
-		if(currentUser.hasEvaluator()) {
+		if(currentUser.hasEvaluator()||currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
 			model.addAttribute("USER", true);
 		}
 		else {
 			//testing
-			model.addAttribute("USER", true);
-//			model.addAttribute("USER", false);
+			model.addAttribute("USER", false);
 		}
 		
 		
-		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete())) {
+		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete() ||currentUser.isCompanySuperUser() || currentUser.isSuperUser())) {
 			model.addAttribute("ADMIN", true);
 		}
 		else {
 			//testing
-			model.addAttribute("ADMIN", true);
-//			model.addAttribute("ADMIN", false);
+			model.addAttribute("ADMIN", false);
 		}
 		
 //		model.addAttribute("role", user2.getRole());

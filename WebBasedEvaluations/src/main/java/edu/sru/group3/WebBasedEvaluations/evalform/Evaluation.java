@@ -52,6 +52,21 @@ public class Evaluation implements Serializable{
 		computeTotals = false;
 		this.companyName = companyName;
 	}
+	
+	public Evaluation() {
+		evalID = "";
+		title = "";
+		description = "";
+
+		sectionList = new ArrayList<Section>();
+		warnings = new ArrayList<String>();
+		errors = new ArrayList<String>();
+		groupsList = new ArrayList<String>();
+		computeRanges = new ArrayList<ComputeRange>();
+
+		completed = false;
+		computeTotals = false;
+	}
 
 	// Setters and Getters ====================================================
 	
