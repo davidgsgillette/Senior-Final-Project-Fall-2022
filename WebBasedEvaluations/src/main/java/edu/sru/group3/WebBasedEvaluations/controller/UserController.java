@@ -44,7 +44,7 @@ public class UserController {
 	private UserRepository userRepository;
 	private EvaluatorRepository evaluatorRepository;
 	private EvaluationRepository evaluationRepository;
-	private Authentication auth; 
+	private Authentication auth;
 
 	private AddUserController addUserController;
 
@@ -56,7 +56,7 @@ public class UserController {
 //	private static final String EVAL_ADMIN = "EVAL_ADMIN";
 //	private static final String EVALUATOR = "EVALUATOR";
 //	private static final String USER = "USER";
-	
+
 
 	@Autowired
 	private AdminMethodsService adminMethodsService;
@@ -472,8 +472,8 @@ public class UserController {
 	 * @return user_settings html webpage.
 	 */
 	@PostMapping("/change/{id}")
-	public String changeUser(Authentication auth, @PathVariable("id") long id, @Validated User user,
-			/* BindingResult result, */ Model model) {
+	public String changeUser(Authentication auth, @PathVariable("id") long id, @Validated User user, Model model) {
+		
 		User user2 = userRepository.findByid(id);
 
 		User user3 = adminMethodsService.comparingMethod(id, user, user2, model);
@@ -483,40 +483,7 @@ public class UserController {
 		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getId());
 		
 		//navbar
-		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEditEvalPerm() || currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
-			model.addAttribute("EVAL_ADMIN", true);
-		}
-		else {
-			//testing
-			model.addAttribute("EVAL_ADMIN", false);
-		}
-		
-		
-		if(evaluatorRepository.findById(currentUser.getId()) != null ||currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
-			model.addAttribute("EVALUATOR", true);
-		}
-		else {
-			//testing
-			model.addAttribute("EVALUATOR", false);
-		}
-		
-		
-		if(currentUser.hasEvaluator()||currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
-			model.addAttribute("USER", true);
-		}
-		else {
-			//testing
-			model.addAttribute("USER", false);
-		}
-		
-		
-		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete() ||currentUser.isCompanySuperUser() || currentUser.isSuperUser())) {
-			model.addAttribute("ADMIN", true);
-		}
-		else {
-			//testing
-			model.addAttribute("ADMIN", false);
-		}
+		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository);
 		
 //		model.addAttribute("role", user2.getRole());
 		

@@ -24,7 +24,9 @@ public class Evaluation implements Serializable{
 	private String title;
 	private String description;
 	private String companyName;
-
+	private Set<String> deptNamesList = new HashSet<>();
+	private String deptNamesString;
+	
 	private List <Section> sectionList;
 	private List <String> warnings;
 	private List <String> errors;
@@ -51,6 +53,7 @@ public class Evaluation implements Serializable{
 		completed = false;
 		computeTotals = false;
 		this.companyName = companyName;
+		deptNamesString = "Departments: ";
 	}
 	
 	public Evaluation() {
@@ -66,12 +69,52 @@ public class Evaluation implements Serializable{
 
 		completed = false;
 		computeTotals = false;
+		deptNamesString =  "Departments: ";
 	}
 
+	public void addDeptName(String name) {
+		this.deptNamesList.add(name);
+		
+		if(deptNamesList.size() == 1) {
+			this.deptNamesString += name;
+		}
+		else {
+			this.deptNamesString += ", " + name;
+		}
+		
+	}
+	public void addDeptNames(Set<String> names) {
+		this.deptNamesList.addAll(names);
+	}
+	
+	public void removeDeptName(String name) {
+		this.deptNamesList.remove(name);
+	}	
+	
+	
+	
 	// Setters and Getters ====================================================
+	
+	
 	
 	public String getEvalID() {
 		return this.evalID;
+	}
+
+	public Set<String> getDeptNamesList() {
+		return deptNamesList;
+	}
+
+	public void setDeptNamesList(Set<String> deptNamesList) {
+		this.deptNamesList = deptNamesList;
+	}
+
+	public String getDeptNamesString() {
+		return deptNamesString;
+	}
+
+	public void setDeptNamesString(String deptNamesString) {
+		this.deptNamesString = deptNamesString;
 	}
 
 	public String getCompanyName() {
@@ -89,23 +132,6 @@ public class Evaluation implements Serializable{
 	public String getTitle() {
 		return title;
 	}
-	
-//	public Set<Department> getDepts() {
-//		return depts;
-//	}
-//	public void addDept(Department dept) {
-//		this.depts.add(dept);
-//	}
-//	public void addAllDepts(Set<Department> depts) {
-//		this.depts.addAll(depts);
-//	}
-//
-//	public void removeDept(Department dept) {
-//		this.depts.remove(dept);
-//	}
-//	public void setDepts(Set<Department> depts) {
-//		this.depts = depts;
-//	}
 
 	public void setTitle(String title) {
 		this.title = title;
