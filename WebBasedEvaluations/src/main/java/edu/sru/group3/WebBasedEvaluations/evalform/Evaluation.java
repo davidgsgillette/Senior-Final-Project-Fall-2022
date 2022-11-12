@@ -26,7 +26,7 @@ public class Evaluation implements Serializable{
 	private String companyName;
 	private Set<String> deptNamesList = new HashSet<>();
 	private String deptNamesString;
-	
+
 	private List <Section> sectionList;
 	private List <String> warnings;
 	private List <String> errors;
@@ -35,8 +35,8 @@ public class Evaluation implements Serializable{
 
 	private boolean completed;
 	private boolean computeTotals;
-	
-//	private Set<Department> depts = new HashSet<Department>();
+
+	//	private Set<Department> depts = new HashSet<Department>();
 
 	//Constructor ==============================================================	
 	public Evaluation(String companyName) {
@@ -55,7 +55,7 @@ public class Evaluation implements Serializable{
 		this.companyName = companyName;
 		deptNamesString = "Departments: ";
 	}
-	
+
 	public Evaluation() {
 		evalID = "";
 		title = "";
@@ -73,30 +73,24 @@ public class Evaluation implements Serializable{
 	}
 
 	public void addDeptName(String name) {
-		this.deptNamesList.add(name);
-		
-		if(deptNamesList.size() == 1) {
-			this.deptNamesString += name;
+
+		if(this.deptNamesList.add(name)) {
+			if(deptNamesList.size() == 1) {
+				this.deptNamesString += name;
+			}
+			else {
+				this.deptNamesString += ", " + name;
+			}
 		}
-		else {
-			this.deptNamesString += ", " + name;
-		}
-		
 	}
-	public void addDeptNames(Set<String> names) {
-		this.deptNamesList.addAll(names);
-	}
-	
-	public void removeDeptName(String name) {
-		this.deptNamesList.remove(name);
-	}	
-	
-	
-	
+
+
+
+
 	// Setters and Getters ====================================================
-	
-	
-	
+
+
+
 	public String getEvalID() {
 		return this.evalID;
 	}
@@ -267,7 +261,7 @@ public class Evaluation implements Serializable{
 		return computeRanges;
 	}
 
-	
+
 	/**
 	 * Prints out information about the Evaluation to the Console.
 	 */
@@ -312,8 +306,8 @@ public class Evaluation implements Serializable{
 		}
 	}
 
-	
-	
+
+
 	/**
 	 * Returns the Question object having the ID passed to the method.
 	 * 
@@ -336,8 +330,8 @@ public class Evaluation implements Serializable{
 		return this.getSection(sec).getQuestion(quest);
 	}
 
-	
-	
+
+
 	/**
 	 * Returns the Section object having the name passed to the method.
 	 * 
@@ -391,7 +385,7 @@ public class Evaluation implements Serializable{
 					this.getQuestionById(questID).clearResponseList();
 				}
 			} else {
-				
+
 				// If question is a CHECK BOX
 				if (this.getQuestionById(questID).getQResponseType().equals("CHECK BOX")) {
 
@@ -405,7 +399,7 @@ public class Evaluation implements Serializable{
 					} else {
 						this.getQuestionById(questID).setQResponse(response[i]);
 					}
-					
+
 					// All other questions
 				} else {
 					this.getQuestionById(questID).setQResponse(response[i]);
@@ -456,8 +450,8 @@ public class Evaluation implements Serializable{
 		return incompQuests;
 	}
 
-	
-	
+
+
 	/**
 	 * Calculates all 'COMPUTE' sections in the evaluation based on the responses to 'DROPDOWN' questions.
 	 */
@@ -476,8 +470,8 @@ public class Evaluation implements Serializable{
 						double pointsMax = sourceSec.getSectionMaxPoints();
 						double score;
 						String computeCategory;
-						
-						
+
+
 						if(pointsEarned > pointsMax) {
 							computeStr = "<span>Points Earned: " + pointsEarned + "/" + pointsMax + "</span><br><span> SCORING ERROR: More Points earned than possbile </span>";
 						} else {
@@ -485,7 +479,7 @@ public class Evaluation implements Serializable{
 							computeCategory = computeSec.getQuestion(j).computeResultString(score);
 							computeStr = "<span>Points Earned: " + pointsEarned + "/" + pointsMax + "</span><br><span> Resulting Grade: " + score + " - " + computeCategory + "</span>";
 						}
-						
+
 						computeSec.getQuestion(j).setQResponse(computeStr);
 					}
 				}
@@ -505,9 +499,9 @@ public class Evaluation implements Serializable{
 
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Checks for errors or warnings that exist in the Evaluation data. Any errors are saved to the Evaluation Error List or Warning List.
 	 * Note: Other error checking is performed prior when reading Evaluation data from an excel file.
@@ -552,8 +546,8 @@ public class Evaluation implements Serializable{
 		}
 	}
 
-	
-	
+
+
 	/**
 	 * Loads appropriate Pre-Load data into Section 0 of the Evaluation.
 	 * 

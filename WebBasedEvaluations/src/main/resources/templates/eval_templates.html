@@ -546,6 +546,7 @@
 															<div class="row p-4">
 																<h1 class="display-6 text-center" th:text="${thisEval.title}"></h1>
 																<h5 class="text-muted text-center" th:text="${thisEval.description}"></h5>
+																<h5 class="text-muted text-center" th:text="${thisEval.deptNamesString}"></h5>
 															</div>
 												
 															<th:block th:each="section: ${thisEval.Sections}">
