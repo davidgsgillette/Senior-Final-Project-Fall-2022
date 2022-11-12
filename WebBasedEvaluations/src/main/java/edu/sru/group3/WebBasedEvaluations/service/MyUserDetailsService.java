@@ -31,6 +31,11 @@ import javax.transaction.Transactional;
 @Transactional
 public class MyUserDetailsService implements UserDetailsService {
 
+	/*
+	 * This is broken, I have no idea what is wrong with this and using MyUserDetailsService
+	 * and UserDetails
+	 */
+	
 	@Autowired
 	private UserRepository userRepository;
 	

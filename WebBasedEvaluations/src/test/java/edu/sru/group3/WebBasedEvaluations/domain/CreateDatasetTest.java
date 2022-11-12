@@ -1,4 +1,27 @@
+
 package edu.sru.group3.WebBasedEvaluations.domain;
+
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
+import org.junit.jupiter.api.BeforeAll;
+
+import edu.sru.group3.WebBasedEvaluations.evalform.Evaluation;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.suite.api.IncludeClassNamePatterns;
+import org.junit.platform.suite.api.Suite;
+import org.junit.platform.suite.api.SuiteDisplayName;
+import org.mockito.Mock;
+
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,21 +80,21 @@ public class CreateDatasetTest {
 		actual.setValue(5, "test 2", "test 2");
 		assertEquals(expected, actual);
 	}
-//TODO:fix this test/check if this is a spring backend function that doesnt need tested. 	
-//	@Test
-//	public void createPieDatasetTest() {
-//		completedEvals = new ArrayList<>();
-//		for (int i = 0; i < 5; i++) {
-//			completedEvals.add(testEvaluation);
-//		}
-//		completedEvals.add(testEvaluation);
-//		completedEvals.set(0, testEvaluation);
-//		System.out.println(completedEvals.size());
-//		DefaultPieDataset actual = new DefaultPieDataset();
-//		DefaultPieDataset expected = createDataset.createPieDataset(completedEvals);
-//		
-//		assertEquals(expected, actual);
-//	}
+	
+	@Test
+	public void createPieDatasetTest() {
+		completedEvals = new ArrayList<>();
+		for (int i = 0; i < 5; i++) {
+			completedEvals.add(testEvaluation);
+		}
+		completedEvals.add(testEvaluation);
+		completedEvals.set(0, testEvaluation);
+		System.out.println(completedEvals.size());
+		DefaultPieDataset actual = new DefaultPieDataset();
+		DefaultPieDataset expected = createDataset.createPieDataset(completedEvals);
+		
+		assertEquals(expected, actual);
+	}
 	
 	@Test
 	public void createDefaultDatasetTest() {
@@ -108,3 +131,4 @@ public class CreateDatasetTest {
 		
 	}
 }
+
