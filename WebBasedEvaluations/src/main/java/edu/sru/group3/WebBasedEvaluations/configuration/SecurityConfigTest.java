@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import edu.sru.group3.WebBasedEvaluations.company.Company;
+import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 
 @Configuration
@@ -25,16 +26,17 @@ public class SecurityConfigTest {
 		String lastName = "test";
 		String email = "test";
 		String password = "test";
-		String role = "Admin";
-		long employeeId = 69420;
+		int employeeId = 69420;
 		String dateOfHire = "test";
 		String jobTitle = "test";
 		String supervisor = "test";
 		String divisionBranch = "test";
+		String deptName = "test";
 		Company co = new Company("test");
+		Role role = new Role();
 		UserDetails user;
-		User newUser = new User(name, firstName, lastName, email, password, role, 
-				employeeId, dateOfHire, jobTitle, supervisor, divisionBranch, co);
+		User newUser = new User(name, firstName, lastName, email, password, 
+				employeeId, dateOfHire, jobTitle, supervisor, divisionBranch, deptName, co, role, false, false);
 		user = (UserDetails) newUser;
 		return new InMemoryUserDetailsManager(user);
 	}

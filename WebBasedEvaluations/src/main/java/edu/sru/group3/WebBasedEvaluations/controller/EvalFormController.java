@@ -169,6 +169,10 @@ public class EvalFormController {
 					}
 				}
 
+				//adds the dept names to the list of depts. 
+				for(Department dept :evalTempList.get(i).getDepts()) {
+					eval.addDeptName(dept.getName());
+				}
 				evalList.add(eval);
 			}
 
@@ -220,14 +224,23 @@ public class EvalFormController {
 			if(dept != null) {
 				if(currentUser.getRole().writableDepartments().contains(dept) || currentUser.isCompanySuperUser()) {
 					depts.add(dept);
-				}				
+					
+				}	
+				else {
+					redir.addFlashAttribute("PermissionError", "User does not have permission to create/add departments");
+
+					log.error("User does not have permission to create/add departments");
+				}
 			}
 			else {
 				Department dept2 = new Department(currentCompany);
 				dept2.setName(deptName);
 				depts.add(dept2);
 				this.deptRepo.save(dept2);
+				
 			}
+			
+		
 			
 		}
 		
@@ -263,7 +276,10 @@ public class EvalFormController {
 //			this.eval.addAllDepts(depts);
 			this.eval = ParseEvaluation.parseEvaluation(this.eval, TEMP_FILES_PATH + XML_FILE_NAME);
 			
-			
+			//adds the dept names to the list of depts. 
+			for(Department dept : depts) {
+				eval.addDeptName(dept.getName());
+			}
 
 			// Check file ID and check for duplicates
 			String id = this.eval.getEvalID();
@@ -327,6 +343,7 @@ public class EvalFormController {
 				showLog = true;
 			} else {
 
+				
 				redir.addFlashAttribute("eval", this.eval);
 				redir.addFlashAttribute("completed", "Preview the template below and click 'Save Evaluation Template' if satisfied.");
 
