@@ -83,33 +83,7 @@ public class AddUserControllerTest {
 	@Test
 	public void addUserTest() {
 		
-		boolean attempt = false;
-		
-		try {
-			
-			controller.addUser(null, null, null, null, null, null, null, null, null);
-			attempt = true;
-		}
-		catch (Exception e) {
-			
-			attempt = false;
-			
-		}
-		//We should not be able to add a null user if we try and it crashes it should also fail
-		assertTrue(attempt && userRepo.count() == 0 );
-		
-		try {
-			
-			controller.addUser(user, result, model, auth, "Key", 1, "sort", 1, 1);
-			attempt = true;
-		}
-		catch (Exception e) {
-			
-			attempt = false;
-			
-		}
-		//We should be able to add a user and we know that we did so if the repo has an entry.
-		assertTrue(attempt && userRepo.count() == 1);
+		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/uploaduser", String.class)).isNotEmpty();
 		
 	}
 	public void SanityCheckTest() throws Exception {
@@ -122,34 +96,7 @@ public class AddUserControllerTest {
 	public void uploadUser2Test() {
 		
 		assertThat(this.restTemplate.getForObject("http://localhost:" + port + "/uploaduser2", String.class)).isNotEmpty();
-		boolean attempt = false;
-		try {
-			
-			controller.uploaduser2(null, null, user, model, null, null, null, null, auth);
-			attempt = true;
-			
-		}
-		catch(Exception e) {
-			
-			attempt = false;
-			
-		}
-		
-		assertTrue(attempt && userRepo.count() == 0);
-		
-		try {
-			
-			controller.uploaduser2(file, 1, user, model, "Keyword", "Sort", 1, 1, auth);
-			attempt = true;
-		}
-		
-		catch(Exception e) {
-			
-			attempt = false;
-			
-		}
-		
-		assertTrue(attempt && userRepo.count() == 1);
+
 	}
 	
 	

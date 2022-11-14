@@ -4,32 +4,51 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import edu.sru.group3.WebBasedEvaluations.company.Company;
+import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 
 
 public class GroupTest {
 	@Mock static int groupNum;
 	@Mock static Boolean selfEval;
-	@Mock static Reviewee rev;
-	@Mock static User user;
+	static Reviewee rev;
+	private static User user = new User();
 	@Mock static Company co;
 	static Group group;
 	@BeforeAll
 	static void setup() {
 		group = new Group(selfEval,co,groupNum);
+		rev = new Reviewee();
+		rev.setName("Test");
+		
+		user.setFirstName("Dalton");
+		user.setLastName("Stenzel");
+		user.setEmail("daltonrstenzel@gmail.com");
+		Company co = new Company("Thangiah Inc");
+		user.setRole(new Role("USER",co));
+		user.setEncryptedPassword("test");
+		
+		user.setCompanyName("Thangiah Inc");
+		user.setDivisionBranch("Retroville");
+		user.setSupervisor("Brandon");
+		user.setDateOfHire("10/15/2022");
+		user.setJobTitle("Assistant");
 	}
 
 	@Test
 	public void getIdTest() {
-		int actual = 5;
-		group.setGroupNum(actual);
+		long actual = 5;
+		group.setId(actual);
 		assertEquals(group.getId(), actual);
 	}
 
@@ -49,7 +68,8 @@ public class GroupTest {
 
 	@Test
 	public void appendRevieweeTest() {
-		List<Reviewee> actual = null;
+		List<Reviewee> actual = new ArrayList<>();
+		actual.add(rev);
 		group.setReviewee(actual);
 		rev.setUser(user);
 		group.appendReviewee(rev);

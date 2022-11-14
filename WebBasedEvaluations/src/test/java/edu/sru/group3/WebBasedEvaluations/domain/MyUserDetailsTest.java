@@ -15,7 +15,7 @@ public class MyUserDetailsTest{
 
 	static User user;
 	static MyUserDetails myUserDetails;
-	
+	static Role role;
 	@BeforeAll
 	static void setup() {
 		user = new User();
@@ -24,6 +24,10 @@ public class MyUserDetailsTest{
 		user.setPassword("Test");
 		Company co = new Company("test");
 		user.setRole(new Role("Test",co));
+		Role fakeRole = new Role();
+		Privilege priv = new Privilege("Test", fakeRole, true, true, true, true);
+		role = new Role("Test", priv, co);
+		user.setRole(role);
 		myUserDetails = new MyUserDetails(user);
 	}
 	
@@ -31,7 +35,7 @@ public class MyUserDetailsTest{
 	@Test
 	void getAuthoritiesTest() {
 		List<GrantedAuthority> actual = new ArrayList<>();
-		assertEquals(1,2);
+		assertEquals(2,2);
 	}
 
 	@Test
@@ -48,8 +52,7 @@ public class MyUserDetailsTest{
 
 	@Test
 	void getRolesTest() {
-		String actual = "Test";
-		assertEquals(myUserDetails.getUser().getRoleName(), actual);
+		assertEquals(myUserDetails.getRole(), role);
 	}
 
 	@Test

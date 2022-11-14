@@ -32,6 +32,7 @@ public class EvaluationLogTest {
 	public void getEvaluatorTest() {
 		Evaluator actual = new Evaluator();
 		actual.setUser(user);
+		evalLog.setEvaluator(actual);
 		assertEquals(evalLog.getEvaluator(), actual);
 	}
 
