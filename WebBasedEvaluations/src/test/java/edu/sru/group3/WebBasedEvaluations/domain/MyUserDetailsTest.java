@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
+
 public class MyUserDetailsTest{
 
 	static User user;
@@ -20,7 +22,8 @@ public class MyUserDetailsTest{
 		user.setId((long) 7);
 		user.setEmail("Test@Test.com");
 		user.setPassword("Test");
-		user.setRoleName("Test");
+		Company co = new Company("test");
+		user.setRole(new Role("Test",co));
 		myUserDetails = new MyUserDetails(user);
 	}
 	

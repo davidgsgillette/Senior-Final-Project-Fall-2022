@@ -143,8 +143,7 @@ public class User {
 	 * @param password
 	 * @param employeeId
 	 * @param dateOfHire
-	 * @param jobTitle
-	 
+	 * @param jobTitle	 
 	 */
 	public User(String name, String firstName, String lastName, String email, String password, /*String role,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor,
@@ -285,6 +284,20 @@ public class User {
 		this.superUser = superUser;
 
 	}	
+	
+	public String getDepartmentNames() {
+		String names = "";
+		for(Department dept : this.departments) {
+			if(names.length() == 0) {
+				names +=  dept.getName();
+			}
+			else {
+				names +=  ", " + dept.getName();
+			}
+			
+		}
+		return departmentName;
+	}
 
 	/**
 	 * @param dept to be added
@@ -478,10 +491,6 @@ public class User {
 
 	public void setEvaluator(Set<Evaluator> evaluator) {
 		this.evaluator = evaluator;
-	}
-
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
 	}
 
 	public String getPassword() {

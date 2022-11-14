@@ -18,6 +18,7 @@ import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.api.SuiteDisplayName;
 
+import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
@@ -25,6 +26,7 @@ import edu.sru.group3.WebBasedEvaluations.repository.RoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 import edu.sru.group3.WebBasedEvaluations.controller.UserController;
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.controller.AddUserControllerTest;
 
 //https://junit.org/junit5/docs/current/user-guide/#overview
@@ -46,12 +48,13 @@ public class AdminMethodsServiceTest {
 	@BeforeAll
 	public static void newUser() {
 		
+		Company co  = new Company("Thangiah Inc");
+		Role role = new Role("USER",co);
 		// User missing some details (Job Title & Date of Hire)
 		user.setFirstName("Sam");
 		user.setLastName("Thangiah");
 		user.setCompanyName("Thangiah Inc");
 		user.setDivisionBranch("Retroville");
-		user.setRoleName("USER");
 		user.setSupervisor(null);
 		user.setEmail("sam.thangiah@sru.edu");
 		user.setEncryptedPassword("test");
@@ -60,7 +63,6 @@ public class AdminMethodsServiceTest {
 		user2.setFirstName("Dalton");
 		user2.setLastName("Stenzel");
 		user2.setEmail("daltonrstenzel@gmail.com");
-		user2.setRoleName("USER");
 		user2.setEncryptedPassword("test");
 		
 		user2.setCompanyName("Thangiah Inc");
@@ -73,7 +75,6 @@ public class AdminMethodsServiceTest {
 		user3.setFirstName("Dalton");
 		user3.setLastName("Stenzel");
 		user3.setEmail("daltonrstenzel @gmail.com");
-		user3.setRoleName("USER");
 		user3.setEncryptedPassword("test");
 		
 		user3.setCompanyName("Thangiah Inc");
