@@ -25,16 +25,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
-/**
- * Service for finding/loading particular users.
- * 
- * @author Dalton Stenzel
- *
- */
 @Suite
 @SuiteDisplayName("My User Details Service Methods")
 @IncludeClassNamePatterns(".*Tests")
-@WebMvcTest
+//@WebMvcTest
 public class MyUserDetailsServiceTest {
 
 	/*

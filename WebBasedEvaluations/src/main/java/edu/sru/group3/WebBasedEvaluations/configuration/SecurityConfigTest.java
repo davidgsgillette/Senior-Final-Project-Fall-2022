@@ -17,7 +17,7 @@ public class SecurityConfigTest {
 	/*
 	 * This is broken, I have no idea what is wrong with this and using MyUserDetailsService
 	 * and UserDetails
-	 */
+	 *
 	
 	@Bean
 	public InMemoryUserDetailsManager userDetailsService() {
@@ -43,5 +43,5 @@ public class SecurityConfigTest {
 		UserDetails user;
 		user = (UserDetails) newUser;
 		return new InMemoryUserDetailsManager(user);
-	}
+	}*/
 }

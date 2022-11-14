@@ -2,6 +2,7 @@ package edu.sru.group3.WebBasedEvaluations.domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -26,6 +27,7 @@ public class EvaluatorTest {
 	@BeforeAll
 	static void setup() {
 		eval = new Evaluator(user, group, level,co);
+		eval.appendEvalutationLog(log);
 	}
 
 
@@ -51,7 +53,7 @@ public class EvaluatorTest {
 	@Test
 	public void getEvalutationLogTest() {
 		List<EvaluationLog> actual = evalLog;
-		eval.appendEvalutationLog(log);
+		actual.add(log);
 		assertEquals(eval.getEvalutationLog(), actual);
 		
 	}
@@ -59,8 +61,7 @@ public class EvaluatorTest {
 	@Test
 	public void appendEvalutationLogTest() {
 		List<EvaluationLog> actual = evalLog;
-		eval.appendEvalutationLog(log);
-		assertNull(eval.getEvalutationLog());
+		assertNotNull(eval.getEvalutationLog());
 		//Add getEvaluationLogTest Code here to add an element and test for not null and equals
 	}
 	
