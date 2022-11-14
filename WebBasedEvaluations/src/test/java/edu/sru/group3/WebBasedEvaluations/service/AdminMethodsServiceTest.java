@@ -66,7 +66,7 @@ public class AdminMethodsServiceTest {
 		
 		user2.setCompanyName("Thangiah Inc");
 		user2.setDivisionBranch("Retroville");
-		user2.setSupervisor(null);
+		user2.setSupervisor("Brandon");
 		user2.setDateOfHire("10/15/2022");
 		user2.setJobTitle("Assistant");
 		
@@ -104,8 +104,6 @@ public class AdminMethodsServiceTest {
     
     @Test
     public void adminMethoSpaceTest() {
-    	//String capVal = adminMeth.capitialize("test");
-        //String finalVal = "Test";
         assertTrue(adminMeth.hasSpace(user3.getEmail()));
         assertFalse(adminMeth.hasSpace(user2.getEmail()));
 
