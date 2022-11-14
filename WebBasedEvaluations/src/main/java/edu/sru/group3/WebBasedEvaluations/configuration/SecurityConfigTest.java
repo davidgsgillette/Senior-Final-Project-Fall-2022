@@ -43,5 +43,5 @@ public class SecurityConfigTest {
 		UserDetails user;
 		user = (UserDetails) newUser;
 		return new InMemoryUserDetailsManager(user);
-	}*/
+	} */
 }
