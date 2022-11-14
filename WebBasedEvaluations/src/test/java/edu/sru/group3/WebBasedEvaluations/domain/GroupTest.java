@@ -28,8 +28,8 @@ public class GroupTest {
 
 	@Test
 	public void getIdTest() {
-		int actual = 5;
-		group.setGroupNum(actual);
+		long actual = 5;
+		group.setId(actual);
 		assertEquals(group.getId(), actual);
 	}
 

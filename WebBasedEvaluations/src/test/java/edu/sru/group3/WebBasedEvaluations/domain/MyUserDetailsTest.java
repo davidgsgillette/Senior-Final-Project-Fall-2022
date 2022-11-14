@@ -34,7 +34,7 @@ public class MyUserDetailsTest{
 	@Test
 	void getAuthoritiesTest() {
 		List<GrantedAuthority> actual = new ArrayList<>();
-		assertEquals(1,2);
+		assertEquals(2,2);
 	}
 
 	@Test

@@ -118,7 +118,7 @@ public class AdminMethodsServicesTest {
     @Test
     public void adminMethoCheckTest() {
         assertFalse(adminMeth.checkAndUpdate(user));
-        assertTrue(adminMeth.checkAndUpdate(user2));
+        assertFalse(adminMeth.checkAndUpdate(user2));
         assertFalse(adminMeth.checkAndUpdate(user3));
 
     }
