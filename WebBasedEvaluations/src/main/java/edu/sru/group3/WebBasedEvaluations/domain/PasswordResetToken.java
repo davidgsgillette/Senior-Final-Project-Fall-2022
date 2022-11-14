@@ -3,7 +3,7 @@ package edu.sru.group3.WebBasedEvaluations.domain;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
-
+import edu.sru.group3.WebBasedEvaluations.domain.*;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Data
-@NoArgsConstructor
 @Table(name ="Verification_Token")
 public class PasswordResetToken {
 	//expiration time is in minutes
@@ -55,11 +54,11 @@ public class PasswordResetToken {
 		this.userID=user.getId();
 		this.localDate=LocalDate.now();
 		this.expireTime=LocalTime.now().plusMinutes(EXPIRATION);
-		// TODO Auto-generated constructor stub
+		
 	}
 	public PasswordResetToken() {
 
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	/*

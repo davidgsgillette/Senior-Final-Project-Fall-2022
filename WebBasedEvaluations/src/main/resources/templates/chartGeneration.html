@@ -54,10 +54,10 @@
 										<td>
 										<div th:each="logs : ${rev.evalutationLog}" th:if="${logs.completed} and ${logs.Evaluator.level.id == 1}">
 										<div class="btn-group">
-												<button 
+												<a
 												class="btn btn-outline-success " type="button"
 												th:text="${'Pdf Generation'}"
-												th:onclick="|window.location.href='@{/generatePdf/{id}(id=${rev.id})}'|"						
+												th:onclick="|window.location.href='@{/generatePdf/{id}(id=${rev.id})}'|"	></a>					
 											</div>
 										</div>
 										</td>
@@ -68,10 +68,10 @@
 											<div th:each="logs : ${rev.evalutationLog}" th:if="${logs.Reviewee.id == rev.id} and  ${logs.completed}">
 											
 											<div class="btn-group">
-												<button 
+												<a 
 												class="btn btn-outline-success " type="button"
 												th:text="${'Bar Chart'} +': '+${logs.Evaluator.level.Name} +': '+${logs.Evaluator.User.Name}"
-												th:onclick="|window.location.href='@{/barchartGeneratorIndividual/{id}(id=${logs.id})}'|"
+												th:onclick="|window.location.href='@{/barchartGeneratorIndividual/{id}(id=${logs.id})}'|"></a>
 												
 										
 											</div>
@@ -83,10 +83,10 @@
 										<td>
 										<div th:each="logs : ${rev.evalutationLog}" th:if="${logs.completed}">
 											<div class="btn-group">
-												<button 
+												<a 
 												class="btn btn-outline-success " type="button"
 												th:text="${'Pie Chart'} +': '+${logs.Evaluator.level.Name} +': '+${logs.Evaluator.User.Name}"
-												th:onclick="|window.location.href='@{/piechartGeneratorIndividual/{id}(id=${logs.id})}'|"										
+												th:onclick="|window.location.href='@{/piechartGeneratorIndividual/{id}(id=${logs.id})}'|"	></a>									
 											</div>
 											</div>
 										</td>
@@ -94,10 +94,10 @@
 										<td>
 										<div th:each="logs : ${rev.evalutationLog}" th:if="${logs.Reviewee.id == rev.id} and  ${logs.completed}">
 											<div class="btn-group">
-												<button 
+												<a 
 												class="btn btn-outline-success " type="button"
 												th:text="${'Ring Chart'} +': '+${logs.Evaluator.level.Name} +': '+${logs.Evaluator.User.Name}"
-												th:onclick="|window.location.href='@{/ringchartGeneratorIndividual/{id}(id=${logs.id})}'|"										
+												th:onclick="|window.location.href='@{/ringchartGeneratorIndividual/{id}(id=${logs.id})}'|"	></a>									
 											</div>
 											</div>
 										</td>
@@ -105,10 +105,10 @@
 										<td>
 										<div th:each="logs : ${rev.evalutationLog}" th:if="${logs.Reviewee.id == rev.id} and  ${logs.completed}">
 											<div class="btn-group">
-												<button 
+												<a 
 												class="btn btn-outline-success " type="button"
 												th:text="${'Area Chart'} +': '+${logs.Evaluator.level.Name} +': '+${logs.Evaluator.User.Name}"
-												th:onclick="|window.location.href='@{/areachartGeneratorIndividual/{id}(id=${logs.id})}'|"										
+												th:onclick="|window.location.href='@{/areachartGeneratorIndividual/{id}(id=${logs.id})}'|"	></a>									
 											</div>
 											</div>
 										</td>

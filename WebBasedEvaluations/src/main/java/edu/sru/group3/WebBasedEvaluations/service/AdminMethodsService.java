@@ -17,6 +17,8 @@ import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.controller.HomePage;
 import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
+import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.RoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 
@@ -682,6 +684,53 @@ public class AdminMethodsService {
 				+ user2.getSupervisor() + " | Date of Hire:" + user2.getDateOfHire());
 
 		return user2;
+	}
+	
+	
+	/**
+	 * @param currentUser the user we are finding the permissions of
+	 * @param model the web model we are adding the permissions to
+	 * @param evalRepo the evaluation repo object so this can be static
+	 * @return The model that includes the boolean representation of the permissions of the user for the purpose of showing buttons on the navbar. 
+	 */
+	public static Model pageNavbarPermissions(User currentUser, Model model, EvaluatorRepository evalRepo) {
+		
+		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEditEvalPerm() || currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
+			model.addAttribute("EVAL_ADMIN", true);
+		}
+		else {
+			//testing
+			model.addAttribute("EVAL_ADMIN", false);
+		}
+		
+		
+		if(evalRepo.findById(currentUser.getId()) != null ||currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
+			model.addAttribute("EVALUATOR", true);
+		}
+		else {
+			//testing
+			model.addAttribute("EVALUATOR", false);
+		}
+		
+		
+		if(currentUser.hasEvaluator()||currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
+			model.addAttribute("USER", true);
+		}
+		else {
+			//testing
+			model.addAttribute("USER", false);
+		}
+		
+		
+		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete() ||currentUser.isCompanySuperUser() || currentUser.isSuperUser())) {
+			model.addAttribute("ADMIN", true);
+		}
+		else {
+			//testing
+			model.addAttribute("ADMIN", false);
+		}		
+		
+		return model;
 	}
 
 }

@@ -11,6 +11,7 @@ import javax.persistence.*;
 import org.springframework.lang.NonNull;
 
 import edu.sru.group3.WebBasedEvaluations.company.Company;
+import edu.sru.group3.WebBasedEvaluations.company.Department;
 
 /**
  * Groups class creates a group for evaluation the id is used to id identify the
@@ -34,6 +35,14 @@ public class Group {
 	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinColumn(name = "company_id", nullable = false)
 	private Company company;
+	
+	
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "dept_groups", 
+			joinColumns = @JoinColumn(name = "group_id"), 
+			inverseJoinColumns = @JoinColumn(name = "dept_id"))
+	private List<Department> departments = new ArrayList<>();
 	
 	private Boolean evalstart;
 	private Boolean selfeval;
@@ -72,10 +81,56 @@ public class Group {
 		this.selfeval = selfeval;
 		this.number = groupNum;
 	}
+	
+//	/**
+//	 * @return a unique set of all the depts in this group
+//	 */
+//	public HashSet<Department> getExisitingDepartments() {
+//		HashSet<Department> depts = new HashSet<Department>();
+//		
+//		for(Reviewee rev : this.reviewees) {
+//			depts.addAll(rev.getUser().getDepartments());
+//		}
+//		
+//		return depts;
+//	}
+	
+	
+	
+	
+	
 // Delete this? Is the exact same as setReviewee
 	public void setGroup(List<Reviewee> reviewee) {
 		this.reviewees = reviewee;
+		for(Reviewee rev : reviewees) {
+			for(Department dept : rev.getUser().getDepartments()) {
+				if(!this.departments.contains(dept)) {
+					this.departments.add(dept);
+				}
+			}
+		}
 
+	}
+
+
+	public List<Department> getDepartments() {
+		return departments;
+	}
+
+	public void setDepartments(List<Department> departments) {
+		this.departments = departments;
+	}
+
+	public List<Reviewee> getReviewees() {
+		return reviewees;
+	}
+
+	public void setReviewees(List<Reviewee> reviewees) {
+		this.reviewees = reviewees;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Set<User> getUsers(){
@@ -133,6 +188,12 @@ public class Group {
 	 */
 	public void appendReviewee(Reviewee rev) {
 		this.reviewees.add(rev);
+		for(Department dept : rev.getUser().getDepartments()) {
+			if(!this.departments.contains(dept)) {
+				System.out.println(dept.getName());
+				this.departments.add(dept);
+			}
+		}
 
 	}
 

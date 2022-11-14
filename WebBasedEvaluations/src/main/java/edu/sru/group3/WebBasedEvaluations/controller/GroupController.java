@@ -363,6 +363,7 @@ public class GroupController {
 	 * takes an excel file and takes the data from it and creates groups 
 	 * @param reapExcelDataFile read the excel file 
 	 * @param redir hold redirection attributes 
+	 * 
 	 * @return admingroup page 
 	 */
 	@RequestMapping(value = "/uploadgroup", method = RequestMethod.POST)
@@ -717,7 +718,7 @@ public class GroupController {
 	public String evalGroups(Model model, Authentication authentication) {
 
 		MyUserDetails userD = (MyUserDetails) authentication.getPrincipal();
-		User user = userRepository.findByid(userD.getID());
+		User currentUser = userRepository.findByid(userD.getID());
 		List<Group> grouplist = (List<Group>) groupRepository.findByevaluatorUserId(userD.getID(),Sort.by(Sort.Direction.ASC, "Id"));
 		grouplist = new ArrayList<Group>(new LinkedHashSet<Group>(grouplist));
 
@@ -728,45 +729,51 @@ public class GroupController {
 
 
 		//navbar
-		if((user.hasRead() || user.hasWrite() || user.hasDelete()) && user.hasEditEvalPerm()) {
-			model.addAttribute("EVAL_ADMIN", true);
-			//			role = "EVAL_ADMIN";
-		}
-		else {
-			model.addAttribute("EVAL_ADMIN", false);
-		}
-
-
-		if(evaluatorRepository.findById(user.getId()) != null) {
-			model.addAttribute("EVALUATOR", true);
-		}
-		else {
-			model.addAttribute("EVALUATOR", false);
-		}
-
-
-		if(user.hasEvaluator()) {
-			model.addAttribute("USER", true);
-		}
-		else {
-			model.addAttribute("USER", false);
-		}
-
-
-		if((user.hasRead() || user.hasWrite() || user.hasDelete())) {
-			model.addAttribute("ADMIN", true);
-		}
-		else {
-			model.addAttribute("ADMIN", false);
-		}
+		//navbar
+				if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEditEvalPerm() || currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
+					model.addAttribute("EVAL_ADMIN", true);
+				}
+				else {
+					//testing
+					model.addAttribute("EVAL_ADMIN", false);
+				}
+				
+				
+				if(evaluatorRepository.findById(currentUser.getId()) != null ||currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
+					model.addAttribute("EVALUATOR", true);
+				}
+				else {
+					//testing
+					model.addAttribute("EVALUATOR", false);
+				}
+				
+				
+				if(currentUser.hasEvaluator()||currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
+					model.addAttribute("USER", true);
+				}
+				else {
+					//testing
+					model.addAttribute("USER", false);
+				}
+				
+				
+				if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete() ||currentUser.isCompanySuperUser() || currentUser.isSuperUser())) {
+					model.addAttribute("ADMIN", true);
+				}
+				else {
+					//testing
+					model.addAttribute("ADMIN", false);
+				}
 		model.addAttribute("id", userD.getID());
-		model.addAttribute("evalu", user);
+		model.addAttribute("evalu", currentUser);
 		model.addAttribute("groups", grouplist);
 		log.info("EvaluationView was opened ");
 		return "EvaluationView";
 	}
 
 
+	
+	
 	/**
 	 * takes  an load information for the admin group age 
 	 * @param model
@@ -808,6 +815,56 @@ public class GroupController {
 		}
 		model.addAttribute("groups", grouplist);
 		log.info("admin group was open ");
+		
+	
+		
+		//navbar
+		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEditEvalPerm() || currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
+			model.addAttribute("EVAL_ADMIN", true);
+		}
+		else {
+			//testing
+			model.addAttribute("EVAL_ADMIN", false);
+		}
+		
+		
+		if(evaluatorRepository.findById(currentUser.getId()) != null ||currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
+			model.addAttribute("EVALUATOR", true);
+		}
+		else {
+			//testing
+			model.addAttribute("EVALUATOR", false);
+		}
+		
+		
+		if(currentUser.hasEvaluator()||currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
+			model.addAttribute("USER", true);
+		}
+		else {
+			//testing
+			model.addAttribute("USER", false);
+		}
+		
+		
+		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete() ||currentUser.isCompanySuperUser() || currentUser.isSuperUser())) {
+			model.addAttribute("ADMIN", true);
+		}
+		else {
+			//testing
+			model.addAttribute("ADMIN", false);
+		}
+		
+		if(grouplist != null) {
+			System.out.println("got to showing depts");
+			for(Group group : grouplist) {
+				for(Department dept : group.getDepartments())
+				{
+					System.out.println(dept.getName());
+				}
+				break;
+			}
+		}
+		
 		return "admin_groups";
 	}
 
