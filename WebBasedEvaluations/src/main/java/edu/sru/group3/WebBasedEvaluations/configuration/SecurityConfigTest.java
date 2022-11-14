@@ -34,9 +34,13 @@ public class SecurityConfigTest {
 		String deptName = "test";
 		Company co = new Company("test");
 		Role role = new Role();
+		role.setName("test");
+		boolean companySuperUser = true;
+		boolean superUser = true;
+		
+		User newUser = new User(name, firstName, lastName, email, password, employeeId, dateOfHire, jobTitle,
+				supervisor, divisionBranch, deptName, co, role, companySuperUser, superUser);
 		UserDetails user;
-		User newUser = new User(name, firstName, lastName, email, password, 
-				employeeId, dateOfHire, jobTitle, supervisor, divisionBranch, deptName, co, role, false, false);
 		user = (UserDetails) newUser;
 		return new InMemoryUserDetailsManager(user);
 	}
