@@ -66,7 +66,6 @@ public class ExcelTest {
 		sheetTest = ExcelRead_group.loadFile(file).getSheetAt(0);
 		assertNotNull(wbTest);
 		assertNotNull(sheetTest);
-		//Note: Does not work because each object is different, need to extract data and compare
     }
 	
 	@Test
