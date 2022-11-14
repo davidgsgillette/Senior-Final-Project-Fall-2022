@@ -9,18 +9,24 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
+
 public class MyUserDetailsTest{
 
 	static User user;
 	static MyUserDetails myUserDetails;
-	
+	static Role role;
 	@BeforeAll
 	static void setup() {
 		user = new User();
 		user.setId((long) 7);
 		user.setEmail("Test@Test.com");
 		user.setPassword("Test");
-		user.setRoleName("Test");
+		Company co = new Company("Test");
+		Role fakeRole = new Role();
+		Privilege priv = new Privilege("Test", fakeRole, true, true, true, true);
+		role = new Role("Test", priv, co);
+		user.setRole(role);
 		myUserDetails = new MyUserDetails(user);
 	}
 	
@@ -45,8 +51,7 @@ public class MyUserDetailsTest{
 
 	@Test
 	void getRolesTest() {
-		String actual = "Test";
-		assertEquals(myUserDetails.getUser().getRoleName(), actual);
+		assertEquals(myUserDetails.getRole(), role);
 	}
 
 	@Test

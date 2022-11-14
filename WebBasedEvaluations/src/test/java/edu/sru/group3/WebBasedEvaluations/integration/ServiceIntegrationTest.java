@@ -78,16 +78,24 @@ public class ServiceIntegrationTest {
 		String lastName = "test";
 		String email = "test";
 		String password = "test";
-		String role = "Admin";
-		long employeeId = 69420;
+		int employeeId = 69420;
 		String dateOfHire = "test";
 		String jobTitle = "test";
 		String supervisor = "test";
 		String divisionBranch = "test";
+		String deptName = "test";
 		Company co = new Company("test");
-		User user = new User(name, firstName, lastName, email, password, role, employeeId, dateOfHire, jobTitle,
-				supervisor, divisionBranch, co);
+		Role role = new Role();
+		role.setName("test");
+		boolean companySuperUser = true;
+		boolean superUser = true;
+		
+		User user = new User(name, firstName, lastName, email, password, employeeId, dateOfHire, jobTitle,
+				supervisor, divisionBranch, deptName, co, role, companySuperUser, superUser);
+		
 
+		
+		
 		// when
 
 		mvc.perform(post("/adduser/").content(objectMapper.writeValueAsString(user))).andExpect(status().isFound());
@@ -95,7 +103,7 @@ public class ServiceIntegrationTest {
 		// then
 		User actual = repo.findByName("intTest");
 		assertThat(actual.getEmail()).isEqualTo("test");
-		repo.deleteById(employeeId);
+		repo.deleteById((long) employeeId);
 		/*
 		 * assertThat(repo.findByCompanyName("test")).isEqualTo(user);
 		 * assertThat(repo.findByEmail(email)).isEqualTo(user);
