@@ -47,13 +47,6 @@ public class UserTest {
 	}
 
 	@Test
-	void getRolesTest() {
-		String actual = "Test";
-		user.setRoleName(actual);
-		assertEquals(user.getRoleName(), actual);
-	}
-
-	@Test
 	void getFirstNameTest() {
 		String actual = "Test";
 		user.setFirstName(actual);

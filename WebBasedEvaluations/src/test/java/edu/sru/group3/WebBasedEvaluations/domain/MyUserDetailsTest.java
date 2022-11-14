@@ -22,7 +22,8 @@ public class MyUserDetailsTest{
 		user.setId((long) 7);
 		user.setEmail("Test@Test.com");
 		user.setPassword("Test");
-		Company co = new Company("Test");
+		Company co = new Company("test");
+		user.setRole(new Role("Test",co));
 		Role fakeRole = new Role();
 		Privilege priv = new Privilege("Test", fakeRole, true, true, true, true);
 		role = new Role("Test", priv, co);
