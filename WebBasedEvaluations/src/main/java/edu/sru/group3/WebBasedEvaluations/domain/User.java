@@ -646,7 +646,12 @@ public class User {
 		if(dateOfHire.matches("[0-9]+")) {
 			dateOfHire = LocalDate.of( 1899 , Month.DECEMBER , 30 ).plusDays((long) Double.parseDouble(dateOfHire)).toString();
 		}
-		this.dateOfHire = dateOfHire;
+		if(dateOfHire.matches("[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]")) {
+			this.dateOfHire = dateOfHire;
+		}
+		else {
+			
+		}
 	}
 
 	public String getJobTitle() {

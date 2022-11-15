@@ -61,10 +61,6 @@ public class Archive {
 		return id;
 	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	public Date getDateEdited() {
 		return dateEdited;
 	}
