@@ -49,12 +49,13 @@ import org.mockito.Mock;
 @IncludeClassNamePatterns(".*Tests")
 public class CreateDatasetTest {
 
-	@Mock Evaluation testEvaluation;
+	static Evaluation testEvaluation;
 	static List<Evaluation> completedEvals;
 	static CreateDataset createDataset;
 	@BeforeAll
 	static void setup() {
 		createDataset = new CreateDataset();
+		testEvaluation = new Evaluation("Test");
 	}
 	
 	@Test
@@ -83,15 +84,16 @@ public class CreateDatasetTest {
 	
 	@Test
 	public void createPieDatasetTest() {
-		/*completedEvals = new ArrayList<>();
+		/*
+		completedEvals = new ArrayList<>();
 		for (int i = 0; i < 5; i++) {
 			completedEvals.add(testEvaluation);
 		}
 		completedEvals.add(testEvaluation);
 		completedEvals.set(0, testEvaluation);
 		DefaultPieDataset actual = new DefaultPieDataset();
-		DefaultPieDataset expected = createDataset.createPieDataset(completedEvals);
 		
+		DefaultPieDataset expected = createDataset.createPieDataset(completedEvals);
 		assertEquals(expected, actual);
 		*/
 	}

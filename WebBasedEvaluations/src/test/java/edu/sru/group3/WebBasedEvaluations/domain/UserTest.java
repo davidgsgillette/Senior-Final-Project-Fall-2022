@@ -85,7 +85,7 @@ public class UserTest {
 
 	@Test
 	void getDateOfHireTest() {
-		String actual = "Test";
+		String actual = "1999-08-20";
 		user.setDateOfHire(actual);
 		assertEquals(user.getDateOfHire(), actual);
 	}
