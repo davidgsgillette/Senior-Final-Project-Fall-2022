@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.controller.HomePage;
@@ -687,6 +688,7 @@ public class AdminMethodsService {
 	}
 	
 	
+	
 	/**
 	 * @param currentUser the user we are finding the permissions of
 	 * @param model the web model we are adding the permissions to
@@ -729,6 +731,20 @@ public class AdminMethodsService {
 			//testing
 			model.addAttribute("ADMIN", false);
 		}		
+		
+		if(currentUser.isCompanySuperUser()) {
+			model.addAttribute("COMPANY_ADMIN", true);
+		}
+		else {
+			model.addAttribute("COMPANY_ADMIN", false);
+		}	
+		
+		if(currentUser.isSuperUser()) {
+			model.addAttribute("SUPERUSER", true);
+		}
+		else {
+			model.addAttribute("SUPERUSER", false);
+		}	
 		
 		return model;
 	}

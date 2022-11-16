@@ -9,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -37,8 +39,11 @@ public class LocationGroup {
 	@OneToMany(mappedBy = "locGroup", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Location> locations;
 	
-	
-	@ManyToMany(mappedBy = "locationGroups", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany
+	@JoinTable(
+			name = "privilege_location_group", 
+			joinColumns = @JoinColumn(name = "location_group_id"), 
+			inverseJoinColumns = @JoinColumn(name = "privilege_id"))	
     private List<Privilege> privileges;
 	
 	
