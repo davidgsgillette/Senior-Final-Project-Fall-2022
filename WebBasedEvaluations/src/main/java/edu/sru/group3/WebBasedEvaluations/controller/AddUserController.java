@@ -483,6 +483,7 @@ public class AddUserController {
 
 			mess = "File failed to be uploaded!";
 			ansr = "addFail";
+			
 			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
 			return "admin_users";
 

@@ -117,7 +117,7 @@ class InitUsers{
 		LocationGroup locGroup2 = new LocationGroup();
 		
 		Location loc = new Location("testLocation", city, co, locGroup);
-		Location loc2 = new Location("testLocation", city, co2, locGroup2);
+		Location loc2 = new Location("testLocation2", city, co2, locGroup2);
 //		locationRepo.save(loc);
 			
 			

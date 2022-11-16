@@ -10,6 +10,7 @@ import javax.persistence.*;
 
 import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.company.Department;
+import edu.sru.group3.WebBasedEvaluations.company.Location;
 import edu.sru.group3.WebBasedEvaluations.company.LocationGroup;
 
 
@@ -49,7 +50,6 @@ public class Privilege {
 	
 	
 	@NonNull
-	@Column(unique=true)
     private String name;
 	
 	@ManyToMany(mappedBy = "privileges")
@@ -64,11 +64,7 @@ public class Privilege {
     private List<Department> depts;
     
     
-    @ManyToMany
-	@JoinTable(
-			name = "privilege_location_group", 
-			joinColumns = @JoinColumn(name = "privilege_id"), 
-			inverseJoinColumns = @JoinColumn(name = "location_group_id"))
+    @ManyToMany(mappedBy = "privileges", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<LocationGroup> locationGroups;
     
     
@@ -127,6 +123,31 @@ public class Privilege {
     	this.d = delete;
     	this.editEvaluator = evaluate;
     	this.companies = cos;
+    }
+    
+    /**
+     * @param loc the loc we are searching for 
+     * @return true if the location is found in any location group
+     */
+    public boolean containsLoc(Location loc){
+    	for(LocationGroup locGroup : this.locationGroups) {
+    		if(locGroup.getLocations().contains(loc)) {
+    			return true;
+    		}
+    	}
+    	return false;
+    }
+    
+    /**
+     * @return the set of locations contained in the location groups. 
+     */
+    public Set<Location> getLocations(){
+    	
+    	HashSet<Location> locs = new HashSet<>();
+    	for(LocationGroup locGroup : this.locationGroups) {
+    		locs.addAll(locGroup.getLocations());
+    	}
+    	return locs;
     }
     
     

@@ -212,10 +212,18 @@ public class EvalFormController {
 		User currentUser = userRepo.findByid(userD.getID());
 
 		Company currentCompany = (currentUser.getCompany());
-
+		XSSFSheet sheet2;
 
 		//deptartmentList
-		XSSFSheet sheet2 = ExcelRead_group.loadFile(file).getSheetAt(1);
+		try {
+			sheet2 = ExcelRead_group.loadFile(file).getSheetAt(1);
+		}
+		catch(Exception e) {
+			RedirectView redirectView = new RedirectView("/admin_evaluations", true);
+			redir.addFlashAttribute("error", "invalid file");
+			return redirectView;
+		}
+		
 		this.depts = new HashSet<Department>();
 		for (int i = 1; sheet2.getRow(i) != null; i++) {
 			String deptName = ExcelRead_group.checkStringType(sheet2.getRow(i).getCell(0));
