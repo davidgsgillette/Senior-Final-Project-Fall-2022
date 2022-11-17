@@ -51,7 +51,7 @@ public class LocationTest {
 		loc.setDepartments(departments);
 		
 		loc.setNumEmployees(0);
-		loc.setHomeCity(homeCity);
+		loc.setParentCity(homeCity);
 		
 		
 		
@@ -216,7 +216,7 @@ public class LocationTest {
 	@Test
 	public void getHomeCityTest() {
 		
-		loc.setHomeCity(homeCity);
+		loc.setParentCity(homeCity);
 		
 		assertTrue(loc.getHomeCity() == homeCity);
 		
@@ -227,7 +227,7 @@ public class LocationTest {
 		
 		City newCity = new City();
 		
-		loc.setHomeCity(newCity);
+		loc.setParentCity(newCity);
 		
 		assertTrue(loc.getHomeCity() == newCity);
 		

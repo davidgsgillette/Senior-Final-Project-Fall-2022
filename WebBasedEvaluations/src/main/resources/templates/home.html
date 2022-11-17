@@ -29,8 +29,7 @@
 				<nav th:if="${ADMIN == true}"
 				class="navbar navbar-light bg-light justify-content-center">
 					<a th:href="@{/admin_users/?keyword={keyword}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage= 0,keyword='',sort='id',currPage=1,sortOr=1)}"
-					class="btn btn-outline-success" type="button">Manage Users</a>
-					<a th:href="@{/admin_roles/}" class="btn btn-outline-success" type="button">Manage Roles</a>
+					class="btn btn-outline-success" type="button">Manage Users</a>					
 					<a th:href="@{/download_log_txt}" class="btn btn-outline-success d-flex" type="button">Download Log File</a>		
 				</nav>
 				
@@ -52,7 +51,14 @@
 				class="navbar navbar-light bg-light justify-content-center">
 					<a th:href="@{/Evaluationgroups}" class="btn btn-outline-success" type="button">Evaluation Groups</a>		
 				</nav>
-				
+				<nav th:if="${COMPANY_ADMIN == true}" 
+				class="navbar navbar-light bg-light justify-content-center">
+					<a th:href="@{/admin_roles}" class="btn btn-outline-success" type="button">Manage Roles</a>		
+				</nav>
+				<nav th:if="${SUPERUSER == true}" 
+				class="navbar navbar-light bg-light justify-content-center">
+					<a th:href="@{/admin_companies}" class="btn btn-outline-success" type="button">Manage Companies</a>		
+				</nav>
 				<nav th:if="${EVALUATOR_EVAL == true}"
 				class="navbar navbar-light bg-light justify-content-center">
 					<button id="btnGroupDrop1" type="button"

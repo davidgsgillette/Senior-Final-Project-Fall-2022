@@ -165,7 +165,16 @@ public class HomePage {
 			model.addAttribute("id", user.getID());
 			model.addAttribute("deptNames", "Departments: " + user2.getDepartmentNames());
 			model.addAttribute("companyName", "Company: " +user2.getCompanyName());
-			model.addAttribute("roleName", "Role: " +user2.getRoleName());
+			if(user2.isSuperUser()) {
+				model.addAttribute("roleName", "Role: SuperSuperUser");
+			}
+			else if(user2.isCompanySuperUser()) {
+				model.addAttribute("roleName", "Role: " +user2.getCompanyName() + " SuperUser");
+			}
+			else {
+				model.addAttribute("roleName", "Role: " +user2.getRoleName());
+			}
+			
 			
 			
 			

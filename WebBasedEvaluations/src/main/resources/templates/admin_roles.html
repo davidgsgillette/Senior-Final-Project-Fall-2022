@@ -19,25 +19,17 @@
 <body>
 
 	<!--  NAVBAR -->
-	<div class="navbar navbar-light bg-light justify-content-center">
-		
+	<nav class="navbar navbar-light bg-light justify-content-center">		
 		<div class="btn-group" role="group" aria-label="Button group with nested dropdown">	
 			<div class="navbar navbar-light bg-light justify-content-center">		
 				<a th:href="@{/home}" class="btn btn-outline-success"  type="button"> Home </a>
 				<nav th:if="${ADMIN == true}"
 				class="navbar navbar-light bg-light justify-content-center">
 					<a th:href="@{/admin_users/?keyword={keyword}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage= 0,keyword='',sort='id',currPage=1,sortOr=1)}"
-					class="btn btn-outline-success" type="button">Manage Users</a>
+					class="btn btn-outline-success" type="button">Manage Users</a>					
 					<a th:href="@{/download_log_txt}" class="btn btn-outline-success d-flex" type="button">Download Log File</a>		
-				</nav>	
-				<nav th:if="${SUPERUSER == true}"
-				class="navbar navbar-light bg-light justify-content-center">	
-					<a th:href="@{/admin_companies/}" class="btn btn-outline-success" type="button">Manage Companies</a>	
-				</nav>	
-				<nav th:if="${COMPANY_ADMIN == true}"
-				class="navbar navbar-light bg-light justify-content-center">
-					<a th:href="@{/admin_roles/}" class="btn btn-outline-success" style="color:#ffffff; background-color:#4CAF50" type="button">Manage Roles</a>	
-				</nav>	
+				</nav>
+				
 				<nav th:if="${EVAL_ADMIN == true}"
 				class="navbar navbar-light bg-light justify-content-center">
 					<a th:href="@{/admin_evaluations}" class="btn btn-outline-success" type="button">Evaluation Forms</a>
@@ -56,7 +48,14 @@
 				class="navbar navbar-light bg-light justify-content-center">
 					<a th:href="@{/Evaluationgroups}" class="btn btn-outline-success" type="button">Evaluation Groups</a>		
 				</nav>
-				
+				<nav th:if="${COMPANY_ADMIN == true}" 
+				class="navbar navbar-light bg-light justify-content-center">
+					<a th:href="@{/admin_roles}" class="btn btn-outline-success" style="color:#ffffff; background-color:#4CAF50" type="button">Manage Roles</a>		
+				</nav>
+				<nav th:if="${SUPERUSER == true}" 
+				class="navbar navbar-light bg-light justify-content-center">
+					<a th:href="@{/admin_companies}" class="btn btn-outline-success" type="button">Manage Companies</a>		
+				</nav>
 				<nav th:if="${EVALUATOR_EVAL == true}"
 				class="navbar navbar-light bg-light justify-content-center">
 					<button id="btnGroupDrop1" type="button"
@@ -67,8 +66,7 @@
 						</ul>
 				</nav>
 				
-				<nav th:if="${USER == true}"
-				class="navbar navbar-light bg-light  justify-content-center">
+				<nav th:if="${USER == true}" class="navbar navbar-light bg-light  justify-content-center">
 					<a th:href="@{/myeval}" class="btn btn-outline-success"
 						type="button">My Evaluations</a> 
 				</nav>
@@ -79,7 +77,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</nav>
 
 	<!-- Home Btn Modal -->
 
@@ -185,7 +183,7 @@
 
 	<div th:switch= "${roles}">
 		<div th:case="null">
-			<p> <strong>There are currently no groups added </strong></p>		
+			<p> <strong>There are currently no roles added </strong></p>		
 		</div>	
 	</div>
 			
@@ -197,17 +195,17 @@
 					th:each="role : ${roles}">
 					<div class="accordion-item">
 						<h2 class="accordion-header" th:id="heading+${role.Id}">
-							<div class="btn-group d-flex">
-								<button class="accordion-button " type="button"
-									data-bs-toggle="collapse"
-									th:attr="data-bs-target='#collapse'+ ${role.Id },aria-controls='#collapse'+ ${role.Id }"
-									aria-expanded="false" th:text="${role.name}">
+							
+							<button class="accordion-button " type="button"
+								data-bs-toggle="collapse"
+								th:attr="data-bs-target='#collapse'+ ${role.Id },aria-controls='#collapse'+ ${role.Id }"
+								aria-expanded="false" th:text="${role.name}">
 
-								</button>
+							</button>
 
 								
 								
-								
+							
 
 						</h2>
 						<div th:id="collapse+ ${role.Id }"

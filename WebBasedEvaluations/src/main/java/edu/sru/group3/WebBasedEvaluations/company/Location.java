@@ -253,9 +253,6 @@ public class Location {
 	}
 
 
-	public void setHomeCity(City homeCity) {
-		this.parentCity = homeCity;
-	}
 
 	public Company getCompany() {
 		return company;
