@@ -15,6 +15,7 @@ public class WorldTest {
 	static long id = 1;
 	static Continent con;
 	static List<Continent> childContinents;
+	static String name = "test";
 	
 	@BeforeAll
 	static public void initialize() {
@@ -24,7 +25,8 @@ public class WorldTest {
 		childContinents = new ArrayList<Continent>();
 		childContinents.add(con);
 		
-		world = new World(numContinents, childContinents);
+		
+		world = new World(numContinents, childContinents,name);
 		
 		world.setId(id);
 		world.setNumContinents(numContinents);

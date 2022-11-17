@@ -234,7 +234,7 @@ public class AddRolesController {
 						}
 						else if(priv.getRead() == locRead && priv.getWrite() == locWrite && priv.getDelete() == locDelete && priv.getEditEvaluator() == locEditEvaluator) {
 							assignedLoc = true;
-							priv.addLocGroup(new LocationGroup(loc));
+							priv.addLocGroup(new LocationGroup(loc.getParentCity().getCityName(),loc,currentCompany));
 //							privRepo.save(priv);
 //							currentRole.addPrivilege(priv);
 						}						
@@ -260,7 +260,7 @@ public class AddRolesController {
 					System.out.println(currentRole.getName() + " creating both");
 					String name = this.privName(currentCompany, loc, locRead, locWrite, locDelete, locEditEvaluator);
 					Privilege priv = new Privilege(name,currentRole,locRead, locWrite, locDelete, locEditEvaluator);					
-					priv.addLocGroup(new LocationGroup(loc));
+					priv.addLocGroup(new LocationGroup(loc.getParentCity().getCityName(),loc,currentCompany));
 					priv.addDept(dept);
 					currentRole.addPrivilege(priv);
 //					newPrivs.add(priv);
@@ -272,7 +272,7 @@ public class AddRolesController {
 					System.out.println(currentRole.getName() + " creating loc");
 					String name = this.privName(currentCompany, loc, locRead, locWrite, locDelete, locEditEvaluator);
 					Privilege priv = new Privilege(name,currentRole,locRead, locWrite, locDelete, locEditEvaluator);
-					priv.addLocGroup(new LocationGroup(loc));
+					priv.addLocGroup(new LocationGroup(loc.getParentCity().getCityName(),loc,currentCompany));
 					currentRole.addPrivilege(priv);
 //					newPrivs.add(priv);
 				}					

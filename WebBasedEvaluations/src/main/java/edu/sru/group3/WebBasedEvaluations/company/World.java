@@ -28,6 +28,8 @@ public class World {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+	@NonNull
+	private String name;
 	
 	@NonNull
 	private int numContinents;
@@ -39,32 +41,45 @@ public class World {
 	
 	
 	
-	
 	/**
 	 * default constructor
 	 */
 	public World() {
 		this.numContinents = 0;
 		this.childContinents = new ArrayList<Continent>();
+		this.name ="";
+		
+	}
+	
+	/**
+	 * @param name name of world
+	 */
+	public World(String name) {
+		this.numContinents = 0;
+		this.childContinents = new ArrayList<Continent>();
+		this.name = name;
+		
 	}
 	
 	/**
 	 * @param numContinents number of continents in the world
 	 * @param childContinents continents in this world 
 	 */
-	public World(int numContinents, List<Continent> childContinents) {
+	public World(int numContinents, List<Continent> childContinents, String name) {
 		this.numContinents = numContinents;
 		this.childContinents = childContinents;
+		this.name = name;
 	}
 
 	/**
 	 * @param numContinents number of continents in the world
 	 * @param childContinents continents in the world.
 	 */
-	public World(int numContinents, Continent childContinents) {
+	public World(int numContinents, Continent childContinents, String name) {
 		this.numContinents = numContinents;
 		this.childContinents = new ArrayList<Continent>();
 		this.childContinents.add(childContinents);
+		this.name=name;
 	}
 
 	
@@ -121,6 +136,14 @@ public class World {
 
 	public Long getId() {
 		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public void setId(Long id) {
