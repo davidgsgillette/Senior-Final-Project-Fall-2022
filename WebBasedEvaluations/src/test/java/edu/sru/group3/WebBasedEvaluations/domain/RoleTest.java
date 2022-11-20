@@ -49,7 +49,8 @@ public class RoleTest {
 		dep.addUser(user);
 		loc = new Location();
 		roles = new HashSet<Role>();
-		locG = new LocationGroup(loc, p, "test");
+		
+		locG = new LocationGroup(loc, p, "test",testCo);
 		p = new Privilege("testAll", role, true, true, true, true);
 		p.addCompany(testCo);
 		p.addDept(dep);
