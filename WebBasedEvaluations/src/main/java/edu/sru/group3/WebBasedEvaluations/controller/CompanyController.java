@@ -40,6 +40,7 @@ import edu.sru.group3.WebBasedEvaluations.repository.CompanyRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.ContinentRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.CountryRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.DepartmentRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.LocationGroupRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.LocationRepository;
@@ -76,6 +77,9 @@ public class CompanyController {
 	private ProvinceRepository provinceRepo;
 	@Autowired
 	private CityRepository cityRepo;
+	
+	@Autowired
+	private EvaluationRepository evalFormRepo;
 
 
 	@Autowired
@@ -118,7 +122,7 @@ public class CompanyController {
 
 
 		model.addAttribute("companies", companies);
-		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepo);
+		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepo,evalFormRepo);
 		return "/admin_companies";
 	}
 

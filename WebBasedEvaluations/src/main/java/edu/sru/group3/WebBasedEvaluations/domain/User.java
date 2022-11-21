@@ -658,8 +658,11 @@ public class User {
 		if(dateOfHire.matches("[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]")) {
 			this.dateOfHire = dateOfHire;
 		}
+		else if(dateOfHire.matches("[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]")) {
+			this.dateOfHire = dateOfHire;
+		}
 		else {
-			
+			this.dateOfHire = "N/A";
 		}
 	}
 
