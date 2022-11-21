@@ -24,87 +24,269 @@
 	</head>
 	
 	<body>
+	
+	
+	
+
+
+
+
+
+
 
 		<!-- NAVBAR -->
 		<th:block th:switch="${completed}">
 			<th:block th:case="null">
-				<th:block th:switch="${hasEvals}">
-					<th:block th:case="yes">
-					
-						<!-- COMPLETE = "null", hasEvals = "yes" ======================================================================== -->
-						<nav class="navbar navbar-light bg-light justify-content-center">
-							<div class="btn-group" role="group">
-								<a th:href="@{/home}" class="btn btn-outline-success" type="button">Home</a>
-								<button th:onclick="|window.location.href='@{/admin_groups}'|" class="btn btn-outline-success" type="button">Groups</button>
-								<a th:href="@{/admin_evaluations}" class="btn btn-outline-success" type="button" style="color: #ffffff; background-color: #4CAF50">Evaluation Forms</a>
+				<!--  NAVBAR -->
+				<nav class="navbar navbar-light bg-light justify-content-center">		
+					<div class="btn-group" role="group" aria-label="Button group with nested dropdown">	
+						<div class="navbar navbar-light bg-light justify-content-center">		
+							<a th:href="@{/home}" class="btn btn-outline-success"  type="button"> Home </a>
+							<nav th:if="${ADMIN == true}"
+							class="navbar navbar-light bg-light justify-content-center">
+								<a th:href="@{/admin_users/?keyword={keyword}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage= 0,keyword='',sort='id',currPage=1,sortOr=1)}"
+								class="btn btn-outline-success" type="button">Manage Users</a>					
+								<a th:href="@{/download_log_txt}" class="btn btn-outline-success d-flex" type="button">Download Log File</a>		
+							</nav>
+							
+							<nav th:if="${EVAL_ADMIN == true}"
+							class="navbar navbar-light bg-light justify-content-center">
+								<a th:href="@{/admin_evaluations}" class="btn btn-outline-success" style="color:#ffffff; background-color:#4CAF50" type="button">Evaluation Forms</a>
 								<a th:href="@{/Archivegroups}" class="btn btn-outline-success" type="button">Archive</a>
-								<a th:href="@{/user_settings/}" class="btn btn-outline-success" type="button">My Account</a>
+								<th:block th:switch="${hasEvals}"> 
+									<th:block th:case="yes">
+										<button th:onclick="|window.location.href='@{/admin_groups}'|" class="btn btn-outline-success" type="button">Groups</button>
+								
+									</th:block>
+									<th:block th:case="no">
+										<span class="d-inline-block tooltip-wrapper" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Groups are inaccessable until at least one Evaluation Template is uploaded.">
+											<a href="#" class="btn btn-outline-success disabled" type="button">Groups</a>
+										</span>
+									</th:block>
+								</th:block>
+							</nav>
+								
+							<nav th:if="${EVALUATOR == true}" 
+							class="navbar navbar-light bg-light justify-content-center">
+								<a th:href="@{/Evaluationgroups}" class="btn btn-outline-success" type="button">Evaluation Groups</a>		
+							</nav>
+							<nav th:if="${COMPANY_ADMIN == true}" 
+							class="navbar navbar-light bg-light justify-content-center">
+								<a th:href="@{/admin_roles}" class="btn btn-outline-success" type="button">Manage Roles</a>		
+							</nav>
+							<nav th:if="${SUPERUSER == true}" 
+							class="navbar navbar-light bg-light justify-content-center">
+								<a th:href="@{/admin_companies}" class="btn btn-outline-success" type="button">Manage Companies</a>		
+							</nav>
+							<nav th:if="${EVALUATOR_EVAL == true}"
+							class="navbar navbar-light bg-light justify-content-center">
+								<button id="btnGroupDrop1" type="button"
+										class="btn btn-outline-success dropdown-toggle"
+										data-bs-toggle="dropdown" aria-expanded="false">Evaluate</button>
+									<ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+										<li><a class="dropdown-item" th:href="@{/Evaluationgroups}">View Groups</a></li>
+									</ul>
+							</nav>
+							
+							<nav th:if="${USER == true}" class="navbar navbar-light bg-light  justify-content-center">
+								<a th:href="@{/myeval}" class="btn btn-outline-success"
+									type="button">My Evaluations</a> 
+							</nav>
+							<div class="navbar navbar-light bg-light justify-content-center">
+								<a th:href="@{/user_settings/?keyword={keyword}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage=${perPage},keyword=${keyword},sort=${sort},currPage=${currPage}, sortOr=${sortOr})}"
+										class="btn btn-outline-success" type="button">My Account</a>
+								<a th:href="@{/logout}" class="btn btn-outline-danger d-flex" type="button"> Logout </a>
 							</div>
-							<a th:href="@{/logout}" class="btn btn-outline-danger d-flex" type="button">Logout</a>
-						</nav>
-						
-					</th:block>
-					<th:block th:case="no">
-					
-						<!-- COMPLETE = "null", hasEvals = "no" ========================================================================== -->
-						<nav class="navbar navbar-light bg-light justify-content-center">
-							<div class="btn-group" role="group">
-								<a th:href="@{/home}" class="btn btn-outline-success" type="button">Home</a>
-								<span class="d-inline-block tooltip-wrapper" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Groups are inaccessable until at least one Evaluation Template is uploaded.">
-									<a href="#" class="btn btn-outline-success disabled" type="button">Groups</a>
-								</span>
-								<a th:href="@{/admin_evaluations}" class="btn btn-outline-success" type="button" style="color: #ffffff; background-color: #4CAF50">Evaluation Forms</a>
-								<a th:href="@{/Archivegroups}" class="btn btn-outline-success" type="button">Archive</a>
-								<a th:href="@{/user_settings/}" class="btn btn-outline-success" type="button">My Account</a>
-							</div>
-							<a th:href="@{/logout}" class="btn btn-outline-danger d-flex" type="button">Logout</a>
-						</nav>
-			
-					</th:block>
-				</th:block>
+						</div>
+					</div>
+				</nav>
 			</th:block>
 			
-			<th:block th:case="*">
-				<th:block th:switch="${hasEvals}">
-					<th:block th:case="yes">
+			<th:block th:case="*">					
+					<!--  NAVBAR -->
+				<nav class="navbar navbar-light bg-light justify-content-center">		
+					<div class="btn-group" role="group" aria-label="Button group with nested dropdown">	
+						<div class="navbar navbar-light bg-light justify-content-center">		
+							<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#homeModal">Home</button>
+							<nav th:if="${ADMIN == true}"
+							class="navbar navbar-light bg-light justify-content-center">								
+								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#adminUsersModal">Manage Users</button>	
+								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#logModal">Download Log File</button>					
+							</nav>
+							
+							<nav th:if="${EVAL_ADMIN == true}"
+							class="navbar navbar-light bg-light justify-content-center">
+								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#evalModal" style="color: #ffffff; background-color: #4CAF50">Evaluation Forms</button>
+								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#archModal">Archive</button>
+								<th:block th:switch="${hasEvals}"> 
+									<th:block th:case="yes">
+										<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#groupsModal">Groups</button>
+								
+									</th:block>
+									<th:block th:case="no">
+										<span class="d-inline-block tooltip-wrapper" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Groups are inaccessable until at least one Evaluation Template is uploaded.">
+											<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#groupsModal">Groups</button>
+										</span>
+									</th:block>
+								</th:block>
+							</nav>
+								
+							<nav th:if="${EVALUATOR == true}" 
+							class="navbar navbar-light bg-light justify-content-center">
+								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#evalGroupsModal">Evaluation Groups</button>	
+							</nav>
+							<nav th:if="${COMPANY_ADMIN == true}" 
+							class="navbar navbar-light bg-light justify-content-center">
+								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#manageRolesModal">Manage Roles</button>									
+							</nav>
+							<nav th:if="${SUPERUSER == true}" 
+							class="navbar navbar-light bg-light justify-content-center">
+								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#manageCompaniesModal">Manage Companies</button>		
+							</nav>
+							<nav th:if="${EVALUATOR_EVAL == true}"
+							class="navbar navbar-light bg-light justify-content-center">
+								<button id="btnGroupDrop1" type="button"
+										class="btn btn-outline-success dropdown-toggle"
+										data-bs-toggle="dropdown" aria-expanded="false">Evaluate</button>
+									<ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+										<li><a class="dropdown-item" th:href="@{/Evaluationgroups}">View Groups</a></li>
+									</ul>
+							</nav>
+							
+							<nav th:if="${USER == true}" class="navbar navbar-light bg-light  justify-content-center">
+								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#manageRolesModal">My Evaluations</button>	
+							</nav>
+							<div class="navbar navbar-light bg-light justify-content-center">
+								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#accountModal">My Account</button>
+								<button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</button>
+							</div>
+						</div>
+					</div>
+				</nav>
 					
-						<!-- COMPLETE = "*", hasEvals = "yes" ============================================================================== -->
-						<nav class="navbar navbar-light bg-light justify-content-center">
-							<div class="btn-group" role="group">
-								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#homeModal">Home</button>
-								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#groupsModal">Groups</button>
-								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#evalModal" style="color: #ffffff; background-color: #4CAF50">Evaluation Forms</button>
-								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#archModal">Archive</button>
-								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#accountModal">My Account</button>
-							</div>
-							<button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</button>
-						</nav>
+					
 						
-					</th:block>
-					<th:block th:case="no">
-						<!-- COMPLETE = "*", hasEvals = "no" =============================================================================== -->
-						
-						<nav class="navbar navbar-light bg-light justify-content-center">
-							<div class="btn-group" role="group">
-								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#homeModal">Home</button>
-								<span class="d-inline-block tooltip-wrapper" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Groups are inaccessable until at least one Evaluation Template is uploaded.">
-									<a href="#" class="btn btn-outline-success disabled" type="button">Groups</a>
-								</span>
-								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#evalModal" style="color: #ffffff; background-color: #4CAF50">Evaluation Forms</button>
-								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#archModal">Archive</button>
-								<button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#accountModal">My Account</button>
-							</div>
-							<button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</button>
-						</nav>
-						
-					</th:block>
-				</th:block>
+					
 			</th:block>
 		</th:block>
 	
 
 		<!-- EVAL ADMIN POPUPS -->
 			<!-- arch Btn Modal -->
+
+			<div class="modal fade" id="manageRolesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="manageRolesModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title" id="manageRolesModalLabel">Warning</h5>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+			        The evaluation file has not been saved. Are you sure you want to navigate away from this page? Changes will be lost.
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Stay on Page</button>
+			        <a th:href="@{/myeval}">Continue and Discard</a>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			
+			<div class="modal fade" id="manageCompaniesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="manageCompaniesModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title" id="manageCompaniesModalLabel">Warning</h5>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+			        The evaluation file has not been saved. Are you sure you want to navigate away from this page? Changes will be lost.
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Stay on Page</button>
+			        <a th:href="@{/admin_companies}">Continue and Discard</a>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			
+			
+			<div class="modal fade" id="manageRolesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="manageRolesModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title" id="manageRolesModalLabel">Warning</h5>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+			        The evaluation file has not been saved. Are you sure you want to navigate away from this page? Changes will be lost.
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Stay on Page</button>
+			        <a th:href="@{/admin_roles}">Continue and Discard</a>
+			      </div>
+			    </div>
+			  </div>
+			</div>	
+			
+			
+			<div class="modal fade" id="evalGroupsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="evalGroupsModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title" id="archModalLabel">Warning</h5>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+			        The evaluation file has not been saved. Are you sure you want to navigate away from this page? Changes will be lost.
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Stay on Page</button>
+			        <a th:href="@{/Evaluationgroups}">Continue and Discard</a>
+			      </div>
+			    </div>
+			  </div>
+			</div>		
+				
+								
+			<div class="modal fade" id="logModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="logModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title" id="logModalLabel">Warning</h5>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+			        The evaluation file has not been saved. Are you sure you want to navigate away from this page? Changes will be lost.
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Stay on Page</button>
+			        <a th:href="@{/download_log_txt}">Continue and Discard</a>
+			      </div>
+			    </div>
+			  </div>
+			</div>			
+								
+			<div class="modal fade" id="adminUsersModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="adminUsersModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title" id="adminUsersModalLabel">Warning</h5>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+			        The evaluation file has not been saved. Are you sure you want to navigate away from this page? Changes will be lost.
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Stay on Page</button>
+			        <a th:href="@{/admin_users/?keyword={keyword}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage= 0,keyword='',sort='id',currPage=1,sortOr=1)}" type="button" class="btn btn-primary">Continue and Discard</a>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+								
+								
 			<div class="modal fade" id="archModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="archModalLabel" aria-hidden="true">
 			  <div class="modal-dialog">
 			    <div class="modal-content">

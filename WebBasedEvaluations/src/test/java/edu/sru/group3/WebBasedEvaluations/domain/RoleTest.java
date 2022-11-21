@@ -49,7 +49,8 @@ public class RoleTest {
 		dep.addUser(user);
 		loc = new Location();
 		roles = new HashSet<Role>();
-		locG = new LocationGroup(loc, p, "test");
+		
+		locG = new LocationGroup(loc, p, "test",testCo);
 		p = new Privilege("testAll", role, true, true, true, true);
 		p.addCompany(testCo);
 		p.addDept(dep);
@@ -57,6 +58,7 @@ public class RoleTest {
 		role = new Role("test", user, p, testCo);
 		p.addRole(role);
 		roles.add(role);
+		user.setRole(role);
 		
 	}
 	
@@ -175,6 +177,13 @@ public class RoleTest {
 	public void containsTest() {
 
 		Role notInContains = new Role("fake", new Company("fake"));
+		Privilege fakePriv = new Privilege("fake", notInContains, true,false,false,false);
+		Location notInLoc = new Location();
+		notInLoc.setLocationName("Test");
+		fakePriv.addLocGroup(new LocationGroup(notInLoc));
+		
+		notInContains.addPrivilege(fakePriv);
+		
 		assertTrue(role.contains(role));
 		assertFalse(role.contains(notInContains));
 	}

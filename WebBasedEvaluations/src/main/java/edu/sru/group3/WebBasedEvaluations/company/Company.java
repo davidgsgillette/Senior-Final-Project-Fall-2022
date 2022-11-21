@@ -62,6 +62,11 @@ public class Company {
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Location> locations;	
 	
+	
+	@NonNull
+	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<LocationGroup> locationGroups;	
+	
 	@OneToMany(mappedBy = "company", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<EvalRole> evalRoles;
 	
@@ -85,6 +90,8 @@ public class Company {
 	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<EvalTemplates> evalTemplates = new HashSet<EvalTemplates>();
 	
+	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Department> departments = new HashSet<Department>();
 
 	public Company() {
 
@@ -107,6 +114,79 @@ public class Company {
 //		roles.add(new Role(roleName,this));
 	}
 
+	
+	
+	/**
+	 * @param locgroup to add
+	 * @return true if added
+	 */
+	public boolean addLocationGroup(LocationGroup locgroup) {
+		this.locationGroups.add(locgroup);
+		return true;
+	}
+
+	
+	
+	/**
+	 * @param locgroups to add
+	 * @return true if all are added
+	 */
+	public boolean addLocationGroups(Collection<LocationGroup> locgroups) {
+		this.locationGroups.addAll(locgroups);
+		return true;
+	}
+
+	
+	
+	/**
+	 * @param locgroup the location group to be removed
+	 * @return true if removed/was present
+	 */
+	public boolean removeLocationGroup(LocationGroup locgroup) {
+
+		if(this.locationGroups.contains(locgroup)) {
+			this.locationGroups.remove(locgroup);			
+			return true;
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * @param dept to add
+	 * @return true if added
+	 */
+	public boolean addDepartment(Department dept) {
+		this.departments.add(dept);
+		return true;
+	}
+
+	
+	/**
+	 * @param depts to add
+	 * @return true if all are added
+	 */
+	public boolean addDeparmetns(Collection<Department> depts) {
+		this.departments.addAll(depts);
+		return true;
+	}
+
+	
+	/**
+	 * @param dept to remove
+	 * @return true if removed
+	 */
+	public boolean removeDepartment(Department dept) {
+
+		if(this.departments.contains(dept)) {
+			this.departments.remove(dept);			
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
 	/**
 	 * @param priv privilege to add
 	 * @return true if privilege is added. 
@@ -361,9 +441,33 @@ public class Company {
 	
 	
 	
-	//getters and setters. 	
+	//getters and setters. 
+	
+	
+	
+	
 	public Set<Privilege> getPrivs() {
 		return privs;
+	}
+
+
+	public Set<EvalTemplates> getEvalTemplates() {
+		return evalTemplates;
+	}
+
+
+	public void setEvalTemplates(Set<EvalTemplates> evalTemplates) {
+		this.evalTemplates = evalTemplates;
+	}
+
+
+	public Set<Department> getDepartments() {
+		return departments;
+	}
+
+
+	public void setDepartments(Set<Department> departments) {
+		this.departments = departments;
 	}
 
 

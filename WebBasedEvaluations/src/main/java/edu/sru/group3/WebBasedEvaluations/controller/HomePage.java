@@ -45,6 +45,7 @@ import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
+import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 import edu.sru.group3.WebBasedEvaluations.service.UserService;
 
 
@@ -61,7 +62,8 @@ public class HomePage {
 	private EvaluationRepository evaluationRepository;
 	private Logger log = LoggerFactory.getLogger(HomePage.class);
 
-
+	@Autowired
+	private EvaluationRepository evalFormRepo;
 
 	public HomePage(UserRepository userRepository, EvaluatorRepository evaluatorRepository,
 			EvaluationRepository evaluationRepository) {
@@ -154,58 +156,31 @@ public class HomePage {
 		} 
 		else {		
 			
-			//adds the attributes to the webpage to see what the user has access to on the homepage.
-//			String role = "";
-			if((user2.hasRead() || user2.hasWrite() || user2.hasDelete()) && user2.hasEditEvalPerm()) {
-				model.addAttribute("EVAL_ADMIN", true);
-//				role = "EVAL_ADMIN";
-			}
-			else {
-				//testing
-				model.addAttribute("EVAL_ADMIN", true);
-//				model.addAttribute("EVAL_ADMIN", false);
-			}
+			//adds the permissions used for thenavbar to the model.
+			model = AdminMethodsService.pageNavbarPermissions(user2, model, evaluatorRepository, evalFormRepo);	
 			
 			
-			if(evaluatorRepository.findById(user2.getId()) != null) {
-				model.addAttribute("EVALUATOR", true);
-			}
-			else {
-				//testing
-				model.addAttribute("EVALUATOR", true);
-//				model.addAttribute("EVALUATOR", false);
-			}
-			
-			
-			if(user2.hasEvaluator()) {
-				model.addAttribute("USER", true);
-			}
-			else {
-				//testing
-				model.addAttribute("USER", true);
-//				model.addAttribute("USER", false);
-			}
-			
-			
-			if((user2.hasRead() || user2.hasWrite() || user2.hasDelete())) {
-				model.addAttribute("ADMIN", true);
-			}
-			else {
-				//testing
-				model.addAttribute("ADMIN", true);
-//				model.addAttribute("ADMIN", false);
-			}
-			
-			
-			
-			// model.addAttribute("role", user.getRoles());
-			// model.addAttribute("role", user.getRole().getName());
-//			model.addAttribute("role", role);
-			//TODO: fix this. 
 			model.addAttribute("EVALUATOR_EVAL", false);
 			model.addAttribute("groupButton", groupButton);			
 			model.addAttribute("user", user.getUsername());
 			model.addAttribute("id", user.getID());
+			model.addAttribute("deptNames", "Departments: " + user2.getDepartmentNames());
+			model.addAttribute("companyName", "Company: " +user2.getCompanyName());
+			if(user2.isSuperUser()) {
+				model.addAttribute("roleName", "Role: SuperSuperUser");
+			}
+			else if(user2.isCompanySuperUser()) {
+				model.addAttribute("roleName", "Role: " +user2.getCompanyName() + " SuperUser");
+			}
+			else {
+				model.addAttribute("roleName", "Role: " +user2.getRoleName());
+			}
+			
+			
+			
+			
+			
+			
 			return "home";
 		}
 	}

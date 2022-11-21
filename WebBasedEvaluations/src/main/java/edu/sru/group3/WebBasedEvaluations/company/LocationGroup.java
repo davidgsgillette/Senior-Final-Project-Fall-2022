@@ -9,7 +9,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -37,9 +40,19 @@ public class LocationGroup {
 	@OneToMany(mappedBy = "locGroup", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private List<Location> locations;
 	
-	
-	@ManyToMany(mappedBy = "locationGroups", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "privilege_location_group", 
+			joinColumns = @JoinColumn(name = "location_group_id"), 
+			inverseJoinColumns = @JoinColumn(name = "privilege_id"))	
     private List<Privilege> privileges;
+	
+	
+	@NonNull
+	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@JoinColumn(name = "company_id", nullable = false)
+	private Company company;
+	
 	
 	
 	@NonNull
@@ -57,10 +70,13 @@ public class LocationGroup {
 	/**
 	 * @param name name of location group ex: "eastUS"
 	 */
-	public LocationGroup(String name) {
+	public LocationGroup(String name, Location loc, Company co) {
 		this.name = name;
 		this.locations = new ArrayList<Location>();
+		this.locations.add(loc);
 		this.numLocations = 0;
+		this.company = co;
+		
 	}
 	
 	
@@ -69,11 +85,12 @@ public class LocationGroup {
 	 * @param privileges privileges to add
 	 * @param name name of locationgroup
 	 */
-	public LocationGroup(List<Location> locations, List<Privilege> privileges, String name) {
+	public LocationGroup(List<Location> locations, List<Privilege> privileges, String name, Company co) {
 		this.name = name;
 		this.locations = locations;
 		this.privileges = privileges;
 		this.numLocations = this.locations.size();
+		this.company = co;
 	}
 	
 	/**
@@ -81,13 +98,14 @@ public class LocationGroup {
 	 * @param privilege to add
 	 * @param name of locGroup
 	 */
-	public LocationGroup(Location location, Privilege privilege, String name) {
+	public LocationGroup(Location location, Privilege privilege, String name, Company co) {
 		this.name = name;
 		this.locations = new ArrayList<Location>();
 		this.numLocations = 0;
 		this.addLocation(location);
 		this.privileges = new ArrayList<Privilege>();
 		this.privileges.add(privilege);
+		this.company = co;
 		
 	}
 	
@@ -173,6 +191,26 @@ public class LocationGroup {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public Company getCompany() {
+		return company;
+	}
+
+
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 
 

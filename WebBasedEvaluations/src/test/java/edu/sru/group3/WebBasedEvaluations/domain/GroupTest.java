@@ -34,7 +34,8 @@ public class GroupTest {
 		user.setFirstName("Dalton");
 		user.setLastName("Stenzel");
 		user.setEmail("daltonrstenzel@gmail.com");
-		user.setRoleName("USER");
+		Company co = new Company("Thangiah Inc");
+		user.setRole(new Role("USER",co));
 		user.setEncryptedPassword("test");
 		
 		user.setCompanyName("Thangiah Inc");
