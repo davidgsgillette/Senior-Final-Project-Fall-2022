@@ -26,6 +26,7 @@ import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.GroupRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.RevieweeRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
+import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 /**
  * Controls the Archive behavior  of the application 
  *
@@ -36,7 +37,9 @@ public class ArchiveController {
 	private GroupRepository groupRepository;
 
 	private UserRepository userRepository;
-
+	
+	
+	
 	private EvaluatorRepository evaluatorRepository;
 	private EvaluationLogRepository evaluationLogRepository;
 	private RevieweeRepository revieweeRepository;
@@ -85,37 +88,7 @@ public class ArchiveController {
 		
 		
 		//navbar controls
-		if((user.hasRead() || user.hasWrite() || user.hasDelete()) && user.hasEditEvalPerm()) {
-			model.addAttribute("EVAL_ADMIN", true);
-//			role = "EVAL_ADMIN";
-		}
-		else {
-			model.addAttribute("EVAL_ADMIN", false);
-		}
-		
-		
-		if(evaluatorRepository.findById(user.getId()) != null) {
-			model.addAttribute("EVALUATOR", true);
-		}
-		else {
-			model.addAttribute("EVALUATOR", false);
-		}
-		
-		
-		if(user.hasEvaluator()) {
-			model.addAttribute("USER", true);
-		}
-		else {
-			model.addAttribute("USER", false);
-		}
-		
-		
-		if((user.hasRead() || user.hasWrite() || user.hasDelete())) {
-			model.addAttribute("ADMIN", true);
-		}
-		else {
-			model.addAttribute("ADMIN", false);
-		}
+		model = AdminMethodsService.pageNavbarPermissions(user, model, evaluatorRepository, evalFormRepo);
 		
 		
 

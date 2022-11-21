@@ -45,6 +45,11 @@ public class UserController {
 	private EvaluatorRepository evaluatorRepository;
 	private EvaluationRepository evaluationRepository;
 	private Authentication auth;
+	
+	@Autowired
+	private EvaluationRepository evalFormRepo;
+	
+	
 
 	private AddUserController addUserController;
 
@@ -138,42 +143,7 @@ public class UserController {
 		
 		
 		//fornavbar
-		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEditEvalPerm()) {
-			model.addAttribute("EVAL_ADMIN", true);
-		}
-		else {
-			model.addAttribute("EVAL_ADMIN", false);
-		}
-		
-		
-		if(evaluatorRepository.findById(currentUser.getId()) != null) {
-			model.addAttribute("EVALUATOR", true);
-			model.addAttribute("EVALUATOR_EVAL", true);
-		}
-		else {
-			model.addAttribute("EVALUATOR", false);
-			model.addAttribute("EVALUATOR_EVAL", false);
-		}
-		
-		
-		if(currentUser.hasEvaluator()) {
-			model.addAttribute("USER", true);
-		}
-		else {
-			model.addAttribute("USER", true);
-		}
-		
-		
-		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete())) {
-			model.addAttribute("ADMIN", true);
-		}
-		else {
-			model.addAttribute("ADMIN", false);
-		}
-		
-		
-		
-		
+		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
 		
 		//companies the currently logged in user can add user to. 
 		Set<Company> companies = currentUser.getRole().writableCompanies();
@@ -233,37 +203,12 @@ public class UserController {
 		} else {
 			groupButton = true;
 		}
-//changed
-		if((user.hasRead() || user.hasWrite() || user.hasDelete()) && user.hasEditEvalPerm()) {
-			model.addAttribute("EVAL_ADMIN", true);
-		}
-		else {
-			model.addAttribute("EVAL_ADMIN", false);
-		}
 		
 		
-		if(evaluatorRepository.findById(user.getId()) != null) {
-			model.addAttribute("EVALUATOR", true);
-		}
-		else {
-			model.addAttribute("EVALUATOR", false);
-		}
 		
 		
-		if(user.hasEvaluator()) {
-			model.addAttribute("USER", true);
-		}
-		else {
-			model.addAttribute("USER", false);
-		}
-		
-		
-		if((user.hasRead() || user.hasWrite() || user.hasDelete())) {
-			model.addAttribute("ADMIN", true);
-		}
-		else {
-			model.addAttribute("ADMIN", false);
-		}
+		//fornavbar
+			model = AdminMethodsService.pageNavbarPermissions(user, model, evaluatorRepository, evalFormRepo);
 //		model.addAttribute("roles", user.getRole().getName());
 		model.addAttribute("id", user.getId());
 		model.addAttribute("groupButton", groupButton);
@@ -303,8 +248,9 @@ public class UserController {
 	public String showUpdateForm(@PathVariable("id") long id, @RequestParam("perPage") Integer perPage,
 			@RequestParam("sort") String sort, @RequestParam("keyword") String keyword,
 			@RequestParam("currPage") Integer currPage, @RequestParam("sortOr") Integer sortOr, User user,
-			Model model) {
+			Model model, Authentication auth) {
 		model.addAttribute("perPage", perPage);
+		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
 		String ansr = null;
 		String mess = null;
 
@@ -318,7 +264,15 @@ public class UserController {
 		model.addAttribute("user", user);
 		model.addAttribute("id", id);
 		adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr,auth);
+		
+		
+		//fornavbar
+		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
+				
+				
 		return "admin_user_update";
+		
+		
 	}
 
 	/*
@@ -352,7 +306,7 @@ public class UserController {
 			@RequestParam("sort") String sort, @RequestParam("keyword") String keyword,
 			@RequestParam("currPage") Integer currPage, @RequestParam("sortOr") Integer sortOr, @Validated User user,
 			/* BindingResult result, */ Model model) {
-
+		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
 		String ansr = null;
 		String mess = null;
 		model.addAttribute("perPage", perPage);
@@ -366,6 +320,7 @@ public class UserController {
 
 		// Checks if email already used by another user, if not then the user selected
 		// will be updated.
+		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
 		if ((userRepository.findByEmail(user.getEmail()) == null)
 				|| (userRepository.findByEmail(user.getEmail())) == userRepository.findByid(id)) {
 
@@ -414,7 +369,8 @@ public class UserController {
 			RedirectAttributes redir, Authentication auth) {
 		String ansr = null;
 		String mess = null;
-
+		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
+		
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
 		List<Evaluator> eval = evaluatorRepository.findByUser(user);
@@ -452,7 +408,7 @@ public class UserController {
 			}
 
 			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
-
+			model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
 			return "admin_users";
 			// return "redirect:/admin_users/?keyword=" + keyword + "&perPage=" +
 			// perPage.toString() + "&sort=" + sort;
@@ -483,7 +439,7 @@ public class UserController {
 		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getId());
 		
 		//navbar
-		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository);
+		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
 		
 //		model.addAttribute("role", user2.getRole());
 		
@@ -495,7 +451,8 @@ public class UserController {
 		user3.setLastName(adminMethodsService.capitalize(user3.getLastName()));
 
 		userRepository.save(user3);
-
+		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
+		
 		return "user_settings";
 	}
 

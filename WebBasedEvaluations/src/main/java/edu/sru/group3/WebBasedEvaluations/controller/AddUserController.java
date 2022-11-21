@@ -34,6 +34,8 @@ import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.excel.ExcelRead_group;
 import edu.sru.group3.WebBasedEvaluations.repository.CompanyRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.DepartmentRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.LocationRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.RoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
@@ -58,6 +60,13 @@ public class AddUserController {
 
 	@Autowired
 	private AdminMethodsService adminMethodsService;
+	
+	@Autowired
+	private EvaluatorRepository evalRepo;
+	
+	
+	@Autowired
+	private EvaluationRepository evalFormRepo;
 
 	private Logger log = LoggerFactory.getLogger(AdminMethodsService.class);
 
@@ -222,9 +231,12 @@ public class AddUserController {
 				// adminUserPageItems(ansr, keyword, mess, perPage, model, sort);
 			}
 			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
+			model = AdminMethodsService.pageNavbarPermissions(adminUser, model, this.evalRepo, evalFormRepo);
 			return "admin_users";
 		}
-
+		
+		model = AdminMethodsService.pageNavbarPermissions(adminUser, model, this.evalRepo, evalFormRepo);
+		
 		if (result.hasErrors()) {
 
 			model.addAttribute("users", userRepository.findAll());
@@ -237,6 +249,7 @@ public class AddUserController {
 			mess = "User email already taken!";
 
 			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
+			model = AdminMethodsService.pageNavbarPermissions(adminUser, model, this.evalRepo, evalFormRepo);
 			return "admin_users";
 
 		}
@@ -467,6 +480,7 @@ public class AddUserController {
 				}
 			}
 		}
+		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, this.evalRepo, evalFormRepo);
 
 		if (check) {
 			log.info("ADMIN User - ID:" + currentUser.getId() + " First Name: " + currentUser.getFirstName()
@@ -476,7 +490,8 @@ public class AddUserController {
 			ansr = "addPass";
 
 			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
-
+			model = AdminMethodsService.pageNavbarPermissions(currentUser, model, this.evalRepo, evalFormRepo);
+			
 			return "admin_users";
 
 		} else {
@@ -485,6 +500,8 @@ public class AddUserController {
 			ansr = "addFail";
 			
 			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
+			model = AdminMethodsService.pageNavbarPermissions(currentUser, model, this.evalRepo, evalFormRepo);
+			
 			return "admin_users";
 
 		}

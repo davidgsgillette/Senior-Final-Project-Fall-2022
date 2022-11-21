@@ -62,7 +62,8 @@ public class HomePage {
 	private EvaluationRepository evaluationRepository;
 	private Logger log = LoggerFactory.getLogger(HomePage.class);
 
-
+	@Autowired
+	private EvaluationRepository evalFormRepo;
 
 	public HomePage(UserRepository userRepository, EvaluatorRepository evaluatorRepository,
 			EvaluationRepository evaluationRepository) {
@@ -156,7 +157,7 @@ public class HomePage {
 		else {		
 			
 			//adds the permissions used for thenavbar to the model.
-			model = AdminMethodsService.pageNavbarPermissions(user2, model, evaluatorRepository);	
+			model = AdminMethodsService.pageNavbarPermissions(user2, model, evaluatorRepository, evalFormRepo);	
 			
 			
 			model.addAttribute("EVALUATOR_EVAL", false);

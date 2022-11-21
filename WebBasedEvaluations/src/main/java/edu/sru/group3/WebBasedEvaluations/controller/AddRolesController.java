@@ -33,6 +33,7 @@ import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
 import edu.sru.group3.WebBasedEvaluations.excel.ExcelRead_group;
 import edu.sru.group3.WebBasedEvaluations.repository.DepartmentRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.LocationGroupRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.LocationRepository;
@@ -58,7 +59,8 @@ public class AddRolesController {
 	private LocationGroupRepository locGroupRepo;
 	@Autowired
 	private PrivilegeRepository privRepo;
-	
+	@Autowired
+	private EvaluationRepository evalFormRepo;
 	
 	@Autowired
 	private AdminMethodsService adminMethodsService;
@@ -99,7 +101,7 @@ public class AddRolesController {
 		
 		
 		model.addAttribute("roles", roles);
-		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepo);
+		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepo,evalFormRepo);
 		
 		return "/admin_roles";
 	}
