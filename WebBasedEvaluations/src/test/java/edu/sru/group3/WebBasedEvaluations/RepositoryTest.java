@@ -78,11 +78,11 @@ public class RepositoryTest {
 	public void saveRepoTest() {
 		
 		
-		MyUserDetails userD = new MyUserDetails(userRepo.findByEmail("jimmy@gmail.com"));
+		MyUserDetails userD = new MyUserDetails(userRepo.findByEmail("admin@gmail.com"));
 		
 		//auth.setAuthenticated(true);
 		
-		assertEquals(userD.getUsername(), "jimmy@gmail.com");
+		assertEquals(userD.getUsername(), "admin@gmail.com");
 
 
 		AddUserController addCon = new AddUserController(userRepo,roleRepo,companyRepo,locationRepo,deptRepo);
@@ -97,7 +97,7 @@ public class RepositoryTest {
 
 		user2.setCompanyName("Thangiah Inc");
 		user2.setDivisionBranch("Retroville");
-		user2.setSupervisor(null);
+		user2.setSupervisor("test");
 		user2.setDateOfHire("10/15/2022");
 		user2.setJobTitle("Assistant");
 		addCon.addUser(user2, result, model, auth, keyword, perPage, sort, currPage, sortOr);
