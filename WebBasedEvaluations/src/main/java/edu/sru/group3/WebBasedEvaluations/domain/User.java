@@ -143,8 +143,7 @@ public class User {
 	 * @param password
 	 * @param employeeId
 	 * @param dateOfHire
-	 * @param jobTitle
-	 
+	 * @param jobTitle	 
 	 */
 	public User(String name, String firstName, String lastName, String email, String password, /*String role,*/
 			int employeeId, String dateOfHire, String jobTitle, String supervisor,
@@ -285,6 +284,20 @@ public class User {
 		this.superUser = superUser;
 
 	}	
+	
+	public String getDepartmentNames() {
+		String names = "";
+		for(Department dept : this.departments) {
+			if(names.length() == 0) {
+				names +=  dept.getName();
+			}
+			else {
+				names +=  ", " + dept.getName();
+			}
+			
+		}
+		return departmentName;
+	}
 
 	/**
 	 * @param dept to be added
@@ -480,10 +493,6 @@ public class User {
 		this.evaluator = evaluator;
 	}
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-
 	public String getPassword() {
 		return password;
 	}
@@ -646,7 +655,15 @@ public class User {
 		if(dateOfHire.matches("[0-9]+")) {
 			dateOfHire = LocalDate.of( 1899 , Month.DECEMBER , 30 ).plusDays((long) Double.parseDouble(dateOfHire)).toString();
 		}
-		this.dateOfHire = dateOfHire;
+		if(dateOfHire.matches("[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]")) {
+			this.dateOfHire = dateOfHire;
+		}
+		else if(dateOfHire.matches("[0-9][0-9]/[0-9][0-9]/[0-9][0-9][0-9][0-9]")) {
+			this.dateOfHire = dateOfHire;
+		}
+		else {
+			this.dateOfHire = "N/A";
+		}
 	}
 
 	public String getJobTitle() {

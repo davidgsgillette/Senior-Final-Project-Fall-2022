@@ -19,6 +19,7 @@ public class LocationGroupTest {
 	static Location loc;
 	static Privilege priv;
 	static long id = 1;
+	static Company co = new Company("test");
 	
 	static List<Privilege> privs;
 	static List<Location> locs;
@@ -37,7 +38,7 @@ public class LocationGroupTest {
 		locs = new ArrayList<Location>();
 		locs.add(loc);
 		
-		group = new LocationGroup(locs, privs,"name");
+		group = new LocationGroup(locs, privs,"name",co);
 		
 		group.setId(id);
 		group.setNumLocations(5);

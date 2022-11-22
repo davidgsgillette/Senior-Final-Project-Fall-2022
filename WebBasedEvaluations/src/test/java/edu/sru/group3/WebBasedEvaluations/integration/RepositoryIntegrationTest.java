@@ -49,6 +49,7 @@ public class RepositoryIntegrationTest {
     @Test
     public void givenUsers_whenGetUsers_thenUserExists() throws Exception {
     	//given
+    	/*
     	String name = "test";
     	String firstName = "test";
     	String lastName = "test";

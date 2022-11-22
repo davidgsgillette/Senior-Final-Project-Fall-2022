@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
@@ -62,8 +63,10 @@ import edu.sru.group3.WebBasedEvaluations.excel.ExcelRead_group;
 import edu.sru.group3.WebBasedEvaluations.repository.DepartmentRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluationLogRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.GroupRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
+import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 
 /**
  * Controller for functionality of the 'eval_templates.html' web page for 'ADMIN_EVAL' users.
@@ -80,6 +83,8 @@ public class EvalFormController {
 	private UserRepository userRepo;
 	private DepartmentRepository deptRepo;
 
+	@Autowired
+	private EvaluatorRepository evaluatorRepo;
 
 	private Evaluation eval;
 	private XSSFWorkbook apacheWorkbook;
@@ -179,7 +184,8 @@ public class EvalFormController {
 			model.addAttribute("evalList", evalList);
 		}
 
-		model.addAttribute("hasEvals", hasEvals);
+		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepo, evalFormRepo);
+//		model.addAttribute("hasEvals", hasEvals);
 
 
 		return "eval_templates";
@@ -212,10 +218,18 @@ public class EvalFormController {
 		User currentUser = userRepo.findByid(userD.getID());
 
 		Company currentCompany = (currentUser.getCompany());
-
+		XSSFSheet sheet2;
 
 		//deptartmentList
-		XSSFSheet sheet2 = ExcelRead_group.loadFile(file).getSheetAt(1);
+		try {
+			sheet2 = ExcelRead_group.loadFile(file).getSheetAt(1);
+		}
+		catch(Exception e) {
+			RedirectView redirectView = new RedirectView("/admin_evaluations", true);
+			redir.addFlashAttribute("error", "invalid file");
+			return redirectView;
+		}
+		
 		this.depts = new HashSet<Department>();
 		for (int i = 1; sheet2.getRow(i) != null; i++) {
 			String deptName = ExcelRead_group.checkStringType(sheet2.getRow(i).getCell(0));

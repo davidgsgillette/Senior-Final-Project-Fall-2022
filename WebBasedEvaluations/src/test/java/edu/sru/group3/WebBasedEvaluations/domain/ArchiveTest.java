@@ -24,67 +24,65 @@ public class ArchiveTest {
 	static Archive archive;
 	static Archive invalidArchive;
 	static Date date = new Date(100);
-	
+
 	@BeforeAll
 	static void setup() {
-		
+
 		archive = new Archive();
-		archive.setId((long) 69);
 		archive.setReviewee("Bob");
 		archive.setRole("Manager");
 		archive.setEvaluator("Steve");
-		archive.setDateEdited(date);		
-		
+		archive.setDateEdited(date);
+
 	}
-	
+
 	@Test
 	public void getIdTest() {
-		long actual = (long) 69;
+		long actual = archive.getId();
 		assertEquals(archive.getId(), actual);
 	}
-	
+
 	@Test
 	public void getDateEditedTest() {
 		Date actual = new Date(100);
 		assertEquals(archive.getDateEdited(), actual);
 	}
-	
+
 	@Test
 	public void getPathTest() {
 		byte[] actual = new byte[1];
 		actual[0] = (byte) 4;
 		archive.setPath(actual);
-		assertEquals(archive.getPath(),actual);
+		assertEquals(archive.getPath(), actual);
 	}
-	
+
 	@Test
 	public void getRevieweeTest() {
 		String actual = "Bob";
 		assertEquals(archive.getReviewee(), actual);
 	}
-	
+
 	@Test
 	public void getRoleTest() {
 		String actual = "Manager";
 		assertEquals(archive.getRole(), actual);
 	}
-	
+
 	@Test
 	public void getEvaluatorTest() {
 		String actual = "Steve";
 		assertEquals(archive.getEvaluator(), actual);
 	}
-	
+
 	@Test
 	public void nullValuesTest() {
 		invalidArchive = new Archive();
-		invalidArchive.setId((long) 8);
 		invalidArchive.setReviewee(null);
 		invalidArchive.setRole(null);
 		invalidArchive.setEvaluator(null);
 		invalidArchive.setDateEdited(null);
 		invalidArchive.setPath(null);
-		
+
 		assertNotNull(invalidArchive.getId());
 		assertNull(invalidArchive.getReviewee());
 		assertNull(invalidArchive.getRole());
@@ -92,9 +90,9 @@ public class ArchiveTest {
 		assertNull(invalidArchive.getDateEdited());
 		assertNull(invalidArchive.getPath());
 	}
-	
+
 	@Test
 	public void Test() {
-		
+
 	}
 }

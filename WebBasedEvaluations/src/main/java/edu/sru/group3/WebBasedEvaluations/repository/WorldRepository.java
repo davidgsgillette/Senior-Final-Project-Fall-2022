@@ -12,5 +12,6 @@ public interface WorldRepository extends CrudRepository<World,Long>{
 
 	public World findById(long id);
 	public Object findAll(Sort by);
+	public World findByName(String name);
 	
 }

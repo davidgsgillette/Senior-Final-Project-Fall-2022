@@ -47,13 +47,6 @@ public class UserTest {
 	}
 
 	@Test
-	void getRolesTest() {
-		String actual = "Test";
-		user.setRoleName(actual);
-		assertEquals(user.getRoleName(), actual);
-	}
-
-	@Test
 	void getFirstNameTest() {
 		String actual = "Test";
 		user.setFirstName(actual);
@@ -92,7 +85,7 @@ public class UserTest {
 
 	@Test
 	void getDateOfHireTest() {
-		String actual = "Test";
+		String actual = "1999-08-20";
 		user.setDateOfHire(actual);
 		assertEquals(user.getDateOfHire(), actual);
 	}

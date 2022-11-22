@@ -84,7 +84,7 @@ class InitUsers{
 		Company co = new Company("Thangiah Manufacturing LLC");
 		Company co2 = new Company("Test Company 2");
 		
-		World world = new World();
+		World world = new World("testWorld");
 //		worldRepo.save(world);
 		
 		Continent continent = new Continent("testContinent", world);
@@ -116,8 +116,11 @@ class InitUsers{
 		LocationGroup locGroup = new LocationGroup();
 		LocationGroup locGroup2 = new LocationGroup();
 		
+		locGroup.setCompany(co);
+		locGroup2.setCompany(co2);
+		
 		Location loc = new Location("testLocation", city, co, locGroup);
-		Location loc2 = new Location("testLocation", city, co2, locGroup2);
+		Location loc2 = new Location("testLocation2", city, co2, locGroup2);
 //		locationRepo.save(loc);
 			
 			
@@ -207,8 +210,7 @@ class InitUsers{
 //		companyRepo.save(co);
 //		userRepo.save(use1);
 		
-		locGroupRepo.save(locGroup);
-		provinceRepo.save(province);
+		locGroupRepo.save(locGroup);		
 		deptRepo.save(dept);
 		privRepo.save(priv);
 		userRepo.save(use1);

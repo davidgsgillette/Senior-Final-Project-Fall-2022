@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.controller.HomePage;
@@ -687,13 +688,14 @@ public class AdminMethodsService {
 	}
 	
 	
+	
 	/**
 	 * @param currentUser the user we are finding the permissions of
 	 * @param model the web model we are adding the permissions to
 	 * @param evalRepo the evaluation repo object so this can be static
 	 * @return The model that includes the boolean representation of the permissions of the user for the purpose of showing buttons on the navbar. 
 	 */
-	public static Model pageNavbarPermissions(User currentUser, Model model, EvaluatorRepository evalRepo) {
+	public static Model pageNavbarPermissions(User currentUser, Model model, EvaluatorRepository evalRepo, EvaluationRepository evalFormRepo) {
 		
 		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEditEvalPerm() || currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
 			model.addAttribute("EVAL_ADMIN", true);
@@ -729,6 +731,29 @@ public class AdminMethodsService {
 			//testing
 			model.addAttribute("ADMIN", false);
 		}		
+		
+		if(currentUser.isCompanySuperUser()) {
+			model.addAttribute("COMPANY_ADMIN", true);
+		}
+		else {
+			model.addAttribute("COMPANY_ADMIN", false);
+		}	
+		
+		if(currentUser.isSuperUser()) {
+			model.addAttribute("SUPERUSER", true);
+		}
+		else {
+			model.addAttribute("SUPERUSER", false);
+		}	
+		
+		
+		if(evalFormRepo.findByCompany(currentUser.getCompany()).size() > 0) {
+			model.addAttribute("hasEvals", "yes");
+		}
+		else
+		{
+			model.addAttribute("hasEvals", "no");
+		}
 		
 		return model;
 	}

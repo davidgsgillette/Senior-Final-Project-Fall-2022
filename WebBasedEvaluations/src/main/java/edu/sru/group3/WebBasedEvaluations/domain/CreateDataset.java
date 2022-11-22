@@ -122,10 +122,10 @@ public class CreateDataset {
 			}
 
 		}
-
+		System.out.println("1");
 		// Get section names and place in array
 		for (int i = 0; i < dataset.getItemCount(); i++) {
-
+			System.out.println("1");
 			sectionName[i] = (String) dataset.getKey(i);
 
 		}
