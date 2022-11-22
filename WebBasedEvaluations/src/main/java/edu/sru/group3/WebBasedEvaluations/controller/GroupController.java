@@ -63,6 +63,7 @@ import edu.sru.group3.WebBasedEvaluations.repository.ArchiveRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.CompanyRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvalRoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
+import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 import edu.sru.group3.WebBasedEvaluations.repository.GroupRepository;
 import edu.sru.group3.WebBasedEvaluations.excel.ExcelRead_group;
 
@@ -790,6 +791,9 @@ public class GroupController {
 		List<EvalRole> roles = (List<EvalRole>) evalRoleRepository.findByCompany(currentCompany);
 		List<EvaluationLog> evalLog = (List<EvaluationLog>) evaluationLogRepository.findByEvaluatorCompany(currentCompany);
 
+		if(evalFormRepo.findByCompany(currentCompany).size() == 0) {
+			return "redirect:/home";
+		}
 
 		model.addAttribute("evaluation", evalLog);
 		model.addAttribute("roles", roles);
@@ -818,41 +822,7 @@ public class GroupController {
 		
 	
 		
-		//navbar
-		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEditEvalPerm() || currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
-			model.addAttribute("EVAL_ADMIN", true);
-		}
-		else {
-			//testing
-			model.addAttribute("EVAL_ADMIN", false);
-		}
-		
-		
-		if(evaluatorRepository.findById(currentUser.getId()) != null ||currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
-			model.addAttribute("EVALUATOR", true);
-		}
-		else {
-			//testing
-			model.addAttribute("EVALUATOR", false);
-		}
-		
-		
-		if(currentUser.hasEvaluator()||currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
-			model.addAttribute("USER", true);
-		}
-		else {
-			//testing
-			model.addAttribute("USER", false);
-		}
-		
-		
-		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete() ||currentUser.isCompanySuperUser() || currentUser.isSuperUser())) {
-			model.addAttribute("ADMIN", true);
-		}
-		else {
-			//testing
-			model.addAttribute("ADMIN", false);
-		}
+		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
 		
 		if(grouplist != null) {
 			System.out.println("got to showing depts");
