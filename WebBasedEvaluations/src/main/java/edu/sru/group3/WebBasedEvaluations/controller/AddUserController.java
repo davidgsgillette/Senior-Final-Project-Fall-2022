@@ -240,7 +240,7 @@ public class AddUserController {
 		if (result.hasErrors()) {
 
 			model.addAttribute("users", userRepository.findAll());
-
+			model = AdminMethodsService.pageNavbarPermissions(adminUser, model, this.evalRepo, evalFormRepo);
 			return "admin_users";
 		}
 
@@ -306,6 +306,7 @@ public class AddUserController {
 				mess = "No file selected!";
 				ansr = "addFail";
 				adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr,auth);
+				model = AdminMethodsService.pageNavbarPermissions(currentUser, model, this.evalRepo, evalFormRepo);
 				return "admin_users";
 
 			}
