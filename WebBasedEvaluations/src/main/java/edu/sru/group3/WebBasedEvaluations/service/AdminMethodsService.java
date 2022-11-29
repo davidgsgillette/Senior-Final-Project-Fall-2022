@@ -3,6 +3,7 @@ package edu.sru.group3.WebBasedEvaluations.service;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -15,11 +16,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.sru.group3.WebBasedEvaluations.company.Company;
+import edu.sru.group3.WebBasedEvaluations.company.Department;
+import edu.sru.group3.WebBasedEvaluations.company.Location;
 import edu.sru.group3.WebBasedEvaluations.controller.HomePage;
 import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
+import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
+import edu.sru.group3.WebBasedEvaluations.repository.CompanyRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.DepartmentRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.LocationRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.RoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 
@@ -532,7 +539,7 @@ public class AdminMethodsService {
 			if (user.getRole() == null || this.roleRepo.findById(user2.getRole().getId()) == null) { //user.getRoles() == ADMIN) {
 				user.setRole(user2.getRole());
 			} 
-			else {				
+			else {			
 				user2.setRole(user.getRole());
 				check = true;				
 			}
@@ -544,12 +551,7 @@ public class AdminMethodsService {
 
 				user.setCompanyName(user2.getCompanyName());
 
-			} /*
-			 * else if (hasSpace(user.getFirstName())) {
-			 * user.setFirstName(user2.getFirstName());
-			 * 
-			 * }
-			 */
+			} 
 
 			else if (user.getCompanyName().equals(user2.getCompanyName())) {
 				user2.setCompanyName(user.getCompanyName());
@@ -567,12 +569,7 @@ public class AdminMethodsService {
 
 				user.setSupervisor(user2.getSupervisor());
 
-			} /*
-			 * else if (hasSpace(user.getFirstName())) {
-			 * user.setFirstName(user2.getFirstName());
-			 * 
-			 * }
-			 */
+			}
 
 			else if (user.getSupervisor().equals(user2.getSupervisor())) {
 				user2.setSupervisor(user.getSupervisor());
@@ -589,17 +586,8 @@ public class AdminMethodsService {
 
 				user.setDivisionBranch(user2.getDivisionBranch());
 
-			} /*
-			 * else if (hasSpace(user.getFirstName())) {
-			 * user.setFirstName(user2.getFirstName());
-			 * 
-			 * }
-			 */
-
-			else if (user.getDivisionBranch().equals(user2.getDivisionBranch())) {
-				user2.setDivisionBranch(user.getDivisionBranch());
-
-			} else {
+			}
+			else {
 				user2.setDivisionBranch(user.getDivisionBranch());
 
 				check = true;
@@ -706,7 +694,7 @@ public class AdminMethodsService {
 		}
 		
 		
-		if(evalRepo.findById(currentUser.getId()) != null ||currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
+		if(evalRepo.findById(currentUser.getId()) != null || currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
 			model.addAttribute("EVALUATOR", true);
 		}
 		else {
@@ -715,16 +703,12 @@ public class AdminMethodsService {
 		}
 		
 		
-		if(currentUser.hasEvaluator()||currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
-			model.addAttribute("USER", true);
-		}
-		else {
-			//testing
-			model.addAttribute("USER", false);
-		}
+		
+		model.addAttribute("USER", true);
 		
 		
-		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete() ||currentUser.isCompanySuperUser() || currentUser.isSuperUser())) {
+		
+		if((currentUser.isCompanySuperUser() || currentUser.isSuperUser())) {
 			model.addAttribute("ADMIN", true);
 		}
 		else {
@@ -755,6 +739,69 @@ public class AdminMethodsService {
 			model.addAttribute("hasEvals", "no");
 		}
 		
+		
+		model.addAttribute("deptNames", currentUser.getDepartmentNames());
+		model.addAttribute("companyName", currentUser.getCompanyName());
+		if(currentUser.isSuperUser()) {
+			model.addAttribute("roleName", "SuperSuperUser");
+		}
+		else if(currentUser.isCompanySuperUser()) {
+			model.addAttribute("roleName",currentUser.getCompanyName() + " SuperUser");
+		}
+		else {
+			model.addAttribute("roleName", currentUser.getRoleName());
+		}
+		
+		
+		
+		
+		return model;
+	}
+	
+	
+	/**
+	 * @param currentUser the currently logged in user
+	 * @param locationRepo the location repo
+	 * @param deptRepo the dept repo
+	 * @param roleRepo the role repo
+	 * @param model the model of the current page that is being changed
+	 * @return a model that contains a list of the roles/depts/locations the user has read access to in order to load the dropdowns bars for those three things. 
+	 */
+	public static Model addingOrEditingUser(User currentUser, LocationRepository locationRepo, DepartmentRepository deptRepo, RoleRepository roleRepo, CompanyRepository companyRepo, Model model) {
+		
+		Set<Location> locations = new HashSet<Location>();
+		Set<Department> depts= new HashSet<Department>();
+		List<Company> companies	= new ArrayList<Company>();
+		List<Role> roles = roleRepo.findByCompany(currentUser.getCompany());
+		
+		
+		
+		if(!currentUser.isCompanySuperUser() && !currentUser.isSuperUser()) {
+			locations = currentUser.getRole().readableLocations();
+			depts = currentUser.getRole().readableDepartments();
+			for(Role role : roles) {
+				if(!currentUser.getRole().contains(role)) {
+					roles.remove(role);
+				}
+			}
+		}
+		else{
+			locations = locationRepo.findByCompany(currentUser.getCompany());
+			depts = deptRepo.findByCompany(currentUser.getCompany());
+		}
+		
+		if(currentUser.isSuperUser()) {
+			companies = companyRepo.findAll();
+		}
+		else {
+			companies.add(currentUser.getCompany());
+		}
+		
+		
+		model.addAttribute("locations", locations);
+		model.addAttribute("depts", depts);
+		model.addAttribute("roles", roles);
+		model.addAttribute("companies", companies);
 		return model;
 	}
 

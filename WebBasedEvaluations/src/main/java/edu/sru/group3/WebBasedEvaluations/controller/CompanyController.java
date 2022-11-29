@@ -135,13 +135,14 @@ public class CompanyController {
 		User currentUser = userRepo.findByid(userD.getID());
 
 
-		XSSFSheet sheet = null;
+		XSSFSheet sheet1 = null;
 		XSSFSheet sheet2 = null;
 		String mess ="";
 		String ansr = "";
 		boolean success = false;
 
 
+		
 
 		if(!currentUser.isSuperUser()) {
 			RedirectView redirectView = new RedirectView("/admin_companies", true);
@@ -150,7 +151,7 @@ public class CompanyController {
 		}
 
 		try {
-			sheet = ExcelRead_group.loadFile(file).getSheetAt(0);
+			sheet1 = ExcelRead_group.loadFile(file).getSheetAt(0);
 			sheet2 = ExcelRead_group.loadFile(file).getSheetAt(1);
 
 		} catch (Exception e) {				
@@ -160,7 +161,20 @@ public class CompanyController {
 		}
 
 
-
+		try{
+			String filetype = ExcelRead_group.checkStringType(sheet2.getRow(0).getCell(5));	
+			if(!filetype.equalsIgnoreCase("Company Template")) {
+				throw new Exception("Wrong file type, please upload the upload_company file.");
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			success = false;	
+			log.error(e.getMessage());
+			RedirectView redirectView = new RedirectView("/admin_companies", true);
+			redir.addFlashAttribute("error", e.getMessage());
+			return redirectView;
+		}
 		Company company = null;
 		Location location = null;
 		LocationGroup locationGroup = null;
@@ -187,19 +201,19 @@ public class CompanyController {
 
 		HashSet<Company> companies = new HashSet<>();
 		//add the locations/company structure
-		for (int i = 1; sheet.getRow(i) != null; i++) {
+		for (int i = 1; sheet1.getRow(i) != null; i++) {
 
 			try {
 
 
-				companyName = ExcelRead_group.checkStringType(sheet.getRow(i).getCell(0));
-				locationGroupName = ExcelRead_group.checkStringType(sheet.getRow(i).getCell(1));
-				locationName = ExcelRead_group.checkStringType(sheet.getRow(i).getCell(2));				
-				cityName = ExcelRead_group.checkStringType(sheet.getRow(i).getCell(3));					
-				provinceName = ExcelRead_group.checkStringType(sheet.getRow(i).getCell(4));		
-				countryName = ExcelRead_group.checkStringType(sheet.getRow(i).getCell(5));		
-				continentName = ExcelRead_group.checkStringType(sheet.getRow(i).getCell(6));		
-				worldName = ExcelRead_group.checkStringType(sheet.getRow(i).getCell(7));		
+				companyName = ExcelRead_group.checkStringType(sheet1.getRow(i).getCell(0));
+				locationGroupName = ExcelRead_group.checkStringType(sheet1.getRow(i).getCell(1));
+				locationName = ExcelRead_group.checkStringType(sheet1.getRow(i).getCell(2));				
+				cityName = ExcelRead_group.checkStringType(sheet1.getRow(i).getCell(3));					
+				provinceName = ExcelRead_group.checkStringType(sheet1.getRow(i).getCell(4));		
+				countryName = ExcelRead_group.checkStringType(sheet1.getRow(i).getCell(5));		
+				continentName = ExcelRead_group.checkStringType(sheet1.getRow(i).getCell(6));		
+				worldName = ExcelRead_group.checkStringType(sheet1.getRow(i).getCell(7));		
 
 
 				company = companyRepo.findByCompanyName(companyName);				
@@ -275,7 +289,7 @@ public class CompanyController {
 				catch(Exception e) {
 					e.printStackTrace();
 					success = false;	
-					log.error("Could not add company/location in row: " + (sheet.getRow(i).getRowNum() + 1) + " from "
+					log.error("Could not add company/location in row: " + (sheet1.getRow(i).getRowNum() + 1) + " from "
 							+ file.getOriginalFilename() + "\n" + e.getStackTrace().toString());
 					RedirectView redirectView = new RedirectView("/admin_companies", true);
 					redir.addFlashAttribute("error", "error saving company: " + companyName);
@@ -285,7 +299,7 @@ public class CompanyController {
 
 			}
 			catch(Exception e) {
-				log.error("Could not add company/location in row: " + (sheet.getRow(i).getRowNum() + 1) + " from "
+				log.error("Could not add company/location in row: " + (sheet1.getRow(i).getRowNum() + 1) + " from "
 						+ file.getOriginalFilename() + "\n" + e.getMessage());
 				redir.addFlashAttribute("log", "error");
 			}
@@ -348,7 +362,7 @@ public class CompanyController {
 				catch(Exception e) {
 					e.printStackTrace();
 					success = false;	
-					log.error("Could not add dept in row: " + (sheet.getRow(i).getRowNum() + 1) + " to company " + companyName + " in file "
+					log.error("Could not add dept in row: " + (sheet1.getRow(i).getRowNum() + 1) + " to company " + companyName + " in file "
 							+ file.getOriginalFilename() + "\n" + e.getStackTrace().toString());
 					RedirectView redirectView = new RedirectView("/admin_companies", true);
 					redir.addFlashAttribute("error", "error saving company: " + companyName);
@@ -359,7 +373,7 @@ public class CompanyController {
 			}
 			catch(Exception e) {
 				success = false;
-				log.error("Could not add dept/company relationship in row: " + (sheet.getRow(i).getRowNum() + 1) + " from "
+				log.error("Could not add dept/company relationship in row: " + (sheet1.getRow(i).getRowNum() + 1) + " from "
 						+ file.getOriginalFilename() + " sheet 2\n" + e.getMessage());
 				redir.addFlashAttribute("log", "error");
 				mess = "File failed to be uploaded!";

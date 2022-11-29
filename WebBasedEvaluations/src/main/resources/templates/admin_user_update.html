@@ -16,20 +16,17 @@
 </head>
 <body>
 
-	<!-- ADMIN NAVBAR -->
-	<nav class="navbar navbar-light bg-light justify-content-center">
-		<div class="btn-group" role="group">
-			<a th:href="@{/home}" class="btn btn-outline-success " type="button">
-				Home </a> <a
-				th:href="@{/admin_users/?keyword={keyword}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage=${perPage},keyword=${keyword},sort=${sort},currPage=${currPage},sortOr=${sortOr})}"
-				class="btn btn-outline-success" type="button">Manage Users</a> <a
-				th:href="@{/user_settings/}" class="btn btn-outline-success"
-				type="button">My Account</a>
-				<a th:href="@{/download_log_txt}" class="btn btn-outline-success d-flex" type="button">Download Log File</a>
+
+	<nav class="navbar navbar-light bg-light  justify-content-center ">
+
+		<div class="btn-group ">
+			<a th:href="@{/admin_users/?keyword={keyword}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage= 0,keyword='',sort='id',currPage=1,sortOr=1)}">
+			<button
+					class="btn btn-outline-success " type="button">Back</button></a>
 		</div>
-		<a th:href="@{/logout}" class="btn btn-outline-danger d-flex"
-			type="button"> Logout </a>
 	</nav>
+
+
 
 
 
@@ -137,16 +134,6 @@
 												placeholder="Supervisor">
 										</div>
 										<div>
-											<label for="companyName">Company Name</label> <input
-												type="text" th:field="*{companyName}" id="companyName"
-												placeholder="Company Name">
-										</div>
-										<div>
-											<label for="divisionBranch">Division Branch</label> <input
-												type="text" th:field="*{divisionBranch}" id="divisionBranch"
-												placeholder="Division Branch">
-										</div>
-										<div>
 											<label for="dateOfHire">Date Of Hire</label> <input
 												type="date" th:field="*{dateOfHire}" id="dateOfHire"
 												placeholder="Date Of Hire">
@@ -160,15 +147,24 @@
 												th:errors="*{password}"></span>
 										</div>
 										<div>
-											<label for="roles">Role</label> <select th:field="*{roles}"
-												id="roles" name="roles">
-												<option value="ADMIN">ADMIN</option>
-												<option value="EVAL_ADMIN">EVAL ADMIN</option>
+											<label for="departmentName">Department</label> <select th:field="*{departmentName}"
+												id="departmentName" name="departmentName">
+										
+												<option th:each="dept : ${depts}"
+													th:value="${dept.name}"
+													th:text="${dept.name}">
+												</option>
 
-												<option value="EVALUATOR">EVALUATOR</option>
-												<option value="EVALUATOR_EVAL">EVALUATOR EVAL</option>
-
-												<option value="USER">USER</option>
+											</select>
+										</div>
+										<div>
+											<label for="role">Role</label> <select th:field="*{role}"
+												id="role" name="role">
+										
+												<option th:each="role : ${roles}"
+													th:value="${role.Id}"
+													th:text="${role.name}">
+												</option>
 
 											</select>
 										</div>

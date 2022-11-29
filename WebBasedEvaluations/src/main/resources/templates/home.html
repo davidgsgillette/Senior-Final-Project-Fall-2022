@@ -19,10 +19,12 @@
 </head>
 <body>
 
+
 	
 
 	<!--  NAVBAR -->
-	<nav class="navbar navbar-light bg-light justify-content-center">		
+	<nav class="navbar navbar-light bg-light justify-content-center">
+		<a class="navbar-brand" th:text=${companyName}></a>		
 		<div class="btn-group" role="group" aria-label="Button group with nested dropdown">	
 			<div class="navbar navbar-light bg-light justify-content-center">		
 				<a th:href="@{/home}" class="btn btn-outline-success" style="color:#ffffff; background-color:#4CAF50" type="button"> Home </a>
@@ -115,8 +117,8 @@
 	</div>
 	
 	
-	<div class="text-center" th:text="${companyName}"></div>
-	<div class="text-center" th:text="${roleName}"></div>
-	<div class="text-center" th:text="${deptNames}"></div>
+	<div class="text-center" th:text="'Company: ' + ${companyName}"></div>
+	<div class="text-center" th:text="'Role: ' + ${roleName}"></div>
+	<div class="text-center" th:text="'Departments: ' + ${deptNames}"></div>
 </body>
 </html>

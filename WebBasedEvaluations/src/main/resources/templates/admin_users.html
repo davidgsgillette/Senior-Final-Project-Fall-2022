@@ -17,8 +17,10 @@
 <title>Users</title>
 </head>
 <body>
+
 <!--  NAVBAR -->
-	<nav class="navbar navbar-light bg-light justify-content-center">		
+	<nav class="navbar navbar-light bg-light justify-content-center">
+		<a class="navbar-brand" th:text=${companyName}></a>		
 		<div class="btn-group" role="group" aria-label="Button group with nested dropdown">	
 			<div class="navbar navbar-light bg-light justify-content-center">		
 				<a th:href="@{/home}" class="btn btn-outline-success"  type="button"> Home </a>
@@ -174,11 +176,18 @@
 												th:errors="*{email}"></span>
 										</div>
 										&nbsp
+										
+										
 										<div>
-											<label for="departmentName">Department</label> <input type="text"
-												th:field="*{departmentName}" id="addDepartmentName" placeholder="Department">
-											<span th:if="${#fields.hasErrors('departmentName')}"
-												th:errors="*{departmentName}"></span>
+											<label for="departmentName">Department</label> <select th:field="*{departmentName}"
+												id="departmentName" name="departmentName">
+										
+												<option th:each="dept : ${depts}"
+													th:value="${dept.name}"
+													th:text="${dept.name}">
+												</option>
+
+											</select>
 										</div>
 									</div>
 									<div class="col" align="right">
@@ -206,10 +215,17 @@
 										</div>
 										&nbsp
 										
+										
 										<div>
-											<label for="divisionBranch">Division Branch(Location)</label> <input
-												type="text" th:field="*{divisionBranch}" id="divisionBranch"
-												placeholder="Division Branch">
+											<label for="divisionBranch">Division Branch</label> <select th:field="*{divisionBranch}"
+												id="divisionBranch" name="divisionBranch">
+										
+												<option th:each="location : ${locations}"
+													th:value="${location.locationName}"
+													th:text="${location.locationName}">
+												</option>
+
+											</select>
 										</div>
 										&nbsp
 										<div>
@@ -230,11 +246,11 @@
 										&nbsp
 										<div>
 											<div>
-												<label for="roleName">Role</label> <select th:field="*{roleName}"
-													id="roleName" name="roleName">
+												<label for="role">Role</label> <select th:field="*{role}"
+													id="role" name="role">
 											
 													<option th:each="role : ${roles}"
-														th:value="${role.name}"
+														th:value="${role.Id}"
 														th:text="${role.name}">
 													</option>
 
@@ -599,7 +615,7 @@
 																class="btn btn-secondary" data-bs-dismiss="modal"
 																th:onclick="|window.location.href='@{/delete/{id}/?keyword={keyword2}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage= ${perPage}, keyword2=${keyword},id=${user.id}, sort=${sort},currPage=${currPage},sortOr=${sortOr})}'|">
 																Delete User</button>
-															<a th:href="@{/home}" type="button"
+															<a th:href="@{/admin_users/?keyword={keyword}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage=0,keyword='',sort='id',currPage=1,sortOr=1)}" type="button"
 																class="btn btn-primary">Cancel </a>
 														</div>
 													</div>

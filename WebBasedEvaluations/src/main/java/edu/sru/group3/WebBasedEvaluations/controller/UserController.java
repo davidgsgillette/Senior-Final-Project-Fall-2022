@@ -20,12 +20,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import edu.sru.group3.WebBasedEvaluations.company.Company;
+import edu.sru.group3.WebBasedEvaluations.company.Department;
 import edu.sru.group3.WebBasedEvaluations.domain.Evaluator;
 import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
 import edu.sru.group3.WebBasedEvaluations.domain.Role;
 import edu.sru.group3.WebBasedEvaluations.domain.User;
+import edu.sru.group3.WebBasedEvaluations.repository.CompanyRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.DepartmentRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluationRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.LocationRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.RoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 import edu.sru.group3.WebBasedEvaluations.service.UserService;
@@ -45,22 +50,32 @@ public class UserController {
 	private EvaluatorRepository evaluatorRepository;
 	private EvaluationRepository evaluationRepository;
 	private Authentication auth;
+
+	@Autowired
+	private RoleRepository roleRepo;
 	
 	@Autowired
+	private LocationRepository locationRepo;
+	
+	@Autowired
+	private DepartmentRepository deptRepo;
+	@Autowired
 	private EvaluationRepository evalFormRepo;
-	
-	
+
+	@Autowired
+	private CompanyRepository companyRepo;
+
 
 	private AddUserController addUserController;
 
 	private Logger log = LoggerFactory.getLogger(UserController.class);
 
-//	private static final String ADMIN = "ADMIN";
-//	private static final String COMPANY_ADMIN = "COMPANY_ADMIN";
-//	private static final String EVALUATOR_EVAL = "EVALUATOR_EVAL";
-//	private static final String EVAL_ADMIN = "EVAL_ADMIN";
-//	private static final String EVALUATOR = "EVALUATOR";
-//	private static final String USER = "USER";
+	//	private static final String ADMIN = "ADMIN";
+	//	private static final String COMPANY_ADMIN = "COMPANY_ADMIN";
+	//	private static final String EVALUATOR_EVAL = "EVALUATOR_EVAL";
+	//	private static final String EVAL_ADMIN = "EVAL_ADMIN";
+	//	private static final String EVALUATOR = "EVALUATOR";
+	//	private static final String USER = "USER";
 
 
 	@Autowired
@@ -105,13 +120,13 @@ public class UserController {
 	public String home(Authentication auth, User user, Model model, String keyword, @RequestParam("perPage") Integer perPage,
 			@RequestParam("sort") String sort, @RequestParam("currPage") Integer currPage,
 			@RequestParam("sortOr") Integer sortOr) {
-		
-		
-		
-		
+
+
+
+
 		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
 		Company currentCompany = currentUser.getCompany();
-//		List<User> listTotal = service.getAllUsers();
+		//		List<User> listTotal = service.getAllUsers();
 		List<User> listTotal = userRepository.findByCompany(currentUser.getCompany());
 		List<User> list;
 		// log.error("Loaded page");
@@ -119,12 +134,12 @@ public class UserController {
 		// No keyword
 		if (keyword == null || keyword.equals("")/* && count !=null */) {
 			list = adminMethodsService.sortCheck(sort, listTotal, sortOr, model);
-			
+
 			list = adminMethodsService.pageCalc(list, currPage, perPage, sort, keyword, model);
 		}
 		// Has keyword
 		else {
-			
+
 			// If showing all users
 			if (perPage <= 0) {
 				list = adminMethodsService.sortCheck(sort, service.getByKeyword(keyword,currentCompany), sortOr, model);
@@ -140,33 +155,34 @@ public class UserController {
 			}
 
 		}
-		
-		
+
+
 		//fornavbar
 		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
+		model = AdminMethodsService.addingOrEditingUser(currentUser, locationRepo, deptRepo, roleRepo, companyRepo, model);
 		
 		//companies the currently logged in user can add user to. 
 		Set<Company> companies = currentUser.getRole().writableCompanies();
 		model.addAttribute("companies", companies);
-		
-		
+
+
 		//roles the currently logged in user can grant. 
 		Set<Role> roles = currentUser.getCompany().getRoles();
 		Set<Role> grantableRoles = new HashSet<Role>();
 		Set<String> roleNames = new HashSet<String>();		
 		roleNames.add(currentUser.getCompany().getDefaultRoleName());
-//		grantableRoles.add(new Role currentUser.getCompany().getDefaultRoleName());
+		//		grantableRoles.add(new Role currentUser.getCompany().getDefaultRoleName());
 		for(Role role : roles) {
 			if(currentUser.getRole().contains(role)) {
 				grantableRoles.add(role);
 				roleNames.add(role.getName());
 			}
 		}
-		
+
 		model.addAttribute("roles", grantableRoles);
 		model.addAttribute("EVALUATOR_EVAL", false);
-		
-		
+
+
 		model.addAttribute("keyword", keyword);
 
 		model.addAttribute("list", list);
@@ -203,13 +219,12 @@ public class UserController {
 		} else {
 			groupButton = true;
 		}
-		
-		
-		
-		
+
+
+
+
 		//fornavbar
-			model = AdminMethodsService.pageNavbarPermissions(user, model, evaluatorRepository, evalFormRepo);
-//		model.addAttribute("roles", user.getRole().getName());
+		model = AdminMethodsService.pageNavbarPermissions(user, model, evaluatorRepository, evalFormRepo);
 		model.addAttribute("id", user.getId());
 		model.addAttribute("groupButton", groupButton);
 
@@ -258,21 +273,57 @@ public class UserController {
 
 		// MyUserDetails userD = (MyUserDetails) authentication.getPrincipal();
 		Long userId = id;
+		
+		
+		
+		
 		User userCheck = userRepository.findById(userId).orElse(null);
 
 		user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+		
+		
+		Department dept = deptRepo.findByNameAndCompany(user.getDepartmentName(), user.getCompany());
+		if(dept != null) {
+			if(currentUser.getRole().writableDepartments().contains(dept) || currentUser.isCompanySuperUser() || currentUser.isSuperUser() && !user.getDepartments().contains(dept)) {
+				user.addDepartment(dept);
+			}
+			else if(!user.getDepartments().contains(dept))
+			{
+				mess = "User " + user.getName() + " already has the dept: " + dept.getName();
+			}
+			else{
+				mess = "User " + user.getName() + " does not have permission to add a user to department " + dept.getName();
+			}
+		}
+		
+		
 		model.addAttribute("user", user);
 		model.addAttribute("id", id);
 		adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr,auth);
+
+		
+		List<Role> roles = roleRepo.findByCompany(currentUser.getCompany());
+		if(!currentUser.isSuperUser() && !currentUser.isCompanySuperUser()) {
+			for(Role role : roles) {
+				if(!currentUser.getRole().contains(role)) {
+					roles.remove(role);
+				}
+			}
+		}
+		model.addAttribute("roles", roles);
 		
 		
+
+		
+
 		//fornavbar
 		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
-				
-				
+		model = AdminMethodsService.addingOrEditingUser(currentUser, locationRepo, deptRepo, roleRepo, companyRepo, model);
+		adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
+
 		return "admin_user_update";
-		
-		
+
+
 	}
 
 	/*
@@ -305,7 +356,7 @@ public class UserController {
 	public String updateUser(@PathVariable("id") long id, @RequestParam("perPage") Integer perPage,
 			@RequestParam("sort") String sort, @RequestParam("keyword") String keyword,
 			@RequestParam("currPage") Integer currPage, @RequestParam("sortOr") Integer sortOr, @Validated User user,
-			/* BindingResult result, */ Model model) {
+			/* BindingResult result, */ Model model, Authentication auth) {
 		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
 		String ansr = null;
 		String mess = null;
@@ -313,7 +364,7 @@ public class UserController {
 
 		User user2 = userRepository.findByid(id);
 
-		adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
+		
 
 		// Performs comparison between old and new user values for changes
 		User user3 = adminMethodsService.comparingMethod(id, user, user2, model);
@@ -321,15 +372,53 @@ public class UserController {
 		// Checks if email already used by another user, if not then the user selected
 		// will be updated.
 		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
+		model = AdminMethodsService.addingOrEditingUser(currentUser, this.locationRepo, this.deptRepo, this.roleRepo, this.companyRepo,  model);
+	
+
+		Department dept = deptRepo.findByNameAndCompany(user.getDepartmentName(), currentUser.getCompany());
+		
+		
+		if(dept != null) {
+			System.out.println("passed null");
+			if(currentUser.getRole().writableDepartments().contains(dept) || currentUser.isCompanySuperUser() || currentUser.isSuperUser() && !user3.getDepartments().contains(dept)) {
+				user3.addDepartment(dept);
+				dept.addUser(user3);
+				System.out.println("added dept");
+			}
+			else if(!user3.getDepartments().contains(dept))
+			{
+				System.out.println("already had it");
+				mess = "User " + user2.getName() + " already has the dept: " + dept.getName();
+			}
+			else{
+				System.out.println("no permissions");
+				mess = "User " + user2.getName() + " does not have permission to add a user to department " + dept.getName();
+			}
+		}
+		
+		
 		if ((userRepository.findByEmail(user.getEmail()) == null)
 				|| (userRepository.findByEmail(user.getEmail())) == userRepository.findByid(id)) {
 
 			user3.setFirstName(adminMethodsService.capitalize(user3.getFirstName()));
 			user3.setLastName(adminMethodsService.capitalize(user3.getLastName()));
 
-			userRepository.save(user3);
+			try {
+				userRepository.save(user3);
+				ansr = "addPass";
+				mess = "User successfully edited!";
+			}
+			catch(Exception e){
+				e.printStackTrace();
+				ansr = "addFail";
+				mess = "problem occured editing user.";
+				log.error(e.getStackTrace().toString());
+				
+			}
+			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
 			return "admin_user_update";
 		} else {
+			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
 			return "admin_user_update";
 
 		}
@@ -370,7 +459,7 @@ public class UserController {
 		String ansr = null;
 		String mess = null;
 		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
-		
+
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
 		List<Evaluator> eval = evaluatorRepository.findByUser(user);
@@ -385,7 +474,7 @@ public class UserController {
 		} else {
 			//if user to be deleted is an admin
 			MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
-			if(!userD.getUsers().contains(user)){
+			if(currentUser.isCompanySuperUser() || currentUser.isSuperUser()){
 				// System.out.println("Detected Admin");
 
 				ansr = "addFail";
@@ -408,6 +497,7 @@ public class UserController {
 			}
 
 			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
+			model = AdminMethodsService.addingOrEditingUser(currentUser, this.locationRepo, this.deptRepo, this.roleRepo, this.companyRepo,  model);
 			model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
 			return "admin_users";
 			// return "redirect:/admin_users/?keyword=" + keyword + "&perPage=" +
@@ -429,20 +519,18 @@ public class UserController {
 	 */
 	@PostMapping("/change/{id}")
 	public String changeUser(Authentication auth, @PathVariable("id") long id, @Validated User user, Model model) {
-		
+
 		User user2 = userRepository.findByid(id);
 
 		User user3 = adminMethodsService.comparingMethod(id, user, user2, model);
-//changed
+		//changed
+
+
 		
 		
 		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getId());
-		
-		//navbar
-		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
-		
-//		model.addAttribute("role", user2.getRole());
-		
+		//		model.addAttribute("role", user2.getRole());
+
 		model.addAttribute("id", user2.getId());
 
 		model.addAttribute("user", user2);
@@ -452,7 +540,8 @@ public class UserController {
 
 		userRepository.save(user3);
 		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
-		
+		model = AdminMethodsService.addingOrEditingUser(currentUser, this.locationRepo, this.deptRepo, this.roleRepo, this.companyRepo, model);
+
 		return "user_settings";
 	}
 
