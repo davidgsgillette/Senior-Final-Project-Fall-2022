@@ -66,19 +66,27 @@ public class RevieweeController {
     	MyUserDetails userD = (MyUserDetails) authentication.getPrincipal();
     	Long id = userD.getID() ;
     	User user2 = userRepository.findByid(userD.getID());
+    	System.out.println("");
     	List<Reviewee> reviewee = revieweeRepository.findByuser_Id(id);
     	List<Group> grouplist = (List<Group>) groupRepository.findByevaluatorUserId(userD.getID());
     	model.addAttribute("groups", grouplist);
 
-    	List<EvalRole>roles = (List<EvalRole>) roleRepository.findAll();
+    	List<EvalRole> roles = (List<EvalRole>) roleRepository.findAll();
     	
     	model = AdminMethodsService.pageNavbarPermissions(user2, model, evaluatorRepository, evalFormRepo);
 
-//    	model.addAttribute("myRole", userD.getRole());
-//    	model.addAttribute("role", roles);
+    	model.addAttribute("myRole", userD.getRole());
+    	model.addAttribute("role", roles);
     	model.addAttribute("id", userD.getID());
     	model.addAttribute("groups", grouplist);
     	model.addAttribute("reviewee", reviewee);
+    	
+    	
+    	
+    	System.out.println(user2.getName());
+    	System.out.println(reviewee.size());
+    	System.out.println(grouplist.size());
+    	System.out.println(roles.size());
     	return "myeval";
 
     }

@@ -24,6 +24,7 @@ public class Reviewee {
 	private Group group;
 	
 	private String name;
+	
 	@OneToOne
 	@JoinColumn(name="user_id")
 	private User user;

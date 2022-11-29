@@ -174,7 +174,7 @@ public class SelfEvaluationController {
 	 * @param eval is the evaluation object 
 	 * @param response is an array  that hold the answer for question the the user answered 
 	 * @param completed is a boolean variable that determines if the sue is saving  or submitting their evaluation
-	 * @param id hold the id of the self evaluation
+	 * @param id holds the id of the self evaluation
 	 * @param authentication is the user details 
 	 * @param model
 	 * @param redir is the a RedirectAttributes model object use to add attributes to a Redirect web page
@@ -193,9 +193,14 @@ public class SelfEvaluationController {
 		MyUserDetails userD = (MyUserDetails) authentication.getPrincipal();
 		Long userid = userD.getID() ;
 		User user = userRepository.findByid(userid);
+		
+		System.out.println(id);
+		
 		Reviewee reviewee	= revieweeRepository.findByNameAndCompany(user.getName(),user.getCompany());
 		EvalTemplates evalTemp = evalFormRepo.findById(reviewee.getGroup().getEvalTemplates().getName()).orElse(null);
 
+		System.out.println(id);
+		
 		Evaluation evalform;
 
 		SelfEvaluation selfEvaluation = selfEvaluationRepository.findByReviewee(reviewee);
