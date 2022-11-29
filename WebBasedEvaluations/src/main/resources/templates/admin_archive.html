@@ -21,10 +21,11 @@
 <body>
 
 	<!--  NAVBAR -->
-	<nav class="navbar navbar-light bg-light justify-content-center">		
+	<nav class="navbar navbar-light bg-light justify-content-center">
+		<a class="navbar-brand" th:text=${companyName}></a>		
 		<div class="btn-group" role="group" aria-label="Button group with nested dropdown">	
 			<div class="navbar navbar-light bg-light justify-content-center">		
-				<a th:href="@{/home}" class="btn btn-outline-success" style="color:#ffffff; background-color:#4CAF50" type="button"> Home </a>
+				<a th:href="@{/home}" class="btn btn-outline-success"  type="button"> Home </a>
 				<nav th:if="${ADMIN == true}"
 				class="navbar navbar-light bg-light justify-content-center">
 					<a th:href="@{/admin_users/?keyword={keyword}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage= 0,keyword='',sort='id',currPage=1,sortOr=1)}"
@@ -35,7 +36,7 @@
 				<nav th:if="${EVAL_ADMIN == true}"
 				class="navbar navbar-light bg-light justify-content-center">
 					<a th:href="@{/admin_evaluations}" class="btn btn-outline-success" type="button">Evaluation Forms</a>
-					<a th:href="@{/Archivegroups}" class="btn btn-outline-success" type="button">Archive</a>
+					<a th:href="@{/Archivegroups}" class="btn btn-outline-success" style="color:#ffffff; background-color:#4CAF50" type="button">Archive</a>
 					<th:block th:switch="${hasEvals}"> 
 						<th:block th:case="yes">
 							<button th:onclick="|window.location.href='@{/admin_groups}'|" class="btn btn-outline-success" type="button">Groups</button>

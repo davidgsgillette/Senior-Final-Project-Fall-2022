@@ -161,6 +161,15 @@ public class AddUserController {
 			user.setCompany(co);
 			Role role = roleRepo.findByNameAndCompany(user.getRoleName(),co);
 
+			
+			try {
+				System.out.println(user.getRoleName());
+				System.out.println(user.getRole().getName());
+			}
+			catch (Exception e) {
+				System.out.println("doesnt have a role");
+			}
+			
 			if(role != null) {
 				if(adminUser.getRole().contains(role)) {
 					user.setRole(role);
@@ -232,15 +241,16 @@ public class AddUserController {
 			}
 			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
 			model = AdminMethodsService.pageNavbarPermissions(adminUser, model, this.evalRepo, evalFormRepo);
+			model = AdminMethodsService.addingOrEditingUser(adminUser, this.locationRepo, this.deptRepo, this.roleRepo, this.companyRepo, model);
 			return "admin_users";
 		}
 		
 		model = AdminMethodsService.pageNavbarPermissions(adminUser, model, this.evalRepo, evalFormRepo);
+		model = AdminMethodsService.addingOrEditingUser(adminUser, this.locationRepo, this.deptRepo, this.roleRepo, this.companyRepo, model);
 		
 		if (result.hasErrors()) {
 
 			model.addAttribute("users", userRepository.findAll());
-			model = AdminMethodsService.pageNavbarPermissions(adminUser, model, this.evalRepo, evalFormRepo);
 			return "admin_users";
 		}
 
@@ -249,7 +259,6 @@ public class AddUserController {
 			mess = "User email already taken!";
 
 			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
-			model = AdminMethodsService.pageNavbarPermissions(adminUser, model, this.evalRepo, evalFormRepo);
 			return "admin_users";
 
 		}
@@ -482,7 +491,9 @@ public class AddUserController {
 			}
 		}
 		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, this.evalRepo, evalFormRepo);
-
+		model = AdminMethodsService.addingOrEditingUser(currentUser, this.locationRepo, this.deptRepo, this.roleRepo, this.companyRepo, model);
+		
+		
 		if (check) {
 			log.info("ADMIN User - ID:" + currentUser.getId() + " First Name: " + currentUser.getFirstName()
 			+ " Last Name: " + " uploaded a file: " + reapExcelDataFile.getOriginalFilename());

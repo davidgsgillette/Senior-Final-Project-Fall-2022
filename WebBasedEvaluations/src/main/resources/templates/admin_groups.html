@@ -26,7 +26,8 @@
 
 	<!-- EVAL ADMIN NAVBAR -->
 	<!--  NAVBAR -->
-	<nav class="navbar navbar-light bg-light justify-content-center">		
+	<nav class="navbar navbar-light bg-light justify-content-center">
+		<a class="navbar-brand" th:text=${companyName}></a>		
 		<div class="btn-group" role="group" aria-label="Button group with nested dropdown">	
 			<div class="navbar navbar-light bg-light justify-content-center">		
 				<a th:href="@{/home}" class="btn btn-outline-success"  type="button"> Home </a>
@@ -48,7 +49,7 @@
 						</th:block>
 						<th:block th:case="no">
 							<span class="d-inline-block tooltip-wrapper" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Groups are inaccessable until at least one Evaluation Template is uploaded.">
-								<a href="#" class="btn btn-outline-success disabled" style="color:#ffffff; background-color:#4CAF50" type="button">Groups</a>
+								<a href="#" class="btn btn-outline-success disabled" type="button">Groups</a>
 							</span>
 						</th:block>
 					</th:block>
