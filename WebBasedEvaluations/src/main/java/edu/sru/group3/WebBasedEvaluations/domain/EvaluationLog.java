@@ -69,7 +69,7 @@ public EvaluationLog(Evaluator evaluator, Reviewee reviewee){
 		// DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		  //Date date = new Date();
 		//this.datecompleted = new Date() ;
-		if(evaluator.getLevel().getId() ==1) {
+		if(evaluator.getLevel().getLevel() ==1) {
 			this.auth =true;
 		}else {
 			this.auth = false;

@@ -99,7 +99,7 @@
 				</thead>
 				<tbody th:each="rev : ${reviewee}">
 					<tr>
-						<td scope="row" th:text=${rev.group.Id}></td>
+						<td scope="row" th:text=${rev.group.number}></td>
 						<td scope="row" th:text=${rev.name}></td>
 						<td th:if="${rev.group.selfeval}"><a
 							th:if="${rev.selfEvaluation != null and rev.selfEvaluation.completed == true}"
@@ -108,7 +108,7 @@
 							<button
 								th:unless="${rev.selfEvaluation != null and rev.selfEvaluation.completed == true}"
 								class="btn btn-outline-success " type="button"
-								th:onclick="|window.location.href='@{/selfeval/{id}/(id = ${id})}'|">Complete
+								th:onclick="|window.location.href='@{/selfeval/{id}/(id = ${rev.Id})}'|">Complete
 								Self Evaluation</button></td>
 						<td th:unless="${rev.group.selfeval}"><span> Self
 								evaluation not needed</span></td>

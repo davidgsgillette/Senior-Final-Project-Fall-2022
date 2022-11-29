@@ -28,8 +28,10 @@ public interface RevieweeRepository extends CrudRepository<Reviewee,Long >{
 	List<Reviewee> findBygroup(Group group);
 
 	List<Reviewee> findByUser_Id(long l);
+	
+	Reviewee findById(long id);
 
-	Reviewee findByname(String string);
+	Reviewee findByNameAndCompany(String string, Company company);
 
 	List<Reviewee> findByuser_Id(long id);
 	

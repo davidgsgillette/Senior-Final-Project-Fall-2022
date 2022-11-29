@@ -562,7 +562,7 @@ public class GroupController {
 				else {
 					if (ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i)) != null) {
 						String name = ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i));
-						System.out.println("user/deptname:" + name);
+//						System.out.println("user/deptname:" + name);
 						User user = userRepository.findByEmail(name);
 						Department dept = deptRepo.findByNameAndCompany(name, currentCompany);
 
@@ -590,8 +590,12 @@ public class GroupController {
 						}
 						else if((dept != null && currentUser.isSuperUser()) || ((currentUser.isCompanySuperUser() && currentUser.getCompanyID() == dept.getCompany().getId()) || currentUser.getRole().writableDepartments().contains(dept))){
 							for(User u : dept.getUsers()) {
-								Reviewee reviewee = new Reviewee(group, u.getName(), u);
+								Reviewee reviewee = this.revieweeRepository.findByNameAndCompany(u.getName(), u.getCompany());
+								if(reviewee == null) {
+									reviewee = new Reviewee(group, u.getName(), u);
+								}								
 								group.appendReviewee(reviewee);
+								reviewee = null;
 							}
 						}
 						else {
@@ -613,7 +617,7 @@ public class GroupController {
 		}
 		try {
 			currentCompany.addGroups(grouplist);
-			System.out.println("added groups to cos");
+//			System.out.println("added groups to cos");
 			groupRepository.saveAll(grouplist);
 		}
 		catch(Exception e) {
@@ -650,9 +654,9 @@ public class GroupController {
 							Evaluator eval = new Evaluator(user, groupRepository.findByNumberAndCompany(groupNum, currentCompany),
 									evalRoleRepository.findByNameAndCompany(levellist.get(z), user.getCompany()),user.getCompany());
 							int num = eval.getLevel().getLevel();
+							
 							if (num != size && (syncmap.get(groupNum).get(num - 1).equals("Async"))) {
 								eval.setSync(false);
-
 							} else if (num != size && syncmap.get(groupNum).get(num - 1).equals("Sync")) {
 								eval.setSync(true);
 							} else if (num == size) {
@@ -662,20 +666,21 @@ public class GroupController {
 							if ((previewmap.get(groupNum).get(num - 1).equals("preview"))) {
 								eval.setPreview(true);
 
-							} else if (previewmap.get(groupNum).get(num - 1).equals("nopreview")) {
+							} 
+							else if (previewmap.get(groupNum).get(num - 1).equals("nopreview")) {
 								eval.setPreview(false);
 							}
 
-							List<Reviewee> rev = revieweeRepository.findBygroup_Id(groupNum);
+							List<Reviewee> rev = revieweeRepository.findByGroupNumberAndCompany(groupNum, currentCompany);
 							List<Evaluator> eval2 = (evaluatorRepository.findByLevelLevelAndGroupNumberAndCompany(num - 1, groupNum, currentCompany));
 							List<Evaluator> eval3 = (evaluatorRepository.findByLevelLevelAndGroupNumberAndCompany(num + 1, groupNum, currentCompany));
+//							System.out.println(rev.size());
 							for (int a = 0; a < rev.size(); a++) {
 								EvaluationLog etemp = new EvaluationLog(eval, rev.get(a));
 
 
 								for (int k = 0; k < eval2.size(); k++) {
-									EvaluationLog log1 = evaluationLogRepository
-											.findByEvaluatorIdAndRevieweeId(eval2.get(k).getId(), rev.get(a).getId());
+									EvaluationLog log1 = evaluationLogRepository.findByEvaluatorIdAndRevieweeId(eval2.get(k).getId(), rev.get(a).getId());
 									if ((eval2.get(k).isSync() != true) && log1.getAuth()) {
 										etemp.setAuth(true);
 
@@ -686,8 +691,7 @@ public class GroupController {
 								}
 								eval.appendEvalutationLog(etemp);
 								for (int k = 0; k < eval3.size(); k++) {
-									EvaluationLog log2 = evaluationLogRepository
-											.findByEvaluatorIdAndRevieweeId(eval3.get(k).getId(), rev.get(a).getId());
+									EvaluationLog log2 = evaluationLogRepository.findByEvaluatorIdAndRevieweeId(eval3.get(k).getId(), rev.get(a).getId());
 									if ((eval.isSync() != true) && etemp.getAuth()) {
 										log2.setAuth(true);
 
@@ -749,7 +753,9 @@ public class GroupController {
 
 		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
 		
+		
 		model.addAttribute("id", userD.getID());
+		model.addAttribute("roles", roles);
 		model.addAttribute("evalu", currentUser);
 		model.addAttribute("groups", grouplist);
 		log.info("EvaluationView was opened ");
@@ -809,16 +815,7 @@ public class GroupController {
 		
 		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
 		
-		if(grouplist != null) {
-			System.out.println("got to showing depts");
-			for(Group group : grouplist) {
-				for(Department dept : group.getDepartments())
-				{
-					System.out.println(dept.getName());
-				}
-				break;
-			}
-		}
+		
 		
 		return "admin_groups";
 	}
