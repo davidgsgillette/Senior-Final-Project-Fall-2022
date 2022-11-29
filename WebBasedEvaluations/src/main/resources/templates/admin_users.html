@@ -176,11 +176,18 @@
 												th:errors="*{email}"></span>
 										</div>
 										&nbsp
+										
+										
 										<div>
-											<label for="departmentName">Department</label> <input type="text"
-												th:field="*{departmentName}" id="addDepartmentName" placeholder="Department">
-											<span th:if="${#fields.hasErrors('departmentName')}"
-												th:errors="*{departmentName}"></span>
+											<label for="departmentName">Department</label> <select th:field="*{departmentName}"
+												id="departmentName" name="departmentName">
+										
+												<option th:each="dept : ${depts}"
+													th:value="${dept.name}"
+													th:text="${dept.name}">
+												</option>
+
+											</select>
 										</div>
 									</div>
 									<div class="col" align="right">

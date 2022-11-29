@@ -787,7 +787,7 @@ public class AdminMethodsService {
 		}
 		else{
 			locations = locationRepo.findByCompany(currentUser.getCompany());
-			depts= deptRepo.findByCompany(currentUser.getCompany());
+			depts = deptRepo.findByCompany(currentUser.getCompany());
 		}
 		
 		if(currentUser.isSuperUser()) {
