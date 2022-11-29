@@ -18488,3 +18488,15 @@ Caused by: java.sql.SQLSyntaxErrorException: Table 'web_eval.user_location' does
 2022-11-29 07:31:41.604  INFO 48668 --- [http-nio-8080-exec-8] e.s.g.W.controller.EvalFormController    : added location San Francisco Officeto dept Testing in company JUNIT Testing CO.
 2022-11-29 07:31:41.611  INFO 48668 --- [http-nio-8080-exec-8] e.s.g.W.controller.EvalFormController    : added location San Francisco Office to dept Testing in company JUNIT Testing CO.
 2022-11-29 07:31:41.614  INFO 48668 --- [http-nio-8080-exec-8] e.s.g.W.controller.EvalFormController    : added dept Management in company JUNIT Testing CO.
+2022-11-29 07:31:41.614  INFO 48668 --- [http-nio-8080-exec-8] e.s.g.W.controller.EvalFormController    : added location Manhatten Officeto dept Management in company JUNIT Testing CO.
+2022-11-29 07:31:41.623  INFO 48668 --- [http-nio-8080-exec-8] e.s.g.W.controller.EvalFormController    : added location Manhatten Office to dept Management in company JUNIT Testing CO.
+2022-11-29 07:31:41.626  INFO 48668 --- [http-nio-8080-exec-8] e.s.g.W.controller.EvalFormController    : added dept Malware in company JUNIT Testing CO.
+2022-11-29 07:31:41.626  INFO 48668 --- [http-nio-8080-exec-8] e.s.g.W.controller.EvalFormController    : added location Seoul Officeto dept Malware in company JUNIT Testing CO.
+2022-11-29 07:31:41.635  INFO 48668 --- [http-nio-8080-exec-8] e.s.g.W.controller.EvalFormController    : added location Seoul Office to dept Malware in company JUNIT Testing CO.
+2022-11-29 07:31:41.643  INFO 48668 --- [http-nio-8080-exec-8] e.s.g.W.controller.EvalFormController    : added location San Francisco Office to dept Management in company JUNIT Testing CO.
+2022-11-29 07:31:41.643  INFO 48668 --- [http-nio-8080-exec-8] e.s.g.W.controller.EvalFormController    : upload_company.xlsx Company added successfuly
+2022-11-29 07:33:35.913  INFO 48668 --- [RMI TCP Connection(4)-127.0.0.1] inMXBeanRegistrar$SpringApplicationAdmin : Application shutdown requested.
+2022-11-29 07:33:35.950  INFO 48668 --- [RMI TCP Connection(4)-127.0.0.1] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2022-11-29 07:33:35.951  INFO 48668 --- [RMI TCP Connection(4)-127.0.0.1] .SchemaDropperImpl$DelayedDropActionImpl : HHH000477: Starting delayed evictData of schema as part of SessionFactory shut-down'
+2022-11-29 07:33:36.651  INFO 48668 --- [RMI TCP Connection(4)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2022-11-29 07:33:36.658  INFO 48668 --- [RMI TCP Connection(4)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
