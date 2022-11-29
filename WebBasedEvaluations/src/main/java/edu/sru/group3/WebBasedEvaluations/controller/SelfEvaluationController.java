@@ -42,7 +42,7 @@ import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
  */
 @Controller
 public class SelfEvaluationController {
-
+	
 	private RevieweeRepository revieweeRepository;
 	private UserRepository userRepository;
 	private SelfEvaluationRepository selfEvaluationRepository;
@@ -55,17 +55,17 @@ public class SelfEvaluationController {
 		this.evaluationLogRepository= evaluationLogRepository;
 		this.evalFormRepo= evalFormRepo;
 	}
+	
 
-
-
+	
 	/**submitselfeval
 	 * Generates a form from the user to to fill out and submit as a self evaluation
 	 * @param id is the reviewee id 
 	 * @param authentication contains the user details
 	 * @param model is the a model object use to add attributes to a web page 
-	 * The model attributes
-	 * eval: is the evaluator template which will be either be a new blank template or if the evaluator has all ready started one  it will be the previously saved template 
-	 * id: is the reviewee  id
+     * The model attributes
+     * eval: is the evaluator template which will be either be a new blank template or if the evaluator has all ready started one  it will be the previously saved template 
+     * id: is the reviewee  id
 	 * @param redir is the a RedirectAttributes model object use to add attributes to a Redirect web page
 	 * @return selfevalformedit page 
 	 */
@@ -77,40 +77,40 @@ public class SelfEvaluationController {
 		User user = userRepository.findByid(userid);
 		Reviewee reviewee = revieweeRepository.findByname(user.getName());
 		Evaluation evall;
-
+		
 		if(reviewee == null) {
 			RedirectView redirectView = new RedirectView("/home", true);
 			System.out.println("user not being evaluated ");
 			redir.addFlashAttribute("error","user not being evaluated ");
 			return redirectView;
 		}
-
+		
 		SelfEvaluation selfEvaluation = selfEvaluationRepository.findByReviewee(reviewee);
-
+		
 		if(selfEvaluation == null) {
-
+			
 			//Deserialize
 			EvalTemplates evalTemp = evalFormRepo.findById(reviewee.getGroup().getEvalTemplates().getName()).orElse(null);
 			evall = (Evaluation) SerializationUtils.deserialize(evalTemp.getEval());
-
+			
 			//Populate preload
-			Group group = reviewee.getGroup();
-			evall.populatePreload(user, group);
-
-			//Serialize
-			byte[] data;
-			data = SerializationUtils.serialize(evall);
-
-			//save to database
-			SelfEvaluation selfEval = new SelfEvaluation(reviewee);
-			selfEval.setPath(data);
-			selfEvaluationRepository.save(selfEval);
-
-
+    		Group group = reviewee.getGroup();
+    		evall.populatePreload(user, group);
+    		
+    		//Serialize
+    		byte[] data;
+        	data = SerializationUtils.serialize(evall);
+        	
+        	//save to database
+        	SelfEvaluation selfEval = new SelfEvaluation(reviewee);
+        	selfEval.setPath(data);
+        	selfEvaluationRepository.save(selfEval);
+			
+			
 		}else {
 
 			evall = (Evaluation) SerializationUtils.deserialize(selfEvaluation.getPath());
-
+		
 		}
 
 
@@ -119,54 +119,54 @@ public class SelfEvaluationController {
 
 		return "selfevalformedit";
 	}
-
-	/**viewselfeval
-	 * lets user view  self evaluation
-	 * @param id is the reviewee id 
-	 * @param type  is who is viewing the self evaluation 
-	 * @param authentication contains the user details
-	 * @param model is the a model object use to add attributes to a web page 
-	 * The model attributes
-	 * eval: is the evaluator template which will be either be a new blank template or if the evaluator has all ready started one  it will be the previously saved template 
-	 * id: is the reviewee  id
-	 * address: holds the back address
-	 * @return preview_eval
-	 */
+	 
+	 /**viewselfeval
+	  * lets user view  self evaluation
+	  * @param id is the reviewee id 
+	  * @param type  is who is viewing the self evaluation 
+	  * @param authentication contains the user details
+	  * @param model is the a model object use to add attributes to a web page 
+	  * The model attributes
+	  * eval: is the evaluator template which will be either be a new blank template or if the evaluator has all ready started one  it will be the previously saved template 
+	  * id: is the reviewee  id
+	  * address: holds the back address
+	  * @return preview_eval
+	  */
 	@RequestMapping({"/viewselfeval/{id}/{type}"})
-	public Object viewselfeval(@PathVariable("id") long id,@PathVariable("type") String type,Authentication authentication, Model model) {
+	 public Object viewselfeval(@PathVariable("id") long id,@PathVariable("type") String type,Authentication authentication, Model model) {
+		 
+
+         
+          Reviewee reviewee    = revieweeRepository.findById(id).orElse(null);
+          Evaluation evall;
+
+          SelfEvaluation SelfEvaluation = selfEvaluationRepository.findByReviewee(reviewee);
 
 
 
-		Reviewee reviewee    = revieweeRepository.findById(id).orElse(null);
-		Evaluation evall;
+         evall = (Evaluation) SerializationUtils.deserialize(SelfEvaluation.getPath());
+           
 
-		SelfEvaluation SelfEvaluation = selfEvaluationRepository.findByReviewee(reviewee);
+if(type.equals("eval")) {
+ 	model.addAttribute("address", "/Evaluationgroups");
+}
+else if(type.equals("rev")) {
+ 	model.addAttribute("address", "/myeval");
+}
+else if(type.equals("admin")) {
+	long eid = SelfEvaluation.getReviewee().getUser().getId();
+ 	model.addAttribute("address", "/admineval/"+eid);
+}
+     
+         model.addAttribute("eval", evall);
+         model.addAttribute("id", id);
 
-
-
-		evall = (Evaluation) SerializationUtils.deserialize(SelfEvaluation.getPath());
-
-
-		if(type.equals("eval")) {
-			model.addAttribute("address", "/Evaluationgroups");
-		}
-		else if(type.equals("rev")) {
-			model.addAttribute("address", "/myeval");
-		}
-		else if(type.equals("admin")) {
-			long eid = SelfEvaluation.getReviewee().getUser().getId();
-			model.addAttribute("address", "/admineval/"+eid);
-		}
-
-		model.addAttribute("eval", evall);
-		model.addAttribute("id", id);
-
-		return "preview_eval";
-	}
-
-
-	/** saveselfEvalForm
-	 * method used to save self evaluation
+         return "preview_eval";
+     }
+	 
+	 
+	 /** saveselfEvalForm
+	  * method used to save self evaluation
 	 * @param eval is the evaluation object 
 	 * @param response is an array  that hold the answer for question the the user answered 
 	 * @param completed is a boolean variable that determines if the sue is saving  or submitting their evaluation
@@ -178,80 +178,80 @@ public class SelfEvaluationController {
 	 * @throws Exception
 	 */
 	@RequestMapping({"/save_selfeval/{id}"})
-	public String saveselfEvalForm(@Validated Evaluation eval, BindingResult results,
-			@RequestParam(value="response", required=false) String[] response,
-			@RequestParam(value="completed", required=true) boolean completed,
-			@PathVariable("id") long id ,
-			Authentication authentication,
-			Model model,
-			RedirectAttributes redir) throws Exception {
+	 public String saveselfEvalForm(@Validated Evaluation eval, BindingResult results,
+			 @RequestParam(value="response", required=false) String[] response,
+			 @RequestParam(value="completed", required=true) boolean completed,
+			 @PathVariable("id") long id ,
+			 Authentication authentication,
+			 Model model,
+			 RedirectAttributes redir) throws Exception {
 
-		MyUserDetails userD = (MyUserDetails) authentication.getPrincipal();
-		Long userid = userD.getID() ;
-		User user = userRepository.findByid(userid);
-		Reviewee reviewee	= revieweeRepository.findByname(user.getName());
-		EvalTemplates evalTemp = evalFormRepo.findById(reviewee.getGroup().getEvalTemplates().getName()).orElse(null);
+		 MyUserDetails userD = (MyUserDetails) authentication.getPrincipal();
+		 Long userid = userD.getID() ;
+		 User user = userRepository.findByid(userid);
+		 Reviewee reviewee	= revieweeRepository.findByname(user.getName());
+		 EvalTemplates evalTemp = evalFormRepo.findById(reviewee.getGroup().getEvalTemplates().getName()).orElse(null);
 
-		Evaluation evalform;
+		 Evaluation evalform;
 
-		SelfEvaluation selfEvaluation = selfEvaluationRepository.findByReviewee(reviewee);
+		 SelfEvaluation selfEvaluation = selfEvaluationRepository.findByReviewee(reviewee);
 
-		if(selfEvaluation == null) {
+		 if(selfEvaluation == null) {
 
-			//Deserialize
-			selfEvaluation = new SelfEvaluation(reviewee);
-			evalform = (Evaluation) SerializationUtils.deserialize(evalTemp.getEval());
+			 //Deserialize
+			 selfEvaluation = new SelfEvaluation(reviewee);
+			 evalform = (Evaluation) SerializationUtils.deserialize(evalTemp.getEval());
 
-		} else {
+		 } else {
 
-			// Deserialize
-			evalform = (Evaluation) SerializationUtils.deserialize(selfEvaluation.getPath());
-		}
+			 // Deserialize
+			 evalform = (Evaluation) SerializationUtils.deserialize(selfEvaluation.getPath());
+		 }
 
-		// Getting and saving responses
-		evalform.saveResponses(response);
+		 // Getting and saving responses
+		 evalform.saveResponses(response);
 
-		// Updating compute sections
-		evalform.updateCompute();
+		 // Updating compute sections
+		 evalform.updateCompute();
 
-		// Determine if evaluation is complete
-		List <Integer> incompQuests = new ArrayList<Integer>();
-		incompQuests.addAll(evalform.verifyCompleted());
+		 // Determine if evaluation is complete
+		 List <Integer> incompQuests = new ArrayList<Integer>();
+		 incompQuests.addAll(evalform.verifyCompleted());
 
-		// Serialize
-		byte[] data;
-		data = SerializationUtils.serialize(evalform);
+		 // Serialize
+		 byte[] data;
+		 data = SerializationUtils.serialize(evalform);
 
-		Date date = new Date();
-		System.out.println(date);
-		selfEvaluation.setDateEdited(date);
-		selfEvaluation.setPath(data);
+		 Date date = new Date();
+		 System.out.println(date);
+		 selfEvaluation.setDateEdited(date);
+		 selfEvaluation.setPath(data);
 
-		if (completed == false) {
-			selfEvaluation.setCompleted(false);
-			selfEvaluationRepository.save(selfEvaluation);
+		 if (completed == false) {
+			 selfEvaluation.setCompleted(false);
+			 selfEvaluationRepository.save(selfEvaluation);
 
-			return "redirect:/myeval";
-		}
+			 return "redirect:/myeval";
+		 }
 
-		// If evaluation is complete
-		if (evalform.getCompleted()) {
+		 // If evaluation is complete
+		 if (evalform.getCompleted()) {
 
-			selfEvaluation.setCompleted(true);
+			 selfEvaluation.setCompleted(true);
 
-			selfEvaluationRepository.save(selfEvaluation);
-			return "redirect:/myeval";
+			 selfEvaluationRepository.save(selfEvaluation);
+			 return "redirect:/myeval";
 
-			// If evaluation is not complete
-		} else {
+			 // If evaluation is not complete
+		 } else {
 
-			selfEvaluation.setCompleted(false);
-			selfEvaluationRepository.save(selfEvaluation);
+			 selfEvaluation.setCompleted(false);
+			 selfEvaluationRepository.save(selfEvaluation);
 
-			redir.addFlashAttribute("error", incompQuests.size() + " required question(s) are blank and must be answered.");
-			redir.addFlashAttribute("incompQuests", incompQuests);
+			 redir.addFlashAttribute("error", incompQuests.size() + " required question(s) are blank and must be answered.");
+			 redir.addFlashAttribute("incompQuests", incompQuests);
 
-			return "redirect:/selfeval/" + id;
-		}
-	}
+			 return "redirect:/selfeval/" + id;
+		 }
+	 }
 }

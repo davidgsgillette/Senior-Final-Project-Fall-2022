@@ -164,16 +164,16 @@ public class HomePage {
 			model.addAttribute("groupButton", groupButton);			
 			model.addAttribute("user", user.getUsername());
 			model.addAttribute("id", user.getID());
-			model.addAttribute("deptNames", user2.getDepartmentNames());
-			model.addAttribute("companyName", user2.getCompanyName());
+			model.addAttribute("deptNames", "Departments: " + user2.getDepartmentNames());
+			model.addAttribute("companyName", "Company: " +user2.getCompanyName());
 			if(user2.isSuperUser()) {
-				model.addAttribute("roleName", "SuperSuperUser");
+				model.addAttribute("roleName", "Role: SuperSuperUser");
 			}
 			else if(user2.isCompanySuperUser()) {
-				model.addAttribute("roleName",user2.getCompanyName() + " SuperUser");
+				model.addAttribute("roleName", "Role: " +user2.getCompanyName() + " SuperUser");
 			}
 			else {
-				model.addAttribute("roleName", user2.getRoleName());
+				model.addAttribute("roleName", "Role: " +user2.getRoleName());
 			}
 			
 			

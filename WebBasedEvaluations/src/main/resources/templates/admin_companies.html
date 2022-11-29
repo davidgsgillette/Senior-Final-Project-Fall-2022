@@ -19,8 +19,7 @@
 <body>
 
 	<!--  NAVBAR -->
-	<nav class="navbar navbar-light bg-light justify-content-center">
-		<a class="navbar-brand" th:text=${companyName}></a>		
+	<nav class="navbar navbar-light bg-light justify-content-center">		
 		<div class="btn-group" role="group" aria-label="Button group with nested dropdown">	
 			<div class="navbar navbar-light bg-light justify-content-center">		
 				<a th:href="@{/home}" class="btn btn-outline-success"  type="button"> Home </a>
@@ -35,16 +34,13 @@
 				class="navbar navbar-light bg-light justify-content-center">
 					<a th:href="@{/admin_evaluations}" class="btn btn-outline-success" type="button">Evaluation Forms</a>
 					<a th:href="@{/Archivegroups}" class="btn btn-outline-success" type="button">Archive</a>
-					<th:block th:switch="${hasEvals}"> 
-						<th:block th:case="yes">
-							<button th:onclick="|window.location.href='@{/admin_groups}'|" class="btn btn-outline-success" type="button">Groups</button>
-					
-						</th:block>
-						<th:block th:case="no">
-							<span class="d-inline-block tooltip-wrapper" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Groups are inaccessable until at least one Evaluation Template is uploaded.">
-								<a href="#" class="btn btn-outline-success disabled" type="button">Groups</a>
-							</span>
-						</th:block>
+					<th:block th:if="${groupButton == true}">
+						<a th:href="@{/admin_groups}" class="btn btn-outline-success" type="button">Groups</a>
+					</th:block>
+					<th:block th:unless="${groupButton == true}">
+						<span class="d-inline-block tooltip-wrapper" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Groups are inaccessable until at least one Evaluation Template is uploaded.">
+							<a href="#" class="btn btn-outline-success disabled" type="button">Groups</a>
+						</span>
 					</th:block>
 				</nav>
 					
@@ -185,7 +181,7 @@
 
 
 
-	<div th:switch= "${companies}">
+	<div th:switch= "${roles}">
 		<div th:case="null">
 			<p> <strong>There are currently no companies added </strong></p>		
 		</div>	

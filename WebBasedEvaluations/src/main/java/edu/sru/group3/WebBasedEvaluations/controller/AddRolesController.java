@@ -131,20 +131,12 @@ public class AddRolesController {
 		
 		try {
 			sheet = ExcelRead_group.loadFile(file).getSheetAt(0);
-			//check the "filetype"
-			String name = ExcelRead_group.checkStringType(sheet.getRow(0).getCell(13));
-			if(!name.equals("Role Template")) {
-				throw new Exception("Invalid file");
-			}
 
 		} catch (Exception e) {				
 			RedirectView redirectView = new RedirectView("/admin_roles", true);
 			redir.addFlashAttribute("error", "invalid file");
 			return redirectView;			
 		}
-		
-		
-		
 		
 		Department dept = null;
 		Location loc = null;
