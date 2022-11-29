@@ -25,6 +25,7 @@ import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.GroupRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.RevieweeRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
+import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
 /**
  * Controls the  Reviewee behavior  of the application 
  *
@@ -71,45 +72,7 @@ public class RevieweeController {
 
     	List<EvalRole>roles = (List<EvalRole>) roleRepository.findAll();
     	
-    	if((user2.hasRead() || user2.hasWrite() || user2.hasDelete()) && user2.hasEditEvalPerm()) {
-			model.addAttribute("EVAL_ADMIN", true);
-//			role = "EVAL_ADMIN";
-		}
-		else {
-			//testing
-//			model.addAttribute("EVAL_ADMIN", true);
-			model.addAttribute("EVAL_ADMIN", false);
-		}
-		
-		
-		if(evaluatorRepository.findById(user2.getId()) != null) {
-			model.addAttribute("EVALUATOR", true);
-		}
-		else {
-			//testing
-//			model.addAttribute("EVALUATOR", true);
-			model.addAttribute("EVALUATOR", false);
-		}
-		
-		
-		if(user2.hasEvaluator()) {
-			model.addAttribute("USER", true);
-		}
-		else {
-			//testing
-//			model.addAttribute("USER", true);
-			model.addAttribute("USER", false);
-		}
-		
-		
-		if((user2.hasRead() || user2.hasWrite() || user2.hasDelete())) {
-			model.addAttribute("ADMIN", true);
-		}
-		else {
-			//testing
-//			model.addAttribute("ADMIN", true);
-			model.addAttribute("ADMIN", false);
-		}
+    	model = AdminMethodsService.pageNavbarPermissions(user2, model, evaluatorRepository, evalFormRepo);
 
 //    	model.addAttribute("myRole", userD.getRole());
 //    	model.addAttribute("role", roles);
@@ -130,14 +93,17 @@ public class RevieweeController {
 	 * @return admin_eval page
 	 */
 	@GetMapping("/admineval/{id}")
-	public Object getrevieweegroup(Model model,@PathVariable("id") long id) {
+	public Object getrevieweegroup(Model model,@PathVariable("id") long id, Authentication auth) {
 		
-		 List<Reviewee> reviewee = revieweeRepository.findByuser_Id(id);
+		
+		MyUserDetails user = (MyUserDetails) auth.getPrincipal();
+		User currentUser = userRepository.findByid(user.getID());
+		List<Reviewee> reviewee = revieweeRepository.findByuser_Id(id);
 		
 			
-			List<EvalRole>roles = (List<EvalRole>) roleRepository.findAll();
+		List<EvalRole>roles = (List<EvalRole>) roleRepository.findAll();
 			
-			
+		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);	
 		model.addAttribute("role", roles);
 		model.addAttribute("id",id);
 		

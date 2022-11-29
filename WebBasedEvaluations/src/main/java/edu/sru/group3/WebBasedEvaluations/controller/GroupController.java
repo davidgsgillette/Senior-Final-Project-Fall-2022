@@ -721,6 +721,7 @@ public class GroupController {
 		MyUserDetails userD = (MyUserDetails) authentication.getPrincipal();
 		User currentUser = userRepository.findByid(userD.getID());
 		List<Group> grouplist = (List<Group>) groupRepository.findByevaluatorUserId(userD.getID(),Sort.by(Sort.Direction.ASC, "Id"));
+		
 		grouplist = new ArrayList<Group>(new LinkedHashSet<Group>(grouplist));
 
 		model.addAttribute("groups", grouplist);
@@ -729,46 +730,13 @@ public class GroupController {
 
 
 
-		//navbar
-		//navbar
-				if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEditEvalPerm() || currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
-					model.addAttribute("EVAL_ADMIN", true);
-				}
-				else {
-					//testing
-					model.addAttribute("EVAL_ADMIN", false);
-				}
-				
-				
-				if(evaluatorRepository.findById(currentUser.getId()) != null ||currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
-					model.addAttribute("EVALUATOR", true);
-				}
-				else {
-					//testing
-					model.addAttribute("EVALUATOR", false);
-				}
-				
-				
-				if(currentUser.hasEvaluator()||currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
-					model.addAttribute("USER", true);
-				}
-				else {
-					//testing
-					model.addAttribute("USER", false);
-				}
-				
-				
-				if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete() ||currentUser.isCompanySuperUser() || currentUser.isSuperUser())) {
-					model.addAttribute("ADMIN", true);
-				}
-				else {
-					//testing
-					model.addAttribute("ADMIN", false);
-				}
+		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
+		
 		model.addAttribute("id", userD.getID());
 		model.addAttribute("evalu", currentUser);
 		model.addAttribute("groups", grouplist);
 		log.info("EvaluationView was opened ");
+		
 		return "EvaluationView";
 	}
 

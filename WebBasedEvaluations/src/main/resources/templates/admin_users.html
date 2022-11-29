@@ -17,8 +17,10 @@
 <title>Users</title>
 </head>
 <body>
+
 <!--  NAVBAR -->
-	<nav class="navbar navbar-light bg-light justify-content-center">		
+	<nav class="navbar navbar-light bg-light justify-content-center">
+		<a class="navbar-brand" th:text=${companyName}></a>		
 		<div class="btn-group" role="group" aria-label="Button group with nested dropdown">	
 			<div class="navbar navbar-light bg-light justify-content-center">		
 				<a th:href="@{/home}" class="btn btn-outline-success"  type="button"> Home </a>
@@ -230,11 +232,11 @@
 										&nbsp
 										<div>
 											<div>
-												<label for="roleName">Role</label> <select th:field="*{roleName}"
-													id="roleName" name="roleName">
+												<label for="role">Role</label> <select th:field="*{role}"
+													id="role" name="role">
 											
 													<option th:each="role : ${roles}"
-														th:value="${role.name}"
+														th:value="${role.Id}"
 														th:text="${role.name}">
 													</option>
 
