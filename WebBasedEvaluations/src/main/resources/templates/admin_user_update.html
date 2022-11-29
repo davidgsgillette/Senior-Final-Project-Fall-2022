@@ -186,12 +186,12 @@
 												th:field="*{supervisor}" id="supervisor"
 												placeholder="Supervisor">
 										</div>
+											
 										
-										<div>
-											<label for="divisionBranch">Division Branch</label> <input
-												type="text" th:field="*{divisionBranch}" id="divisionBranch"
-												placeholder="Division Branch">
-										</div>
+										
+										
+										
+										
 										<div>
 											<label for="dateOfHire">Date Of Hire</label> <input
 												type="date" th:field="*{dateOfHire}" id="dateOfHire"
@@ -206,16 +206,16 @@
 												th:errors="*{password}"></span>
 										</div>
 										<div>
-												<label for="role">Role</label> <select th:field="*{role}"
-													id="role" name="role">
-											
-													<option th:each="role : ${roles}"
-														th:value="${role.Id}"
-														th:text="${role.name}">
-													</option>
+											<label for="role">Role</label> <select th:field="*{role}"
+												id="role" name="role">
+										
+												<option th:each="role : ${roles}"
+													th:value="${role.Id}"
+													th:text="${role.name}">
+												</option>
 
-												</select>
-											</div>
+											</select>
+										</div>
 									</div>
 
 								</div>

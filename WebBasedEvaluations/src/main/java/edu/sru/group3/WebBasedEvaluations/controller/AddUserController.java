@@ -156,7 +156,7 @@ public class AddUserController {
 			//departments of the user being added
 
 			Department dept = deptRepo.findByNameAndCompany(user.getDepartmentName(), currentCompany);
-			Location loc = locationRepo.findByLocationName(user.getDivisionBranch());
+			Location loc = locationRepo.findByLocationNameAndCompany(user.getDivisionBranch(), adminUser.getCompany());
 			Company co = companyRepo.findByCompanyName(user.getCompanyName());
 			user.setCompany(co);
 			Role role = roleRepo.findByNameAndCompany(user.getRoleName(),co);
@@ -194,7 +194,7 @@ public class AddUserController {
 				}
 			}
 			if(loc != null) {
-				if(adminUser.getRole().writableLocations().contains(loc)) {
+				if(adminUser.getRole().writableLocations().contains(loc) || adminUser.isCompanySuperUser() || adminUser.isSuperUser()) {
 					user.addLocation(loc);
 				}
 				else {

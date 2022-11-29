@@ -208,10 +208,17 @@
 										</div>
 										&nbsp
 										
+										
 										<div>
-											<label for="divisionBranch">Division Branch(Location)</label> <input
-												type="text" th:field="*{divisionBranch}" id="divisionBranch"
-												placeholder="Division Branch">
+											<label for="divisionBranch">Division Branch</label> <select th:field="*{divisionBranch}"
+												id="divisionBranch" name="divisionBranch">
+										
+												<option th:each="location : ${locations}"
+													th:value="${location.locationName}"
+													th:text="${location.locationName}">
+												</option>
+
+											</select>
 										</div>
 										&nbsp
 										<div>
