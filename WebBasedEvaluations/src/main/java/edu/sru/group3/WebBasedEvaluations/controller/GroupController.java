@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
@@ -61,6 +61,7 @@ import edu.sru.group3.WebBasedEvaluations.repository.EvaluatorRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.RevieweeRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.ArchiveRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.CompanyRepository;
+import edu.sru.group3.WebBasedEvaluations.repository.DepartmentRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.EvalRoleRepository;
 import edu.sru.group3.WebBasedEvaluations.repository.UserRepository;
 import edu.sru.group3.WebBasedEvaluations.service.AdminMethodsService;
@@ -79,6 +80,9 @@ public class GroupController {
 
 	private UserRepository userRepository;
 
+	@Autowired
+	private DepartmentRepository deptRepo;
+	
 	private EvaluatorRepository evaluatorRepository;
 	private EvaluationLogRepository evaluationLogRepository;
 	private RevieweeRepository revieweeRepository;
@@ -557,34 +561,47 @@ public class GroupController {
 
 				else {
 					if (ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i)) != null) {
-						User user = userRepository.findByEmail(ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i)));
+						String name = ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i));
+						System.out.println("user/deptname:" + name);
+						User user = userRepository.findByEmail(name);
+						Department dept = deptRepo.findByNameAndCompany(name, currentCompany);
 
 						//						System.out.println((currentUser.isCompanySuperUser() && currentUser.getCompanyID() == user.getCompanyID()));
 						//						System.out.println(currentUser.isCompanySuperUser() );
 						//						System.out.println(user.getCompanyID());
 						//						System.out.println(currentUser.getCompanyID());
 						//						System.out.println(currentUser.getRole().writableUsers().contains(user));
-						if (user == null) {
+						if (user == null && dept == null) {
 
-							redir.addFlashAttribute("error", "user "
-									+ ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i)) + " does not exist");
+							redir.addFlashAttribute("error", "user or dept "
+									+ name + " does not exist");
 
 							RedirectView redirectView = new RedirectView("/admin_groups", true);
 							//System.out.println("user dosnt not exist " + x + " " + i
 							//		+ ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i)));
-							log.error("user" + ExcelRead_group.checkStringType(sheet.getRow(x).getCell(i)) + "does not not exist");
+							log.error("user or dept " + name + "does not not exist");
 							return redirectView;
-
-						} else if((currentUser.isCompanySuperUser() && currentUser.getCompanyID() == user.getCompanyID()) || currentUser.getRole().writableUsers().contains(user)) {
-							Reviewee reviewee = new Reviewee(group, user.getName(), user);
-							group.appendReviewee(reviewee);
+							
+						} else if(user != null) {
+							if(currentUser.isSuperUser() || ((currentUser.isCompanySuperUser() && currentUser.getCompanyID() == user.getCompanyID()) || currentUser.getRole().writableUsers().contains(user))) {
+								Reviewee reviewee = new Reviewee(group, user.getName(), user);
+								group.appendReviewee(reviewee);
+							}
+						}
+						else if((dept != null && currentUser.isSuperUser()) || ((currentUser.isCompanySuperUser() && currentUser.getCompanyID() == dept.getCompany().getId()) || currentUser.getRole().writableDepartments().contains(dept))){
+							for(User u : dept.getUsers()) {
+								Reviewee reviewee = new Reviewee(group, u.getName(), u);
+								group.appendReviewee(reviewee);
+							}
 						}
 						else {
 							RedirectView redirectView = new RedirectView("/admin_groups", true);
-							redir.addFlashAttribute("error", "User " + currentUser.getName() + " cannot add user " + user.getName() + " to a group");
-							log.error("User " + currentUser.getName() + " cannot add user " + user.getName() + " to a group");
+							redir.addFlashAttribute("error", "User/dept " + currentUser.getName() + " cannot add user/dept " + name + " to a group");
+							log.error("User/dept " + currentUser.getName() + " cannot add user/dept " + name + " to a group");
 							return redirectView;
 						}
+						user = null;
+						dept = null;
 					}
 				}
 
