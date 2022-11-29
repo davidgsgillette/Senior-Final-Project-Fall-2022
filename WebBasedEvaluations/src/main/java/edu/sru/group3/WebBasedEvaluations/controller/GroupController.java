@@ -590,8 +590,12 @@ public class GroupController {
 						}
 						else if((dept != null && currentUser.isSuperUser()) || ((currentUser.isCompanySuperUser() && currentUser.getCompanyID() == dept.getCompany().getId()) || currentUser.getRole().writableDepartments().contains(dept))){
 							for(User u : dept.getUsers()) {
-								Reviewee reviewee = new Reviewee(group, u.getName(), u);
+								Reviewee reviewee = this.revieweeRepository.findByNameAndCompany(u.getName(), u.getCompany());
+								if(reviewee == null) {
+									reviewee = new Reviewee(group, u.getName(), u);
+								}								
 								group.appendReviewee(reviewee);
+								reviewee = null;
 							}
 						}
 						else {

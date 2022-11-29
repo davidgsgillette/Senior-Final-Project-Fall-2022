@@ -46,6 +46,7 @@ public class Group {
 	
 	private Boolean evalstart;
 	private Boolean selfeval;
+	
 	@OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true,  fetch = FetchType.LAZY)
 	private List<Reviewee> reviewees = new ArrayList<>();
 

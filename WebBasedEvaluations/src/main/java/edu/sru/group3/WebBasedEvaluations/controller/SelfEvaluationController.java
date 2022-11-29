@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -75,7 +76,9 @@ public class SelfEvaluationController {
 		MyUserDetails userD = (MyUserDetails) authentication.getPrincipal();
 		Long userid = userD.getID() ;
 		User user = userRepository.findByid(userid);
-		Reviewee reviewee = revieweeRepository.findByname(user.getName());
+		System.out.println(id);
+//		Reviewee reviewee = revieweeRepository.findByNameAndCompany(user.getName(), user.getCompany());
+		Reviewee reviewee = revieweeRepository.findById(id);
 		Evaluation evall;
 
 		if(reviewee == null) {
@@ -90,7 +93,8 @@ public class SelfEvaluationController {
 		if(selfEvaluation == null) {
 
 			//Deserialize
-			EvalTemplates evalTemp = evalFormRepo.findById(reviewee.getGroup().getEvalTemplates().getName()).orElse(null);
+			EvalTemplates evalTemp = reviewee.getGroup().getEvalTemplates();
+			//evalFormRepo.findById(reviewee.getGroup().getEvalTemplates().getId()).orElse(null);
 			evall = (Evaluation) SerializationUtils.deserialize(evalTemp.getEval());
 
 			//Populate preload
@@ -137,7 +141,7 @@ public class SelfEvaluationController {
 
 
 
-		Reviewee reviewee    = revieweeRepository.findById(id).orElse(null);
+		Reviewee reviewee = revieweeRepository.findById(id);
 		Evaluation evall;
 
 		SelfEvaluation SelfEvaluation = selfEvaluationRepository.findByReviewee(reviewee);
@@ -189,7 +193,7 @@ public class SelfEvaluationController {
 		MyUserDetails userD = (MyUserDetails) authentication.getPrincipal();
 		Long userid = userD.getID() ;
 		User user = userRepository.findByid(userid);
-		Reviewee reviewee	= revieweeRepository.findByname(user.getName());
+		Reviewee reviewee	= revieweeRepository.findByNameAndCompany(user.getName(),user.getCompany());
 		EvalTemplates evalTemp = evalFormRepo.findById(reviewee.getGroup().getEvalTemplates().getName()).orElse(null);
 
 		Evaluation evalform;

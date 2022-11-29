@@ -15,6 +15,7 @@ public interface EvaluationRepository extends CrudRepository<EvalTemplates,Strin
     List<EvalTemplates> findByCompany(Company company);
     long count();
 	EvalTemplates findByNameAndCompany(String name, Company company);
+	
 
 
 
