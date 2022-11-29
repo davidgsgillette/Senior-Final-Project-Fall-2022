@@ -78,30 +78,30 @@ class InitUsers{
 		Company co = new Company("Thangiah Manufacturing LLC");
 //		Company co2 = new Company("Test Company 2");
 		
-		World world = new World("testWorld");
+		World world = new World("World");
 //		worldRepo.save(world);
 		
-		Continent continent = new Continent("testContinent", world);
+		Continent continent = new Continent("NA", world);
 //		continentRepo.save(continent);
 		
 		world.addContinent(continent);
 //		worldRepo.save(world);
 	
-		Country country = new Country("testCountry", continent);
+		Country country = new Country("USA", continent);
 //		countryRepo.save(country);
 		
 		continent.addCountry(country);
 //		continentRepo.save(continent);
 		
 
-		Province province = new Province("testProvince", country);
+		Province province = new Province("PA", country);
 //		provinceRepo.save(province);
 		
 		country.addProvince(province);
 //		countryRepo.save(country);
 		
 		
-		City city = new City("testCity", province);
+		City city = new City("Slippery Rock", province);
 //		cityRepo.save(city);
 		
 		province.addCity(city);
@@ -113,7 +113,7 @@ class InitUsers{
 		locGroup.setCompany(co);
 //		locGroup2.setCompany(co2);
 		
-		Location loc = new Location("testLocation", city, co, locGroup);
+		Location loc = new Location("none", city, co, locGroup);
 //		Location loc2 = new Location("testLocation2", city, co2, locGroup2);
 //		locationRepo.save(loc);
 			
@@ -153,7 +153,7 @@ class InitUsers{
 		
 		
 		
-		Department dept = new Department(use1, loc, "testing dept", null,null,co);
+		Department dept = new Department(use1, loc, "none", null,null,co);
 //		Department dept2 = new Department(use2, loc2, "testing dept2", null,null,co2);
 		
 		use1.addDepartment(dept);

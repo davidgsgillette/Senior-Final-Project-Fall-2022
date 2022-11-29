@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import edu.sru.group3.WebBasedEvaluations.company.Company;
+import edu.sru.group3.WebBasedEvaluations.company.Department;
 import edu.sru.group3.WebBasedEvaluations.domain.Evaluator;
 import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
 import edu.sru.group3.WebBasedEvaluations.domain.Role;
@@ -158,7 +159,8 @@ public class UserController {
 
 		//fornavbar
 		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
-
+		model = AdminMethodsService.addingOrEditingUser(currentUser, locationRepo, deptRepo, roleRepo, companyRepo, model);
+		
 		//companies the currently logged in user can add user to. 
 		Set<Company> companies = currentUser.getRole().writableCompanies();
 		model.addAttribute("companies", companies);
@@ -271,9 +273,30 @@ public class UserController {
 
 		// MyUserDetails userD = (MyUserDetails) authentication.getPrincipal();
 		Long userId = id;
+		
+		
+		
+		
 		User userCheck = userRepository.findById(userId).orElse(null);
 
 		user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+		
+		
+		Department dept = deptRepo.findByNameAndCompany(user.getDepartmentName(), user.getCompany());
+		if(dept != null) {
+			if(currentUser.getRole().writableDepartments().contains(dept) || currentUser.isCompanySuperUser() || currentUser.isSuperUser() && !user.getDepartments().contains(dept)) {
+				user.addDepartment(dept);
+			}
+			else if(!user.getDepartments().contains(dept))
+			{
+				mess = "User " + user.getName() + " already has the dept: " + dept.getName();
+			}
+			else{
+				mess = "User " + user.getName() + " does not have permission to add a user to department " + dept.getName();
+			}
+		}
+		
+		
 		model.addAttribute("user", user);
 		model.addAttribute("id", id);
 		adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr,auth);
@@ -282,21 +305,21 @@ public class UserController {
 		List<Role> roles = roleRepo.findByCompany(currentUser.getCompany());
 		if(!currentUser.isSuperUser() && !currentUser.isCompanySuperUser()) {
 			for(Role role : roles) {
-
-
-
 				if(!currentUser.getRole().contains(role)) {
 					roles.remove(role);
 				}
 			}
 		}
-		//adding the roles dropdown
-
 		model.addAttribute("roles", roles);
+		
+		
+
+		
 
 		//fornavbar
 		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
-
+		model = AdminMethodsService.addingOrEditingUser(currentUser, locationRepo, deptRepo, roleRepo, companyRepo, model);
+		adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
 
 		return "admin_user_update";
 
@@ -350,8 +373,30 @@ public class UserController {
 		// will be updated.
 		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
 		model = AdminMethodsService.addingOrEditingUser(currentUser, this.locationRepo, this.deptRepo, this.roleRepo, this.companyRepo,  model);
-		
+	
 
+		Department dept = deptRepo.findByNameAndCompany(user.getDepartmentName(), currentUser.getCompany());
+		
+		
+		if(dept != null) {
+			System.out.println("passed null");
+			if(currentUser.getRole().writableDepartments().contains(dept) || currentUser.isCompanySuperUser() || currentUser.isSuperUser() && !user3.getDepartments().contains(dept)) {
+				user3.addDepartment(dept);
+				dept.addUser(user3);
+				System.out.println("added dept");
+			}
+			else if(!user3.getDepartments().contains(dept))
+			{
+				System.out.println("already had it");
+				mess = "User " + user2.getName() + " already has the dept: " + dept.getName();
+			}
+			else{
+				System.out.println("no permissions");
+				mess = "User " + user2.getName() + " does not have permission to add a user to department " + dept.getName();
+			}
+		}
+		
+		
 		if ((userRepository.findByEmail(user.getEmail()) == null)
 				|| (userRepository.findByEmail(user.getEmail())) == userRepository.findByid(id)) {
 
@@ -481,6 +526,8 @@ public class UserController {
 		//changed
 
 
+		
+		
 		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getId());
 		//		model.addAttribute("role", user2.getRole());
 

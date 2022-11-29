@@ -60,11 +60,11 @@ public class AddUserController {
 
 	@Autowired
 	private AdminMethodsService adminMethodsService;
-	
+
 	@Autowired
 	private EvaluatorRepository evalRepo;
-	
-	
+
+
 	@Autowired
 	private EvaluationRepository evalFormRepo;
 
@@ -156,12 +156,12 @@ public class AddUserController {
 			//departments of the user being added
 
 			Department dept = deptRepo.findByNameAndCompany(user.getDepartmentName(), currentCompany);
-			Location loc = locationRepo.findByLocationName(user.getDivisionBranch());
+			Location loc = locationRepo.findByLocationNameAndCompany(user.getDivisionBranch(), adminUser.getCompany());
 			Company co = companyRepo.findByCompanyName(user.getCompanyName());
 			user.setCompany(co);
 			Role role = roleRepo.findByNameAndCompany(user.getRoleName(),co);
 
-			
+
 			try {
 				System.out.println(user.getRoleName());
 				System.out.println(user.getRole().getName());
@@ -169,7 +169,7 @@ public class AddUserController {
 			catch (Exception e) {
 				System.out.println("doesnt have a role");
 			}
-			
+
 			if(role != null) {
 				if(adminUser.getRole().contains(role)) {
 					user.setRole(role);
@@ -185,16 +185,20 @@ public class AddUserController {
 				user.setRole(newRole);
 			}
 			if(dept != null) {
-				if(adminUser.getRole().writableDepartments().contains(dept)) {
+				if(adminUser.getRole().writableDepartments().contains(dept) || adminUser.isCompanySuperUser() || adminUser.isSuperUser() && !user.getDepartments().contains(dept)) {
 					user.addDepartment(dept);
 				}
-				else {
+				else if(!user.getDepartments().contains(dept))
+				{
+					mess = "User " + adminUser.getName() + " already has the dept: " + dept.getName();
+				}
+				else{
 					mess = "User " + adminUser.getName() + " does not have permission to add a user to department " + dept.getName();
 					check = false;
 				}
 			}
 			if(loc != null) {
-				if(adminUser.getRole().writableLocations().contains(loc)) {
+				if(adminUser.getRole().writableLocations().contains(loc) || adminUser.isCompanySuperUser() || adminUser.isSuperUser()) {
 					user.addLocation(loc);
 				}
 				else {
@@ -223,15 +227,26 @@ public class AddUserController {
 
 				user.setEncryptedPassword(user.getPassword());
 				user.setReset(true);
-				userRepository.save(user);
+				boolean worked = true;
+				try {
+					userRepository.save(user);
+				}
+				catch(Exception e) {
+					ansr = "addFail";
+					mess = "Error occured!";	
+					worked=false;
+					log.error(e.getStackTrace().toString());
+				}
 
-				log.info("ADMIN User - ID:" + adminUser.getId() + " First Name: " + adminUser.getFirstName()
-				+ " Last Name: " + " added a " + user.getRole().getName() + " user");
+				if(worked) {
+					log.info("ADMIN User - ID:" + adminUser.getId() + " First Name: " + adminUser.getFirstName()
+					+ " Last Name: " + " added a " + user.getRole().getName() + " user");
 
-				ansr = "addPass";
-				mess = "User successfully added!";				
-				// adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model,
-				// sort);
+					ansr = "addPass";
+					mess = "User successfully added!";				
+					// adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model,
+					// sort);
+				}
 			} else {
 				ansr = "addFail";
 				if(mess == null) {
@@ -244,10 +259,10 @@ public class AddUserController {
 			model = AdminMethodsService.addingOrEditingUser(adminUser, this.locationRepo, this.deptRepo, this.roleRepo, this.companyRepo, model);
 			return "admin_users";
 		}
-		
+
 		model = AdminMethodsService.pageNavbarPermissions(adminUser, model, this.evalRepo, evalFormRepo);
 		model = AdminMethodsService.addingOrEditingUser(adminUser, this.locationRepo, this.deptRepo, this.roleRepo, this.companyRepo, model);
-		
+
 		if (result.hasErrors()) {
 
 			model.addAttribute("users", userRepository.findAll());
@@ -434,7 +449,7 @@ public class AddUserController {
 						Department dept = this.deptRepo.findByNameAndCompany(deptName, currentCompany);
 						if(dept != null) {
 							if(currentUser.getRole().writableDepartments().contains(dept) || currentUser.isCompanySuperUser()) {
-								
+
 								if(setAsDeptManager || dept.getDeptHead() == null) {
 									dept.setDeptHead(user2);
 									user2.addSubDept(dept);
@@ -459,7 +474,7 @@ public class AddUserController {
 								user2.addSubDept(dept);
 								user2.addDepartment(dept);
 								user2.setSupervisor(null);
-								
+
 							}
 						}					
 
@@ -492,8 +507,8 @@ public class AddUserController {
 		}
 		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, this.evalRepo, evalFormRepo);
 		model = AdminMethodsService.addingOrEditingUser(currentUser, this.locationRepo, this.deptRepo, this.roleRepo, this.companyRepo, model);
-		
-		
+
+
 		if (check) {
 			log.info("ADMIN User - ID:" + currentUser.getId() + " First Name: " + currentUser.getFirstName()
 			+ " Last Name: " + " uploaded a file: " + reapExcelDataFile.getOriginalFilename());
@@ -503,17 +518,17 @@ public class AddUserController {
 
 			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
 			model = AdminMethodsService.pageNavbarPermissions(currentUser, model, this.evalRepo, evalFormRepo);
-			
+
 			return "admin_users";
 
 		} else {
 
 			mess = "File failed to be uploaded!";
 			ansr = "addFail";
-			
+
 			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
 			model = AdminMethodsService.pageNavbarPermissions(currentUser, model, this.evalRepo, evalFormRepo);
-			
+
 			return "admin_users";
 
 		}

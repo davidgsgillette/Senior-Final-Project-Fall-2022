@@ -586,17 +586,8 @@ public class AdminMethodsService {
 
 				user.setDivisionBranch(user2.getDivisionBranch());
 
-			} /*
-			 * else if (hasSpace(user.getFirstName())) {
-			 * user.setFirstName(user2.getFirstName());
-			 * 
-			 * }
-			 */
-
-			else if (user.getDivisionBranch().equals(user2.getDivisionBranch())) {
-				user2.setDivisionBranch(user.getDivisionBranch());
-
-			} else {
+			}
+			else {
 				user2.setDivisionBranch(user.getDivisionBranch());
 
 				check = true;
@@ -796,7 +787,7 @@ public class AdminMethodsService {
 		}
 		else{
 			locations = locationRepo.findByCompany(currentUser.getCompany());
-			depts= deptRepo.findByCompany(currentUser.getCompany());
+			depts = deptRepo.findByCompany(currentUser.getCompany());
 		}
 		
 		if(currentUser.isSuperUser()) {
