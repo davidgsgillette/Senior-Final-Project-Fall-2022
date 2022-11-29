@@ -196,9 +196,9 @@ public class SelfEvaluationController {
 		
 		System.out.println(id);
 		
-		Reviewee reviewee	= revieweeRepository.findByNameAndCompany(user.getName(),user.getCompany());
-		EvalTemplates evalTemp = evalFormRepo.findById(reviewee.getGroup().getEvalTemplates().getName()).orElse(null);
-
+		Reviewee reviewee	= revieweeRepository.findById(id);
+		EvalTemplates evalTemp = reviewee.getGroup().getEvalTemplates();
+//		evalFormRepo.findById(reviewee.getGroup().getEvalTemplates().getId()  .getName()).orElse(null);
 		System.out.println(id);
 		
 		Evaluation evalform;
