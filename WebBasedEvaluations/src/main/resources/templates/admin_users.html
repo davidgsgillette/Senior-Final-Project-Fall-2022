@@ -589,6 +589,19 @@
 
 												</div>
 											</th>
+											
+											<th>
+												<div th:switch="${sortOr}">
+
+													<button th:case="2" id="departmentName"
+														class="btn btn-outline-success" type="button"
+														th:onclick="|window.location.href='@{/admin_users/?keyword={keyword}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage=${perPage},keyword=${keyword},currPage=${currPage},sort='departmentName', sortOr=1)}'|">Department</button>
+													<button th:case="*" id="departmentName"
+														class="btn btn-outline-success" type="button"
+														th:onclick="|window.location.href='@{/admin_users/?keyword={keyword}&perPage={perPage}&sort={sort}&currPage={currPage}&sortOr={sortOr}(perPage=${perPage},keyword=${keyword},currPage=${currPage},sort='departmentName', sortOr=2)}'|">Department</button>
+
+												</div>
+											</th>
 
 										</tr>
 									</thead>
@@ -627,6 +640,7 @@
 
 											<td th:text="${user.email}"></td>
 											<td th:text="${user.roleName}"></td>
+											<td th:text="${user.departmentName}"></td>
 											<td align="center">
 												<button class="btn btn-outline-success" value=false
 													type="button"
