@@ -559,6 +559,12 @@ public class User {
 	
 
 	public String getRoleName() {
+		if(this.superUser) {
+			return "SuperUser";
+		}
+		if(this.companySuperUser) {
+			return "CompanySuperUser";
+		}
 		return roleName;
 	}
 
