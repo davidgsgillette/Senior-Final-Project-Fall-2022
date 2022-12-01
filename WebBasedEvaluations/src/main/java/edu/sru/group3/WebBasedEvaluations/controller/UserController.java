@@ -405,12 +405,12 @@ public class UserController {
 
 			try {
 				userRepository.save(user3);
-				ansr = "addPass";
+				ansr = "pass";
 				mess = "User successfully edited!";
 			}
 			catch(Exception e){
 				e.printStackTrace();
-				ansr = "addFail";
+				ansr = "fail";
 				mess = "problem occured editing user.";
 				log.error(e.getStackTrace().toString());
 				
