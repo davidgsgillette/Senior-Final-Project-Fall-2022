@@ -100,6 +100,9 @@ public class Role {
 		this.privileges.add(priv);
 		this.users = new HashSet<User>();
 		this.users.add(user);
+		if(this.name.contains("ADMIN")) {
+			user.setCompanySuperUser(true);
+		}
 //		this.companies = new HashSet<Company>();
 		this.company = co;
 	}
@@ -114,6 +117,14 @@ public class Role {
 		this.name = name;
 		this.privileges = privs;
 		this.users = users;
+		
+		for(User us : users) {
+			if(this.name.contains("ADMIN")) {
+				us.setCompanySuperUser(true);
+			}
+		}
+		
+		
 //		this.companies = new HashSet<Company>();
 		this.company = co;
 	} 
@@ -542,6 +553,9 @@ public class Role {
 	 */
 	public boolean addUser(User u) {
 		this.users.add(u);
+		if(this.name.contains("ADMIN")) {
+			u.setCompanySuperUser(true);
+		}
 		return true;
 	}
 
@@ -605,6 +619,11 @@ public class Role {
 
 	public void setUsers(Set<User> users) {
 		this.users = users;
+		for(User user : users) {
+			if(this.name.contains("ADMIN")) {
+				user.setCompanySuperUser(true);
+			}
+		}
 	}
 
 	public Set<Privilege> getPrivileges() {

@@ -21,6 +21,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.company.Department;
+import edu.sru.group3.WebBasedEvaluations.company.Location;
 import edu.sru.group3.WebBasedEvaluations.domain.Evaluator;
 import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
 import edu.sru.group3.WebBasedEvaluations.domain.Role;
@@ -474,7 +475,7 @@ public class UserController {
 		} else {
 			//if user to be deleted is an admin
 			MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
-			if(currentUser.isCompanySuperUser() || currentUser.isSuperUser()){
+			if(user.isCompanySuperUser() || user.isSuperUser()){
 				// System.out.println("Detected Admin");
 
 				ansr = "addFail";
@@ -489,7 +490,43 @@ public class UserController {
 				log.info("User Deleted- Id:" + user.getId() + " | First Name:" + user.getFirstName() + " | Last Name:"
 						+ user.getLastName() + " | Role:" + user.getRole().getName());
 
+				Set<Department> depts = user.getDepartments();
+				Set<Department> subDepts = user.getSubDepartments();
+				for(Department dept : depts) {
+					dept.removeUser(user);					
+				}
+				for(Department dept : subDepts) {
+					dept.removeUser(user);
+				}
+				user.setDepartments(null);
+				user.setSubDepartments(null);
+				user.getCompany().removeUser(user);
+				this.companyRepo.save(user.getCompany());
+				user.setCompany(null);				
+				this.deptRepo.saveAll(depts);
+				this.deptRepo.saveAll(subDepts);
+				
+				
+				Role role = user.getRole();
+				role.removeUser(user);
+				user.setRole(null);
+				this.roleRepo.save(role);
+				
+				Set<Location> locs = user.getLocations();
+				
+				for(Location loc : locs) {
+					loc.removeUser(user);
+				}
+				this.locationRepo.saveAll(locs);
+				user.setLocations(null);
+				
+				
+				userRepository.save(user);
+								
+				
+				
 				userRepository.delete(user);
+				
 				ansr = "addPass";
 				mess = "User '" + user.getFirstName() + " " + user.getLastName() + "' has been deleted";
 				model.addAttribute("ansr", ansr);
