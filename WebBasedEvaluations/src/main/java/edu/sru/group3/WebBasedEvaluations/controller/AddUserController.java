@@ -151,7 +151,7 @@ public class AddUserController {
 		if (userRepository.findByEmail(user.getEmail()) == null) {
 
 			check = adminMethodsService.checkAndUpdate(user);
-
+//			boolean missedField = false;
 			//check if admin has permission to add this user to the dept/location/role
 			//departments of the user being added
 
@@ -232,6 +232,12 @@ public class AddUserController {
 					userRepository.save(user);
 				}
 				catch(Exception e) {
+					
+					
+//					missedField = true;
+//					model.addAttribute("missedField", missedField);
+//					model.addAttribute("enteredEmail", user.getEmail());
+//					
 					ansr = "addFail";
 					mess = "Error occured!";	
 					worked=false;
@@ -250,6 +256,7 @@ public class AddUserController {
 			} else {
 				ansr = "addFail";
 				if(mess == null) {
+					
 					mess = "User not added! A field was blank, contained spaces or the password wasn't at least 5 characters!";
 				}
 				// adminUserPageItems(ansr, keyword, mess, perPage, model, sort);

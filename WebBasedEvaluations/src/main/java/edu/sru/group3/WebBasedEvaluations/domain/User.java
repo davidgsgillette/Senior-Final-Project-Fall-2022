@@ -84,9 +84,9 @@ public class User {
 	private Set<Evaluator> evaluator = new HashSet<Evaluator>();
 
 
-	@NonNull
-	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-	@JoinColumn(name = "company_id", nullable = false)
+	
+	@ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+	@JoinColumn(name = "company_id")
 	private Company company;
 
 
@@ -97,9 +97,9 @@ public class User {
 			inverseJoinColumns = @JoinColumn(name = "location_id"))
 	private Set<Location> locations;
 
-	@NonNull
+	
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "role_id", nullable = false)
+	@JoinColumn(name = "role_id")
 	private Role role;
 
 
@@ -110,7 +110,7 @@ public class User {
 
 
 
-	@ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private Set<Department> departments;
 
 	// Preload
@@ -170,10 +170,15 @@ public class User {
 			this.role = new Role (co.getDefaultRoleName(),co);
 		}
 		else {
-			this.role = role;
+			this.role = role;					
 		}
 		this.roleName = role.getName();
-		this.companySuperUser = companySuperUser;
+
+		if(role.getName().contains("ADMIN")) {
+			this.companySuperUser = true;
+		}else {
+			this.companySuperUser = companySuperUser;
+		}
 		this.superUser = superUser;
 
 
@@ -227,7 +232,11 @@ public class User {
 			this.role = role;
 		}
 		this.roleName = role.getName();
-		this.companySuperUser = companySuperUser;
+		if(role.getName().contains("ADMIN")) {
+			this.companySuperUser = true;
+		}else {
+			this.companySuperUser = companySuperUser;
+		}
 		this.superUser = superUser;
 
 
@@ -280,7 +289,11 @@ public class User {
 			this.role = role;
 		}
 		this.roleName = role.getName();
-		this.companySuperUser = companySuperUser;
+		if(role.getName().contains("ADMIN")) {
+			this.companySuperUser = true;
+		}else {
+			this.companySuperUser = companySuperUser;
+		}
 		this.superUser = superUser;
 
 	}	
@@ -462,7 +475,16 @@ public class User {
 
 	public void setRole(Role role) {
 		this.role = role;
-		this.roleName = role.getName();
+		if(role == null) {
+			this.roleName = "none";
+		}
+		else {
+			this.roleName = role.getName();
+			if(role.getName().contains("ADMIN")) {
+				this.companySuperUser = true;
+			}
+		}		
+		
 	}
 
 	public void setDepartments(Set<Department> departments) {

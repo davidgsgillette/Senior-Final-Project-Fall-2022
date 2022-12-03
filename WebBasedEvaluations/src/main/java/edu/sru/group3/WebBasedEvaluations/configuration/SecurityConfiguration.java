@@ -85,23 +85,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.cors().and().csrf().disable();
 		http.csrf().disable();
 		http.headers().frameOptions().disable();
-		http.authorizeRequests().antMatchers("/edit/*").hasAuthority(ADMIN)
-				// .antMatchers("/pages/*").hasAuthority(ADMIN)
-
-				// .antMatchers("/register").permitAll()
-				// .antMatchers("/registerUser").permitAll()
-
-				.antMatchers("/email_sent").permitAll().antMatchers("/reset").permitAll().antMatchers("/resetting")
-				.permitAll().antMatchers("/changePassword").permitAll().antMatchers("/recoverChanges/*").permitAll()
-
-				.antMatchers("/adduser").hasAuthority(ADMIN).antMatchers("/download_log_txt").hasAuthority(ADMIN).antMatchers("/addgroup").hasAuthority(ADMIN)
-				// .antMatchers("/signup").hasAuthority(ADMIN)
-
-				.antMatchers("/admin_users/").hasAuthority(ADMIN).antMatchers("/admin_evaluations")
-				.hasAnyAuthority(EVAL_ADMIN, EVALUATOR_EVAL, EVALUATOR, ADMIN).antMatchers("/admin_groups")
-				.hasAnyAuthority(EVAL_ADMIN, EVALUATOR_EVAL, EVALUATOR, ADMIN).antMatchers("/admin_home").hasAuthority(ADMIN)
-				// .antMatchers("/base").permitAll()
-				.antMatchers("/home").hasAnyAuthority(ADMIN, USER, EVALUATOR, EVAL_ADMIN, EVALUATOR_EVAL)
+		http.authorizeRequests()
+//				.antMatchers("/edit/*").hasAuthority(ADMIN)
+//				// .antMatchers("/pages/*").hasAuthority(ADMIN)
+//
+//				// .antMatchers("/register").permitAll()
+//				// .antMatchers("/registerUser").permitAll()
+//
+//				.antMatchers("/email_sent").permitAll().antMatchers("/reset").permitAll().antMatchers("/resetting")
+//				.permitAll().antMatchers("/changePassword").permitAll().antMatchers("/recoverChanges/*").permitAll()
+//
+//				.antMatchers("/adduser").hasAuthority(ADMIN).antMatchers("/download_log_txt").hasAuthority(ADMIN).antMatchers("/addgroup").hasAuthority(ADMIN)
+//				// .antMatchers("/signup").hasAuthority(ADMIN)
+//
+//				.antMatchers("/admin_users/").hasAuthority(ADMIN).antMatchers("/admin_evaluations")
+//				.hasAnyAuthority(EVAL_ADMIN, EVALUATOR_EVAL, EVALUATOR, ADMIN).antMatchers("/admin_groups")
+//				.hasAnyAuthority(EVAL_ADMIN, EVALUATOR_EVAL, EVALUATOR, ADMIN).antMatchers("/admin_home").hasAuthority(ADMIN)
+//				// .antMatchers("/base").permitAll()
+//				.antMatchers("/home").hasAnyAuthority(ADMIN, USER, EVALUATOR, EVAL_ADMIN, EVALUATOR_EVAL)
 
 				.antMatchers("/").hasAnyAuthority(USER, ADMIN, EVAL_ADMIN).antMatchers("/h2-console/**")
 				.hasAuthority(ADMIN).antMatchers("/").permitAll().antMatchers("/h2-console/**").hasAuthority(ADMIN)

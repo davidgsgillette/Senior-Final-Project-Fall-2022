@@ -117,7 +117,8 @@ class InitUsers{
 		Location loc2 = new Location("testLocation2", city, co2, locGroup2);
 //		locationRepo.save(loc);
 			
-			
+		
+		//this role name of "ADMIN*" is also used to assign the company super user value dynamically. 
 		Role adminRole = new Role("ADMIN",co);
 		Role adminRole2 = new Role("ADMIN2",co2);
 //		Role testRole1 = new Role("TEST_ROLE_1",co);

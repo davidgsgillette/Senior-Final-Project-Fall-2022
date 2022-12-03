@@ -145,8 +145,9 @@
 							<div class="container">
 								<div class="row align-items-start">
 									<div class="col" align="right">
+										<div class="text-center" th:text="'* Indicates a required field'"></div><br>
 										<div>
-											<label for="firstName">First Name</label> <input type="text"
+											<label for="firstName">*First Name</label> <input type="text"
 												th:field="*{firstName}" id="addFirstName"
 												placeholder="First Name"> <span
 												th:if="${#fields.hasErrors('firstName')}"
@@ -154,7 +155,7 @@
 										</div>
 										&nbsp
 										<div>
-											<label for="lastName">Last Name</label> <input type="text"
+											<label for="lastName">*Last Name</label> <input type="text"
 												th:field="*{lastName}" id="addLastName"
 												placeholder="Last Name"> <span
 												th:if="${#fields.hasErrors('lastName')}"
@@ -170,16 +171,18 @@
 										</div>
 										&nbsp
 										<div>
-											<label for="email">Email</label> <input type="text"
+											<label for="email">*Email</label> <input type="text"
 												th:field="*{email}" id="addEmail" placeholder="Email">
 											<span th:if="${#fields.hasErrors('email')}"
 												th:errors="*{email}"></span>
+											
 										</div>
-										&nbsp
 										
+									</div>
+									<div class="col" align="right">
 										
 										<div>
-											<label for="departmentName">Department</label> <select th:field="*{departmentName}"
+											<label for="departmentName">*Department</label> <select th:field="*{departmentName}"
 												id="departmentName" name="departmentName">
 										
 												<option th:each="dept : ${depts}"
@@ -189,21 +192,20 @@
 
 											</select>
 										</div>
-									</div>
-									<div class="col" align="right">
+										&nbsp
 										<div>
-											<label for="jobTitle">Job</label> <input type="text"
+											<label for="jobTitle">*Job</label> <input type="text"
 												th:field="*{jobTitle}" id="jobTitle" placeholder="Job Title">
 										</div>
 										&nbsp
 										<div>
-											<label for="supervisor">Supervisor</label> <input type="text"
+											<label for="supervisor">*Supervisor</label> <input type="text"
 												th:field="*{supervisor}" id="supervisor"
 												placeholder="Supervisor">
 										</div>
 										&nbsp
 										<div>
-											<label for="companyName">Company Name</label> <select th:field="*{companyName}"
+											<label for="companyName">*Company Name</label> <select th:field="*{companyName}"
 												id="companyName" name="companyName">
 										
 												<option th:each="company : ${companies}"
@@ -217,7 +219,7 @@
 										
 										
 										<div>
-											<label for="divisionBranch">Division Branch</label> <select th:field="*{divisionBranch}"
+											<label for="divisionBranch">*Division Branch</label> <select th:field="*{divisionBranch}"
 												id="divisionBranch" name="divisionBranch">
 										
 												<option th:each="location : ${locations}"
@@ -227,16 +229,18 @@
 
 											</select>
 										</div>
-										&nbsp
+										
+									</div>
+									<div class="col" align="right">
+										
 										<div>
 											<label for="dateOfHire">Date Of Hire</label> <input
 												type="date" th:field="*{dateOfHire}" id="dateOfHire"
 												placeholder="Date Of Hire(XX-XX-XXXX)">
 										</div>
-									</div>
-									<div class="col" align="right">
+										&nbsp
 										<div>
-											<label for="password">Password</label> <input
+											<label for="password">*Password (Min 5 characters)</label> <input
 												data-toggle="tooltip" title="Length must be at least five characters" type="password"
 												th:field="*{password}" id="password"
 												placeholder="Password"> <span
@@ -246,7 +250,7 @@
 										&nbsp
 										<div>
 											<div>
-												<label for="role">Role</label> <select th:field="*{role}"
+												<label for="role">*Role</label> <select th:field="*{role}"
 													id="role" name="role">
 											
 													<option th:each="role : ${roles}"
