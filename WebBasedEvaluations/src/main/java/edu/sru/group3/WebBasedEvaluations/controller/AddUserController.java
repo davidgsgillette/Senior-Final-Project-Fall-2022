@@ -140,11 +140,12 @@ public class AddUserController {
 			@RequestParam("sort") String sort, @RequestParam("currPage") Integer currPage,
 			@RequestParam("sortOr") Integer sortOr) {
 		String ansr = null;
-		String mess = null;
-		User adminUser = user;
+		String mess = null;		
 		boolean check = false;
-		
-		
+		user.setAdminEval(false);
+		user.setCompanySuperUser(false);
+		user.setSuperUser(false);
+		User adminUser = user;
 		
 		User currentUser;
 		Company currentCompany;
@@ -361,6 +362,7 @@ public class AddUserController {
 				ansr = "addFail";
 				adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr,auth);
 				model = AdminMethodsService.pageNavbarPermissions(currentUser, model, this.evalRepo, evalFormRepo);
+				model = AdminMethodsService.addingOrEditingUser(currentUser, this.locationRepo, this.deptRepo, this.roleRepo, this.companyRepo, model);
 				return "admin_users";
 
 			}
@@ -547,6 +549,7 @@ public class AddUserController {
 
 			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
 			model = AdminMethodsService.pageNavbarPermissions(currentUser, model, this.evalRepo, evalFormRepo);
+			model = AdminMethodsService.addingOrEditingUser(currentUser, this.locationRepo, this.deptRepo, this.roleRepo, this.companyRepo, model);
 
 			return "admin_users";
 
@@ -557,6 +560,7 @@ public class AddUserController {
 
 			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
 			model = AdminMethodsService.pageNavbarPermissions(currentUser, model, this.evalRepo, evalFormRepo);
+			model = AdminMethodsService.addingOrEditingUser(currentUser, this.locationRepo, this.deptRepo, this.roleRepo, this.companyRepo, model);
 
 			return "admin_users";
 
