@@ -75,6 +75,9 @@ public class User {
 	
 	@NonNull
 	private boolean superUser;
+	
+	@NonNull
+	private boolean adminEval;
 
 	//	@NonNull
 	//	private List<User> evaluatees;
@@ -180,6 +183,7 @@ public class User {
 			this.companySuperUser = companySuperUser;
 		}
 		this.superUser = superUser;
+		this.adminEval = false;
 
 
 	}
@@ -238,7 +242,7 @@ public class User {
 			this.companySuperUser = companySuperUser;
 		}
 		this.superUser = superUser;
-
+		this.adminEval = false;
 
 	}
 
@@ -295,6 +299,7 @@ public class User {
 			this.companySuperUser = companySuperUser;
 		}
 		this.superUser = superUser;
+		this.adminEval = false;
 
 	}	
 	
@@ -350,6 +355,19 @@ public class User {
 				return true;
 		}
 		return false;
+	}
+	
+	
+
+	public boolean isAdminEval() {
+		if(this.role.getName().contains("ADM_EVAL")) {
+			return true;
+		}
+		return adminEval;
+	}
+
+	public void setAdminEval(boolean adminEval) {
+		this.adminEval = adminEval;
 	}
 
 	/**

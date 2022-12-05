@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -97,7 +98,14 @@ public class AddRolesController {
 		}
 
 		
-		List<Role> roles = roleRepo.findByCompany(currentCompany);
+		List<Role> roles = new ArrayList<Role>();
+		roles.addAll(roleRepo.findByCompany(currentCompany));
+		
+		for(int x = 0 ; x < roles.size();x++) {
+			if(roles.get(x).getName().contains("SUPERUSER")) {
+				roles.remove(x);
+			}
+		}
 		
 		
 		model.addAttribute("roles", roles);
@@ -193,7 +201,7 @@ public class AddRolesController {
 					
 					if(dept == null) {
 						RedirectView redirectView = new RedirectView("/admin_roles", true);
-						redir.addFlashAttribute("error", "dept " + deptName + " does not exists, please ensure it is created before associating it with a role.");
+						redir.addFlashAttribute("error", "Please upload a company containing  the dept: " + deptName + " before associating it with a role.");
 						return redirectView;	
 					}
 					
@@ -218,7 +226,7 @@ public class AddRolesController {
 
 					if(loc == null) {
 						RedirectView redirectView = new RedirectView("/admin_roles", true);
-						redir.addFlashAttribute("error", "location " + locName + " does not exists, please ensure it is created before associating it with a role.");
+						redir.addFlashAttribute("error", "Please upload company containing location with name " + locName + " before attempting add a role to that location.");
 						return redirectView;	
 					}
 					

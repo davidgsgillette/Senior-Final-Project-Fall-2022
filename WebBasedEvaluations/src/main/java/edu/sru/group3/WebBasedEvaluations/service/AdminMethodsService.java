@@ -246,6 +246,14 @@ public class AdminMethodsService {
 			listTotal.addAll(loggedInUser.getRole().readableUsers());
 		}
 		
+		//doesnt show super user to normal admins. 
+		for(User user : listTotal) {
+			if(!loggedInUser.isSuperUser()) {
+				if(user.isSuperUser()) {
+					listTotal.remove(user);
+				}
+			}
+		}
 //				new ArrayList<User>(loggedInUser.getRole().readableUsers());
 		
 		int startVal = 0;
@@ -685,7 +693,7 @@ public class AdminMethodsService {
 	 */
 	public static Model pageNavbarPermissions(User currentUser, Model model, EvaluatorRepository evalRepo, EvaluationRepository evalFormRepo) {
 		
-		if((currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEditEvalPerm() || currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
+		if((currentUser.isAdminEval() || currentUser.hasRead() || currentUser.hasWrite() || currentUser.hasDelete()) && currentUser.hasEditEvalPerm() || currentUser.isCompanySuperUser()) {
 			model.addAttribute("EVAL_ADMIN", true);
 		}
 		else {
@@ -694,7 +702,7 @@ public class AdminMethodsService {
 		}
 		
 		
-		if(evalRepo.findById(currentUser.getId()) != null || currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
+		if(evalRepo.findById(currentUser.getId()).orElse(null) != null || currentUser.isCompanySuperUser()) {
 			model.addAttribute("EVALUATOR", true);
 		}
 		else {
@@ -716,7 +724,7 @@ public class AdminMethodsService {
 			model.addAttribute("ADMIN", false);
 		}		
 		
-		if(currentUser.isCompanySuperUser()) {
+		if(currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
 			model.addAttribute("COMPANY_ADMIN", true);
 		}
 		else {
@@ -772,7 +780,10 @@ public class AdminMethodsService {
 		Set<Location> locations = new HashSet<Location>();
 		Set<Department> depts= new HashSet<Department>();
 		List<Company> companies	= new ArrayList<Company>();
-		List<Role> roles = roleRepo.findByCompany(currentUser.getCompany());
+		List<Role> roles = new ArrayList<Role>();
+		
+		
+		
 		
 		
 		
@@ -798,10 +809,26 @@ public class AdminMethodsService {
 		}
 		
 		
+		roles.addAll(roleRepo.findByCompany(currentUser.getCompany()));
+		
+		for(int x = 0 ; x < roles.size();x++) {
+			if(roles.get(x).getName().contains("SUPERUSER")) {
+				roles.remove(x);
+			}
+		}
+		
+		
+		
+		
+		
 		model.addAttribute("locations", locations);
 		model.addAttribute("depts", depts);
 		model.addAttribute("roles", roles);
 		model.addAttribute("companies", companies);
+		
+		for(Company co : companies) {
+			System.out.println("admin method co name: " + co.getCompanyName());
+		}
 		return model;
 	}
 

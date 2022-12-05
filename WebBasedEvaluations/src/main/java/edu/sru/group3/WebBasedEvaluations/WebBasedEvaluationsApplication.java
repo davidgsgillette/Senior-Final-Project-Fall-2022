@@ -119,7 +119,9 @@ class InitUsers{
 			
 		
 		//this role name of "ADMIN*" is also used to assign the company super user value dynamically. 
-		Role adminRole = new Role("ADMIN",co);
+		Role adminRole = new Role("SUPERUSER",co);
+		
+		Role USER = new Role("USER",co);
 		Role adminRole2 = new Role("ADMIN2",co2);
 //		Role testRole1 = new Role("TEST_ROLE_1",co);
 //		Role testRole2 = new Role("TEST_ROLE_2",co2);
@@ -127,6 +129,7 @@ class InitUsers{
 	
 		
 		co.addRole(adminRole);
+		co.addRole(USER);
 //		co.addRole(testRole1);
 //		co.addRole(testRole2);
 		co2.addRole(adminRole2);
@@ -138,7 +141,7 @@ class InitUsers{
 		
 		
 		
-		User use1 = new User("jimmy neutron","fname","lname","admin@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ", 999991, "N/A", "N/A", null, "N/A","admin dept", co, adminRole,true,true);
+		User use1 = new User("jimmy neutron","fname","lname","admin@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ", 999991, "N/A", "N/A", null, "N/A","admin dept", co, adminRole,false,true);
 		User use2 = new User("jimmy2 neutron2","fname2","lname2","admin2@gmail.com","$2y$12$.ahxo5UdngIuZdKSu91Jn.VtHjjYCh04.lpM5LNFdICjEjechMDQ", 999991, "N/A", "N/A", null, "N/A","admin dept", co2, adminRole2,true,false);
 //		adminRole.addUser(use1);
 //		roleRepo.save(adminRole);

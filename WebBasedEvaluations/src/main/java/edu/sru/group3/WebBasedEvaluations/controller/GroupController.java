@@ -377,7 +377,7 @@ public class GroupController {
 		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
 		Company currentCompany = currentUser.getCompany();
 		//checks if user can assign evaluator. 
-		if(!(currentUser.isCompanySuperUser() || currentUser.hasEditEvalPerm())) {
+		if(!(currentUser.isCompanySuperUser() || currentUser.hasEditEvalPerm() || currentUser.isAdminEval())) {
 			RedirectView redirectView = new RedirectView("/admin_groups", true);
 			redir.addFlashAttribute("error", "invalid permissions on user "+currentUser.getName());
 			log.error("invalid permissions on user "+currentUser.getName()+ " does not have permission to create a eval group or assign evaluator role.");
@@ -815,7 +815,7 @@ public class GroupController {
 		
 		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
 		
-		
+		System.out.println("got here");
 		
 		return "admin_groups";
 	}
