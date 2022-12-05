@@ -159,7 +159,7 @@ public class AddUserController {
 			Location loc = locationRepo.findByLocationNameAndCompany(user.getDivisionBranch(), adminUser.getCompany());
 			Company co = companyRepo.findByCompanyName(user.getCompanyName());
 			user.setCompany(co);
-			Role role = roleRepo.findByNameAndCompany(user.getRoleName(),co);
+			Role role = roleRepo.findByNameAndCompany(user.getRole().getName(),co);
 
 
 			try {
@@ -171,7 +171,7 @@ public class AddUserController {
 			}
 
 			if(role != null) {
-				if(adminUser.getRole().contains(role)) {
+				if(adminUser.getRole().contains(role) || adminUser.isCompanySuperUser() || adminUser.isSuperUser()) {
 					user.setRole(role);
 				}
 				else {
@@ -185,7 +185,7 @@ public class AddUserController {
 				user.setRole(newRole);
 			}
 			if(dept != null) {
-				if(adminUser.getRole().writableDepartments().contains(dept) || adminUser.isCompanySuperUser() || adminUser.isSuperUser() && !user.getDepartments().contains(dept)) {
+				if((adminUser.getRole().writableDepartments().contains(dept) || adminUser.isCompanySuperUser() || adminUser.isSuperUser()) && !user.getDepartments().contains(dept)) {
 					user.addDepartment(dept);
 				}
 				else if(!user.getDepartments().contains(dept))
@@ -223,6 +223,10 @@ public class AddUserController {
 
 					user.setName(user.getFirstName() + " " + user.getLastName() + " " + user.getSuffixName());
 
+				}
+				
+				if(user.getRole().getName().contains("ADMIN_EVAL")) {
+					user.setAdminEval(true);
 				}
 
 				user.setEncryptedPassword(user.getPassword());
@@ -419,7 +423,7 @@ public class AddUserController {
 
 						//check that the location exists and that the logged in user has permission to add a user to it. 
 						if(loc != null ){
-							if(currentUser.getRole().writableLocations().contains(loc) || currentUser.isCompanySuperUser()){
+							if(currentUser.getRole().writableLocations().contains(loc) || currentUser.isCompanySuperUser() || currentUser.isSuperUser()){
 								user2.addLocation(loc);
 							}
 							else {
@@ -427,7 +431,7 @@ public class AddUserController {
 							}
 						}
 						else {
-							if(currentUser.getRole().writableLocations().contains(loc) || currentUser.isCompanySuperUser()){
+							if(currentUser.getRole().writableLocations().contains(loc) || currentUser.isCompanySuperUser() || currentUser.isSuperUser()){
 								loc = new Location(locationName,null,currentCompany,null);
 								user2.addLocation(loc);
 							}
@@ -438,7 +442,7 @@ public class AddUserController {
 
 						Role role = roleRepo.findByNameAndCompany(roleName,currentCompany);
 						if(role != null) {
-							if(currentUser.getRole().contains(role)) {
+							if(currentUser.getRole().contains(role) || currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
 								user2.setRole(role);
 							}
 							else {
@@ -455,7 +459,7 @@ public class AddUserController {
 						//sets the department and supervisor based on the dept we are adding the user to. 
 						Department dept = this.deptRepo.findByNameAndCompany(deptName, currentCompany);
 						if(dept != null) {
-							if(currentUser.getRole().writableDepartments().contains(dept) || currentUser.isCompanySuperUser()) {
+							if(currentUser.getRole().writableDepartments().contains(dept) || currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
 
 								if(setAsDeptManager || dept.getDeptHead() == null) {
 									dept.setDeptHead(user2);
@@ -475,7 +479,7 @@ public class AddUserController {
 							}
 						}
 						else {
-							if(currentUser.getRole().writableDepartments().contains(dept) || currentUser.isCompanySuperUser()) {
+							if(currentUser.getRole().writableDepartments().contains(dept) || currentUser.isCompanySuperUser() || currentUser.isSuperUser()) {
 								//adds the user as the dept head since it is a fresh dept.
 								dept = new Department(user2,loc,user2.getDepartmentName(),null,user2,currentCompany);
 								user2.addSubDept(dept);
@@ -483,13 +487,12 @@ public class AddUserController {
 								user2.setSupervisor(null);
 
 							}
-						}					
-
-
-
+						}			
 
 						user2.setReset(true);
-
+						if(user2.getRole().getName().contains("ADM_EVAL")) {
+							user2.setAdminEval(true);
+						}
 
 
 

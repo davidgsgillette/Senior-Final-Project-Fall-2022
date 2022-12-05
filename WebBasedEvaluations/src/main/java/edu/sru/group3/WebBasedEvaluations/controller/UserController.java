@@ -163,24 +163,23 @@ public class UserController {
 		model = AdminMethodsService.addingOrEditingUser(currentUser, locationRepo, deptRepo, roleRepo, companyRepo, model);
 		
 		//companies the currently logged in user can add user to. 
-		Set<Company> companies = currentUser.getRole().writableCompanies();
-		model.addAttribute("companies", companies);
+		
 
 
 		//roles the currently logged in user can grant. 
-		Set<Role> roles = currentUser.getCompany().getRoles();
-		Set<Role> grantableRoles = new HashSet<Role>();
-		Set<String> roleNames = new HashSet<String>();		
-		roleNames.add(currentUser.getCompany().getDefaultRoleName());
-		//		grantableRoles.add(new Role currentUser.getCompany().getDefaultRoleName());
-		for(Role role : roles) {
-			if(currentUser.getRole().contains(role)) {
-				grantableRoles.add(role);
-				roleNames.add(role.getName());
-			}
-		}
+//		Set<Role> roles = currentUser.getCompany().getRoles();
+//		Set<Role> grantableRoles = new HashSet<Role>();
+//		Set<String> roleNames = new HashSet<String>();		
+//		roleNames.add(currentUser.getCompany().getDefaultRoleName());
+//		//		grantableRoles.add(new Role currentUser.getCompany().getDefaultRoleName());
+//		for(Role role : roles) {
+//			if(currentUser.getRole().contains(role)) {
+//				grantableRoles.add(role);
+//				roleNames.add(role.getName());
+//			}
+//		}
 
-		model.addAttribute("roles", grantableRoles);
+//		model.addAttribute("roles", grantableRoles);
 		model.addAttribute("EVALUATOR_EVAL", false);
 
 
@@ -192,7 +191,7 @@ public class UserController {
 		model.addAttribute("sortOr", sortOr);
 
 		model.addAttribute("sort", sort);
-
+		
 		return "admin_users";
 	}
 
@@ -303,16 +302,16 @@ public class UserController {
 		adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr,auth);
 
 		
-		List<Role> roles = roleRepo.findByCompany(currentUser.getCompany());
-		if(!currentUser.isSuperUser() && !currentUser.isCompanySuperUser()) {
-			for(Role role : roles) {
-				if(!currentUser.getRole().contains(role)) {
-					roles.remove(role);
-				}
-			}
-		}
-		model.addAttribute("roles", roles);
-		
+//		List<Role> roles = roleRepo.findByCompany(currentUser.getCompany());
+//		if(!currentUser.isSuperUser() && !currentUser.isCompanySuperUser()) {
+//			for(Role role : roles) {
+//				if(!currentUser.getRole().contains(role)) {
+//					roles.remove(role);
+//				}
+//			}
+//		}
+//		model.addAttribute("roles", roles);
+//		
 		
 
 		
