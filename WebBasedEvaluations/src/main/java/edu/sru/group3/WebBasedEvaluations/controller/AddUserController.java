@@ -143,10 +143,19 @@ public class AddUserController {
 		String mess = null;
 		User adminUser = user;
 		boolean check = false;
+		
+		
+		
+		User currentUser;
+		Company currentCompany;
+		
 		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
-		adminUser = userRepository.findByid(userD.getID());
-		Company currentCompany = adminUser.getCompany();
 
+		Long idnum = userD.getID();
+
+		currentUser = this.userRepository.findById(idnum).orElse(null);
+
+		currentCompany = currentUser.getCompany();
 
 		if (userRepository.findByEmail(user.getEmail()) == null) {
 
@@ -327,9 +336,19 @@ public class AddUserController {
 
 		String ansr;
 		String mess;
+		
+		
+		User currentUser;
+		Company currentCompany;
+		
 		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
-		User currentUser = userRepository.findByid(userD.getID());
-		Company currentCompany = currentUser.getCompany();
+
+		Long idnum = userD.getID();
+
+		currentUser = this.userRepository.findById(idnum).orElse(null);
+
+		currentCompany = currentUser.getCompany();
+		
 		boolean check = false;
 		XSSFSheet sheet = null;
 		try {

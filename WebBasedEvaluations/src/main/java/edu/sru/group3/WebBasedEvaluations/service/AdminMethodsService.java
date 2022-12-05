@@ -233,9 +233,18 @@ public class AdminMethodsService {
 			Integer currPage, Integer sortOr, Authentication auth) {
 		//List<User> listTotal = service.getAllUsers();
 		
+		User loggedInUser;
+		Company currentCompany;
+		
 		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
-		User loggedInUser = userRepository.findByid(userD.getID());	
-		Company currentCompany = loggedInUser.getCompany();
+
+		Long idnum = userD.getID();
+
+		loggedInUser = this.userRepository.findById(idnum).orElse(null);
+
+		currentCompany = loggedInUser.getCompany();
+		
+		
 		//gets only the users that the currently logged in user has access to. 
 		List<User> listTotal = new ArrayList<User>();
 		if(loggedInUser.isCompanySuperUser() || loggedInUser.isSuperUser()) {

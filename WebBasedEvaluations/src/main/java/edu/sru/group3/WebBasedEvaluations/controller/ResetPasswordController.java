@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.MyUserDetails;
 import edu.sru.group3.WebBasedEvaluations.domain.PasswordResetToken;
 import edu.sru.group3.WebBasedEvaluations.domain.ResetPassword;
@@ -83,8 +84,17 @@ public class ResetPasswordController {
 	@GetMapping({ "/firstReset" })
 	public String firstResetPassword(Authentication auth, @ModelAttribute ResetPassword reset,
 			/* User user3, BindingResult result, */ Model model) {
-		MyUserDetails user = (MyUserDetails) auth.getPrincipal();
-		User user2 = userRepository.findByid(user.getID());
+		
+		
+		User user2;
+		
+		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+
+		Long idnum = userD.getID();
+
+		user2 = this.userRepository.findById(idnum).orElse(null);
+
+		
 		model.addAttribute("reset", reset);
 
 		model.addAttribute("user", user2);
