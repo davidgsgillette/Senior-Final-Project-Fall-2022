@@ -82,10 +82,16 @@ public class AddRolesController {
 	public String addRoles(Model model, Authentication auth) {
 
 
+		User currentUser;
+		Company currentCompany;
+		
 		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
-		User currentUser = userRepo.findByid(userD.getID());
 
-		Company currentCompany = (currentUser.getCompany());
+		Long idnum = userD.getID();
+
+		currentUser = this.userRepo.findById(idnum).orElse(null);
+
+		currentCompany = currentUser.getCompany();
 
 
 		// Create the directories if they do not exist, delete any existing files
@@ -119,10 +125,16 @@ public class AddRolesController {
 	@RequestMapping(value = "/upload_roles", method = RequestMethod.POST)
 	public Object uploadRoles(@RequestParam("file") MultipartFile file, RedirectAttributes redir, Authentication auth) throws Exception {
 		
+		User currentUser;
+		Company currentCompany;
+		
 		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
-		User currentUser = userRepo.findByid(userD.getID());
 
-		Company currentCompany = (currentUser.getCompany());
+		Long idnum = userD.getID();
+
+		currentUser = this.userRepo.findById(idnum).orElse(null);
+
+		currentCompany = currentUser.getCompany();
 		
 		XSSFSheet sheet = null;
 		String mess ="";

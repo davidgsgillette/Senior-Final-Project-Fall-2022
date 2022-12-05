@@ -140,13 +140,23 @@ public class AddUserController {
 			@RequestParam("sort") String sort, @RequestParam("currPage") Integer currPage,
 			@RequestParam("sortOr") Integer sortOr) {
 		String ansr = null;
-		String mess = null;
-		User adminUser = user;
+		String mess = null;		
 		boolean check = false;
+		user.setAdminEval(false);
+		user.setCompanySuperUser(false);
+		user.setSuperUser(false);
+		User adminUser = user;
+		
+		User currentUser;
+		Company currentCompany;
+		
 		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
-		adminUser = userRepository.findByid(userD.getID());
-		Company currentCompany = adminUser.getCompany();
 
+		Long idnum = userD.getID();
+
+		currentUser = this.userRepository.findById(idnum).orElse(null);
+
+		currentCompany = currentUser.getCompany();
 
 		if (userRepository.findByEmail(user.getEmail()) == null) {
 
@@ -327,9 +337,19 @@ public class AddUserController {
 
 		String ansr;
 		String mess;
+		
+		
+		User currentUser;
+		Company currentCompany;
+		
 		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
-		User currentUser = userRepository.findByid(userD.getID());
-		Company currentCompany = currentUser.getCompany();
+
+		Long idnum = userD.getID();
+
+		currentUser = this.userRepository.findById(idnum).orElse(null);
+
+		currentCompany = currentUser.getCompany();
+		
 		boolean check = false;
 		XSSFSheet sheet = null;
 		try {
@@ -342,6 +362,7 @@ public class AddUserController {
 				ansr = "addFail";
 				adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr,auth);
 				model = AdminMethodsService.pageNavbarPermissions(currentUser, model, this.evalRepo, evalFormRepo);
+				model = AdminMethodsService.addingOrEditingUser(currentUser, this.locationRepo, this.deptRepo, this.roleRepo, this.companyRepo, model);
 				return "admin_users";
 
 			}
@@ -528,6 +549,7 @@ public class AddUserController {
 
 			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
 			model = AdminMethodsService.pageNavbarPermissions(currentUser, model, this.evalRepo, evalFormRepo);
+			model = AdminMethodsService.addingOrEditingUser(currentUser, this.locationRepo, this.deptRepo, this.roleRepo, this.companyRepo, model);
 
 			return "admin_users";
 
@@ -538,6 +560,7 @@ public class AddUserController {
 
 			adminMethodsService.adminUserPageItems(ansr, keyword, mess, perPage, model, sort, currPage, sortOr, auth);
 			model = AdminMethodsService.pageNavbarPermissions(currentUser, model, this.evalRepo, evalFormRepo);
+			model = AdminMethodsService.addingOrEditingUser(currentUser, this.locationRepo, this.deptRepo, this.roleRepo, this.companyRepo, model);
 
 			return "admin_users";
 

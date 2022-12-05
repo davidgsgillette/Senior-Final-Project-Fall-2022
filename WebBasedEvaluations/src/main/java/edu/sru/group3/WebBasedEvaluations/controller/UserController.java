@@ -121,12 +121,23 @@ public class UserController {
 	public String home(Authentication auth, User user, Model model, String keyword, @RequestParam("perPage") Integer perPage,
 			@RequestParam("sort") String sort, @RequestParam("currPage") Integer currPage,
 			@RequestParam("sortOr") Integer sortOr) {
+		
+		
 
 
 
 
-		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
-		Company currentCompany = currentUser.getCompany();
+		User currentUser;
+		Company currentCompany;
+		
+		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+
+		Long id = userD.getID();
+
+		currentUser = userRepository.findById(id).orElse(null);
+
+		currentCompany = currentUser.getCompany();
+		
 		//		List<User> listTotal = service.getAllUsers();
 		List<User> listTotal = userRepository.findByCompany(currentUser.getCompany());
 		List<User> list;
@@ -265,7 +276,17 @@ public class UserController {
 			@RequestParam("currPage") Integer currPage, @RequestParam("sortOr") Integer sortOr, User user,
 			Model model, Authentication auth) {
 		model.addAttribute("perPage", perPage);
-		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
+		
+		
+		User currentUser;
+		
+		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+
+		Long idNum = userD.getID();
+
+		currentUser = userRepository.findById(idNum).orElse(null);
+
+		
 		String ansr = null;
 		String mess = null;
 
@@ -357,7 +378,16 @@ public class UserController {
 			@RequestParam("sort") String sort, @RequestParam("keyword") String keyword,
 			@RequestParam("currPage") Integer currPage, @RequestParam("sortOr") Integer sortOr, @Validated User user,
 			/* BindingResult result, */ Model model, Authentication auth) {
-		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
+		
+		
+		User currentUser;
+		
+		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+
+		Long idnum = userD.getID();
+
+		currentUser = userRepository.findById(idnum).orElse(null);
+
 		String ansr = null;
 		String mess = null;
 		model.addAttribute("perPage", perPage);
@@ -458,7 +488,17 @@ public class UserController {
 			RedirectAttributes redir, Authentication auth) {
 		String ansr = null;
 		String mess = null;
-		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
+		
+		User currentUser;
+		Company currentCompany;
+		
+		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+
+		Long idnum = userD.getID();
+
+		currentUser = userRepository.findById(idnum).orElse(null);
+
+		currentCompany = currentUser.getCompany();
 
 		User user = userRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
@@ -473,7 +513,6 @@ public class UserController {
 			return redirectView;
 		} else {
 			//if user to be deleted is an admin
-			MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
 			if(user.isCompanySuperUser() || user.isSuperUser()){
 				// System.out.println("Detected Admin");
 
@@ -563,8 +602,14 @@ public class UserController {
 
 
 		
+		User currentUser;
 		
-		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getId());
+		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+
+		Long idnum = userD.getID();
+
+		currentUser = userRepository.findById(idnum).orElse(null);
+
 		//		model.addAttribute("role", user2.getRole());
 
 		model.addAttribute("id", user2.getId());

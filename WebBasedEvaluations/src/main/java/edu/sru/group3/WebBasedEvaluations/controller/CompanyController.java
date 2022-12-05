@@ -101,8 +101,13 @@ public class CompanyController {
 	public String addRoles(Model model, Authentication auth) {
 
 
+		User currentUser;
+		
 		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
-		User currentUser = userRepo.findByid(userD.getID());
+
+		Long idnum = userD.getID();
+
+		currentUser = this.userRepo.findById(idnum).orElse(null);
 
 
 		// Create the directories if they do not exist, delete any existing files
@@ -131,8 +136,14 @@ public class CompanyController {
 	@RequestMapping(value = "/upload_company", method = RequestMethod.POST)
 	public Object uploadCompany(@RequestParam("file") MultipartFile file, RedirectAttributes redir, Authentication auth) throws Exception {
 
+		User currentUser;
+		
 		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
-		User currentUser = userRepo.findByid(userD.getID());
+
+		Long idnum = userD.getID();
+
+		currentUser = this.userRepo.findById(idnum).orElse(null);
+
 
 
 		XSSFSheet sheet1 = null;

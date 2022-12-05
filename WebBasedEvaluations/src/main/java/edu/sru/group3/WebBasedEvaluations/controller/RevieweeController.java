@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.EvalRole;
 import edu.sru.group3.WebBasedEvaluations.domain.Evaluator;
 import edu.sru.group3.WebBasedEvaluations.domain.Group;
@@ -63,9 +64,16 @@ public class RevieweeController {
 	 */
     @GetMapping("/myeval")
     public Object getreviewee(Model model, Authentication authentication) {
-    	MyUserDetails userD = (MyUserDetails) authentication.getPrincipal();
-    	Long id = userD.getID() ;
-    	User user2 = userRepository.findByid(userD.getID());
+    	
+    	
+    	User user2;
+		
+		MyUserDetails userD = (MyUserDetails) authentication.getPrincipal();
+
+		Long id = userD.getID();
+
+		user2 = this.userRepository.findById(id).orElse(null);
+
     	System.out.println("");
     	List<Reviewee> reviewee = revieweeRepository.findByuser_Id(id);
     	List<Group> grouplist = (List<Group>) groupRepository.findByevaluatorUserId(userD.getID());
@@ -104,8 +112,14 @@ public class RevieweeController {
 	public Object getrevieweegroup(Model model,@PathVariable("id") long id, Authentication auth) {
 		
 		
-		MyUserDetails user = (MyUserDetails) auth.getPrincipal();
-		User currentUser = userRepository.findByid(user.getID());
+		User currentUser;
+		
+		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+
+		Long idnum = userD.getID();
+
+		currentUser = this.userRepository.findById(idnum).orElse(null);
+
 		List<Reviewee> reviewee = revieweeRepository.findByuser_Id(id);
 		
 			

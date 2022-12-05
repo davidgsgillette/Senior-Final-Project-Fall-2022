@@ -290,10 +290,21 @@ public class GroupController {
 		//System.out.println("end");
 		//System.out.println(isprev.length);
 		//System.out.println(roles.length);
-		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
+		User currentUser;
+		Company currentCompany;
+		
+		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+
+		Long idnum = userD.getID();
+
+		currentUser = this.userRepository.findById(idnum).orElse(null);
+
+		currentCompany = currentUser.getCompany();
+		
+		
+		
 		//  edits group 
 		Group group = groupRepository.findById(id);
-		Company currentCompany = group.getCompany();
 
 		group.getReviewee().clear();
 		group.getEvaluator().clear();
@@ -374,8 +385,17 @@ public class GroupController {
 	@RequestMapping(value = "/uploadgroup", method = RequestMethod.POST)
 	public Object uploadgroup(@RequestParam("file") MultipartFile reapExcelDataFile, RedirectAttributes redir, Authentication auth) {
 
-		User currentUser = userRepository.findByid(((MyUserDetails) auth.getPrincipal()).getID());
-		Company currentCompany = currentUser.getCompany();
+		User currentUser;
+		Company currentCompany;
+		
+		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+
+		Long idnum = userD.getID();
+
+		currentUser = this.userRepository.findById(idnum).orElse(null);
+
+		currentCompany = currentUser.getCompany();
+		
 		//checks if user can assign evaluator. 
 		if(!(currentUser.isCompanySuperUser() || currentUser.hasEditEvalPerm() || currentUser.isAdminEval())) {
 			RedirectView redirectView = new RedirectView("/admin_groups", true);
@@ -739,8 +759,15 @@ public class GroupController {
 	@GetMapping("/Evaluationgroups")
 	public String evalGroups(Model model, Authentication authentication) {
 
+		User currentUser;
+		
 		MyUserDetails userD = (MyUserDetails) authentication.getPrincipal();
-		User currentUser = userRepository.findByid(userD.getID());
+
+		Long idnum = userD.getID();
+
+		currentUser = this.userRepository.findById(idnum).orElse(null);
+
+		
 		List<Group> grouplist = (List<Group>) groupRepository.findByevaluatorUserId(userD.getID(),Sort.by(Sort.Direction.ASC, "Id"));
 		
 		grouplist = new ArrayList<Group>(new LinkedHashSet<Group>(grouplist));
@@ -774,10 +801,18 @@ public class GroupController {
 	@GetMapping("/admin_groups")
 	public String Groups(Model model, Authentication auth) {
 		
-		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
-		User currentUser = userRepo.findByid(userD.getID());
+		User currentUser;
+		Company currentCompany;
 		
-		Company currentCompany = (currentUser.getCompany());
+		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
+
+		Long idnum = userD.getID();
+
+		currentUser = this.userRepository.findById(idnum).orElse(null);
+
+		currentCompany = currentUser.getCompany();
+		
+		
 		List<Group> grouplist = (List<Group>) groupRepository.findByCompany(currentCompany);
 		List<EvalRole> roles = (List<EvalRole>) evalRoleRepository.findByCompany(currentCompany);
 		List<EvaluationLog> evalLog = (List<EvaluationLog>) evaluationLogRepository.findByEvaluatorCompany(currentCompany);
@@ -811,11 +846,8 @@ public class GroupController {
 		model.addAttribute("groups", grouplist);
 		log.info("admin group was open ");
 		
-	
-		
 		model = AdminMethodsService.pageNavbarPermissions(currentUser, model, evaluatorRepository, evalFormRepo);
 		
-		System.out.println("got here");
 		
 		return "admin_groups";
 	}

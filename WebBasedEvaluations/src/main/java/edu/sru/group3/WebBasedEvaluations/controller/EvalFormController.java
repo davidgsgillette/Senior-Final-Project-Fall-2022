@@ -116,10 +116,18 @@ public class EvalFormController {
 	 */
 	@GetMapping("/admin_evaluations")
 	public String adminEvaluations(Model model, Authentication auth) {
+		
+		User currentUser;
+		Company currentCompany;
+		
 		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
-		User currentUser = userRepo.findByid(userD.getID());
 
-		Company currentCompany = (currentUser.getCompany());
+		Long idnum = userD.getID();
+
+		currentUser = this.userRepo.findById(idnum).orElse(null);
+
+		currentCompany = currentUser.getCompany();
+		
 		// Create the directories if they do not exist, delete any existing files
 		try {
 			Files.createDirectories(Paths.get(TEMP_FILES_PATH));
@@ -214,10 +222,16 @@ public class EvalFormController {
 
 
 		boolean showLog = false;
+		User currentUser;
+		Company currentCompany;
+		
 		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
-		User currentUser = userRepo.findByid(userD.getID());
 
-		Company currentCompany = (currentUser.getCompany());
+		Long idnum = userD.getID();
+
+		currentUser = this.userRepo.findById(idnum).orElse(null);
+
+		currentCompany = currentUser.getCompany();
 		XSSFSheet sheet2;
 
 		//deptartmentList
@@ -392,9 +406,19 @@ public class EvalFormController {
 	 */
 	@RequestMapping("/eval_form")
 	public RedirectView saveEvalTemplate(@Validated Evaluation eval, Model model, Authentication auth) throws Exception {
+
+		User currentUser;
+		Company currentCompany;
+		
 		MyUserDetails userD = (MyUserDetails) auth.getPrincipal();
-		User currentUser = userRepo.findByid(userD.getID());		
-		Company currentCompany = (currentUser.getCompany());
+
+		Long idnum = userD.getID();
+
+		currentUser = this.userRepo.findById(idnum).orElse(null);
+
+		currentCompany = currentUser.getCompany();
+		
+		
 		Set<Department> tempDepts = new HashSet<Department>();
 		tempDepts.addAll(depts);
 		// Create the directories if they do not exist, delete any existing files

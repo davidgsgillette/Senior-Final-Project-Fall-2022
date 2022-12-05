@@ -12,6 +12,7 @@ import org.springframework.util.SerializationUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.Archive;
 import edu.sru.group3.WebBasedEvaluations.domain.EvalRole;
 import edu.sru.group3.WebBasedEvaluations.domain.Group;
@@ -75,8 +76,19 @@ public class ArchiveController {
 	public String evalGroups(Model model, Authentication authentication) {
 		
 		boolean groupButton = false;
+		
+		
+		User user;
+		
 		MyUserDetails userD = (MyUserDetails) authentication.getPrincipal();
-		User user = userRepository.findByid(userD.getID());
+
+		Long idnum = userD.getID();
+
+		user = this.userRepository.findById(idnum).orElse(null);
+
+		
+		
+		
 		List<Archive> Archivelist = (List<Archive>) archiveRepository.findAll();
 		System.out.print(Archivelist.size());
 		
@@ -111,8 +123,16 @@ public class ArchiveController {
 	@GetMapping("/ViewArchive/{id}")
 	public String ViewViewArchive(@PathVariable("id") long id, Model model, Authentication authentication) {
 
+		User user;
+		
 		MyUserDetails userD = (MyUserDetails) authentication.getPrincipal();
-		User user = userRepository.findByid(userD.getID());
+
+		Long idnum = userD.getID();
+
+		user = this.userRepository.findById(idnum).orElse(null);
+
+		
+		
 		Archive	archive= archiveRepository.findById(id).orElse(null);
 		 Evaluation evall;
 		 evall = (Evaluation) SerializationUtils.deserialize(archive.getPath());

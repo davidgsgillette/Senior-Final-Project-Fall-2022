@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import edu.sru.group3.WebBasedEvaluations.company.Company;
 import edu.sru.group3.WebBasedEvaluations.domain.EvalTemplates;
 import edu.sru.group3.WebBasedEvaluations.domain.Evaluator;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -117,11 +118,14 @@ public class HomePage {
 	public String home(Authentication auth, User user3, /*BindingResult result,*/ Model model) {
 
 
+		User user2;
 		
 		MyUserDetails user = (MyUserDetails) auth.getPrincipal();
-		User user2 = userRepository.findByid(user.getID());
-		
-		
+
+		Long idnum = user.getID();
+
+		user2 = this.userRepository.findById(idnum).orElse(null);
+
 
 		boolean groupButton = false;
 		/*
@@ -150,37 +154,29 @@ public class HomePage {
 			//System.out.println(groupButton);
 
 		}*/
-
 		if (user2.getReset() == true) {
 			return "redirect:/firstReset";
 		} 
 		else {		
-			
 			//adds the permissions used for thenavbar to the model.
 			model = AdminMethodsService.pageNavbarPermissions(user2, model, evaluatorRepository, evalFormRepo);	
-			
+		
 			
 			model.addAttribute("EVALUATOR_EVAL", false);
-			model.addAttribute("groupButton", groupButton);			
+			model.addAttribute("groupButton", groupButton);	
 			model.addAttribute("user", user.getUsername());
 			model.addAttribute("id", user.getID());
 			model.addAttribute("deptNames", user2.getDepartmentNames());
 			model.addAttribute("companyName", user2.getCompanyName());
 			if(user2.isSuperUser()) {
 				model.addAttribute("roleName", "SuperSuperUser");
-			}
+			}			
 			else if(user2.isCompanySuperUser()) {
 				model.addAttribute("roleName",user2.getCompanyName() + " SuperUser");
 			}
 			else {
 				model.addAttribute("roleName", user2.getRoleName());
 			}
-			
-			
-			
-			
-			
-			
 			return "home";
 		}
 	}
